@@ -1,8 +1,12 @@
+#####
+# Copyright (c) 2018 Y Paritcher
+#####
+
 PREFIX=$$HOME/x-tools/arm-unknown-linux-gnueabi/bin/arm-unknown-linux-gnueabi-
 CC=gcc
 AR=ar
 RANLIB=ranlib
-CFLAGS=-Wall -Wextra -std=c99 -pedantic $(INC_DIR:%=-I%)
+CFLAGS=-Wall -Wextra -O2 -std=c99 -pedantic $(INC_DIR:%=-I%)
 LDLIBS=-lm
 
 INC_DIR = include
@@ -16,23 +20,29 @@ staticobjects := $(patsubst $(SRCDIR)%.c,$(STATICDIR)%.o,$(wildcard $(SRCDIR)*.c
 TESTDIR=test/
 TESTLDFLAGS=-L$(LIBDIR)
 TESTLDLIBS=-lzmanim
+testobjects := $(patsubst %.c,%.o,$(wildcard $(TESTDIR)*.c))
 
 VPATH = src $(INC_DIR)
 
 .PHONY: clean cleaner all
 
-all: $(LIBDIR)libzmanim.so $(LIBDIR)libzmanim.a $(TESTDIR)main
+all: shared static test
 
 kindle: CC = $(PREFIX)gcc
 kindle: AR = $(PREFIX)ar
 kindle: RANLIB = $(PREFIX)ranlib
-kindle: $(LIBDIR)libzmanim.so $(LIBDIR)libzmanim.a $(TESTDIR)main
+kindle: shared static test
 
+shared: $(LIBDIR)libzmanim.so
 
-$(LIBDIR)libzmanim.so: $(sharedobjects) # $(addprefix $(SHAREDDIR),$(wildcard *.o))
+static: $(LIBDIR)libzmanim.a
+
+test: $(TESTDIR)mainstatic $(TESTDIR)mainshared
+
+$(LIBDIR)libzmanim.so: $(sharedobjects)
 	$(CC) -shared $(LDFLAGS) $^ $(LDLIBS) -o $@
 
-$(LIBDIR)libzmanim.a: $(staticobjects) # $(addprefix $(STATICDIR),$(wildcard *.o))
+$(LIBDIR)libzmanim.a: $(staticobjects)
 	$(AR) rc $@ $^
 	$(RANLIB) $@
 
@@ -42,11 +52,14 @@ $(SHAREDDIR)%.o: $(SRCDIR)%.c
 $(STATICDIR)%.o: $(SRCDIR)%.c
 	$(CC) -static -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
-$(TESTDIR)main: $(TESTDIR)main.c
-	$(CC) -c $(CPPFLAGS) $(CFLAGS) $(TESTDIR)main.c -o $(TESTDIR)main.o
-	$(CC) -static $(TESTLDFLAGS) $(TESTDIR)main.o $(TESTLDLIBS) -lm -o $@static
-	$(CC) $(TESTLDFLAGS) $(TESTDIR)main.o $(TESTLDLIBS) -o $@shared
+$(TESTDIR)%.o: $(TESTDIR)%.c
+	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
+$(TESTDIR)mainstatic: $(testobjects)
+	$(CC) -static $(TESTLDFLAGS) $^ $(TESTLDLIBS) -lm -o $@
+
+$(TESTDIR)mainshared: $(testobjects)
+		$(CC) $(TESTLDFLAGS) $^ $(TESTLDLIBS) -o $@
 
 clean:
 	rm -f $(SHAREDDIR)*.o $(STATICDIR)*.o $(TESTDIR)main.o

@@ -1,20 +1,12 @@
+/****
+Copyright (c) 2018 Y Paritcher
+****/
 
 #include <time.h>
 #include "util.h"
 #include "NOAAcalculator.h"
+#include "calculatorutil.h"
 #include <math.h>
-
-# define M_PI		3.14159265358979323846	/* pi */
-
-double radToDeg(double angleRad)
-{
-	return (180.0 * angleRad / M_PI);
-}
-
-double degToRad(double angleDeg)
-{
-	return (M_PI * angleDeg / 180.0);
-}
 
 double calcJD(struct tm *date)
 {
@@ -236,15 +228,12 @@ double calcSunsetUTC(double JD, double latitude, double longitude, double zenith
 	return timeUTC;
 }
 
-double getUTCSunrise(struct tm *date, double latitude, double longitude, double zenith)
+double getUTCSunrise(struct tm *date, location *here, double zenith, unsigned int adjustForElevation)
 {
-	double adjustedZenith = zenith;
-	if (zenith == 90.0)
-	{
-		adjustedZenith += 0.83333;
-	}
+	double elevation = adjustForElevation ? here->elevation : 0;
+	double adjustedZenith = adjustZenith(zenith, elevation);
 
-	double sunrise = calcSunriseUTC(calcJD(date), latitude, -longitude, adjustedZenith);
+	double sunrise = calcSunriseUTC(calcJD(date), here->latitude, -here->longitude, adjustedZenith);
 	sunrise = sunrise / 60;
 
 	while (sunrise < 0.0)
@@ -258,15 +247,12 @@ double getUTCSunrise(struct tm *date, double latitude, double longitude, double 
 	return sunrise;
 }
 
-double getUTCSunset(struct tm *date, double latitude, double longitude, double zenith)
+double getUTCSunset(struct tm *date, location *here, double zenith, unsigned int adjustForElevation)
 {
-	double adjustedZenith = zenith;
-	if (zenith == 90.0)
-	{
-		adjustedZenith += 0.83333;
-	}
+	double elevation = adjustForElevation ? here->elevation : 0;
+	double adjustedZenith = adjustZenith(zenith, elevation);
 
-	double sunset = calcSunsetUTC(calcJD(date), latitude, -longitude, adjustedZenith);
+	double sunset = calcSunsetUTC(calcJD(date), here->latitude, -here->longitude, adjustedZenith);
 	sunset = sunset / 60;
 
 	while (sunset < 0.0)
