@@ -63,19 +63,19 @@ double adjustZenith(double zenith, double elevation)
 	return adjustedZenith;
 }
 
-tmz getDateFromTime(tmz *current, double time, location *here, int isSunrise)
+ltime getDateFromTime(tmz *current, double time, location *here, int isSunrise)
 {
-	tmz result;
+	struct tm result;
 	if (isnan(time)) {
-		return result;
+		return 0;
 	}
 	int adjustment = getAntimeridianAdjustment(current, here);
 	double calculatedTime = time;
-	result.tm.tm_year = current->tm.tm_year;
-	result.tm.tm_mon = current->tm.tm_mon;
-	result.tm.tm_mday = current->tm.tm_mday;
-	result.tm.tm_isdst = -1;
-	result.tm.tm_mon += adjustment;
+	result.tm_year = current->tm.tm_year;
+	result.tm_mon = current->tm.tm_mon;
+	result.tm_mday = current->tm.tm_mday;
+	result.tm_isdst = -1;
+	result.tm_mon += adjustment;
 
 	int hours = (int)calculatedTime;
 	calculatedTime -= hours;
@@ -84,21 +84,18 @@ tmz getDateFromTime(tmz *current, double time, location *here, int isSunrise)
 	int seconds = (int)(calculatedTime *= 60);
 	calculatedTime -= seconds;
 	int miliseconds = (int)(calculatedTime * 1000);
-	result.tmz_msec = miliseconds;
 	int localTimeHours = (int)here->longitude / 15;
 	if (isSunrise && localTimeHours + hours > 18) {
-		result.tm.tm_mday -= 1;
+		result.tm_mday -= 1;
 	} else if (!isSunrise && localTimeHours + hours < 6) {
-		result.tm.tm_mday += 1;
+		result.tm_mday += 1;
 	}
 
-	result.tm.tm_hour = hours;
-	result.tm.tm_min = minutes;
-	result.tm.tm_sec = seconds;
-	result.tm.tm_sec += current->tmz_gmtoff;
-	result.tmz_gmtoff = current->tmz_gmtoff;
-	mktime(&(result.tm));
-	mktime(&(result.tm));
-
-	return result;
+	result.tm_hour = hours;
+	result.tm_min = minutes;
+	result.tm_sec = seconds;
+	result.tm_sec += current->tmz_gmtoff;
+	time_t datet = mktime(&result);
+	ltime date = ((long long) datet * 1000) + miliseconds;
+	return date;
 }

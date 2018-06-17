@@ -24,20 +24,26 @@ testobjects := $(patsubst %.c,%.o,$(wildcard $(TESTDIR)*.c))
 
 VPATH = src $(INC_DIR)
 
-.PHONY: clean cleaner all
+.PHONY: clean cleaner all shared static test teststatic testshared kindle fresh
 
-all: shared static test
+all:
+	$(MAKE) shared static
+	$(MAKE) test
 
 kindle: CC = $(PREFIX)gcc
 kindle: AR = $(PREFIX)ar
 kindle: RANLIB = $(PREFIX)ranlib
-kindle: shared static test
+kindle: all
 
 shared: $(LIBDIR)libzmanim.so
 
 static: $(LIBDIR)libzmanim.a
 
-test: $(TESTDIR)mainstatic $(TESTDIR)mainshared
+test: teststatic testshared
+
+teststatic: static $(TESTDIR)teststatic
+
+testshared: shared $(TESTDIR)testshared
 
 $(LIBDIR)libzmanim.so: $(sharedobjects)
 	$(CC) -shared $(LDFLAGS) $^ $(LDLIBS) -o $@
@@ -55,14 +61,20 @@ $(STATICDIR)%.o: $(SRCDIR)%.c
 $(TESTDIR)%.o: $(TESTDIR)%.c
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
-$(TESTDIR)mainstatic: $(testobjects)
+$(TESTDIR)teststatic: $(testobjects)
 	$(CC) -static $(TESTLDFLAGS) $^ $(TESTLDLIBS) -lm -o $@
 
-$(TESTDIR)mainshared: $(testobjects)
+$(TESTDIR)testshared: $(testobjects)
 		$(CC) $(TESTLDFLAGS) $^ $(TESTLDLIBS) -o $@
 
+testobjects: shared static
+
 clean:
-	rm -f $(SHAREDDIR)*.o $(STATICDIR)*.o $(TESTDIR)main.o
+	rm -f $(SHAREDDIR)*.o $(STATICDIR)*.o $(TESTDIR)test.o
 
 cleaner: clean
-	rm -f $(LIBDIR)libzmanim.so $(LIBDIR)libzmanim.a $(TESTDIR)mainshared $(TESTDIR)mainstatic
+	rm -f $(LIBDIR)libzmanim.so $(LIBDIR)libzmanim.a $(TESTDIR)testshared $(TESTDIR)teststatic
+
+fresh:
+	$(MAKE) cleaner
+	$(MAKE) all
