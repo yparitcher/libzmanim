@@ -33,7 +33,7 @@ all:
 kindle: CC = $(PREFIX)gcc
 kindle: AR = $(PREFIX)ar
 kindle: RANLIB = $(PREFIX)ranlib
-kindle: all
+kindle: shared static test
 
 shared: $(LIBDIR)libzmanim.so
 
