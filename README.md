@@ -30,15 +30,14 @@ once this setup is complete:
 call any of the get functions to get that zman as a ltime that can easily be converted to a `time_t` by `/ 1000`
 
 for further examples see the test.c file that implements a basic wrapper to show daily zmanim
-<!---
+
 ### test usage:
 
-./teststatic date latitude longitude timezone
+./teststatic year month day latitude longitude timezone
 ```
-./teststatic 2018-01-01 40.66896 -73.94284 -4.0
+./teststatic 2018 01 01 40.66896 -73.94284 -4.0
 ```
 ./teststatic is interchangeable with ./testshared.
---->
 
 ## License
 sms-bot is Copyright (c) 2018 [Yparitcher](https://github.com/yparitcher).
