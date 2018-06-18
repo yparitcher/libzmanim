@@ -30,24 +30,75 @@ double getlatitude();
 double getlongitude();
 double getelevation();
 
+ltime getalos();
+ltime getalosbaalhatanya();
+ltime getalos26degrees();
+ltime getalos19p8degrees();
+ltime getalos18degrees();
+ltime getalos120();
+ltime getalos120zmanis();
+ltime getalos96();
+ltime getalos96zmanis();
+ltime getalos90();
+ltime getalos90zmanis();
+ltime getalos72();
+ltime getalos72zmanis();
+ltime getalos60();
+
+ltime getmisheyakir11p5degrees();
+ltime getmisheyakir11degrees();
+ltime getmisheyakir10p2degrees();
+
 ltime getsunrise();
 ltime getsunrisebaalhatanya();
 ltime getelevationsunrise();
-ltime getsunset();
-ltime getsunsetbaalhatanya();
-ltime getelevationsunset();
-
-ltime getalos();
-ltime getalosbaalhatanya();
-ltime getalos120();
-ltime getalos72();
-
-ltime getmisheyakir10point2degrees();
 
 ltime getshmabaalhatanya();
 ltime getshmagra();
 ltime getshmamga();
 
+ltime gettefilabaalhatanya();
+ltime gettefilagra();
+ltime gettefilamga();
+
+ltime getachilaschometzbaalhatanya();
+ltime getachilaschometzgra();
+ltime getachilaschometzmga();
+
+ltime getbiurchometzbaalhatanya();
+ltime getbiurchometzgra();
+ltime getbiurchometzmga();
+
+ltime getchatzosbaalhatanya();
+ltime getchatzosgra();
+
+ltime getminchagedolabaalhatanya();
+ltime getminchagedolagra();
+ltime getminchagedolamga();
+ltime getminchagedolabaalhatanyag30m();
+ltime getminchagedolagrag30m();
+ltime getminchagedolamgag30m();
+
+ltime getminchaketanabaalhatanya();
+ltime getminchaketanagra();
+ltime getminchaketanamga();
+
+ltime getplagbaalhatanya();
+ltime getplaggra();
+ltime getplagmga();
+
+ltime getcandlelighting();
+
+ltime getsunset();
+ltime getsunsetbaalhatanya();
+ltime getelevationsunset();
+
+ltime gettzaisbaalhatanya();
+ltime gettzais8p5();
 ltime gettzais72();
+
+long getshaahzmanisbaalhatanya();
+long getshaahzmanisgra();
+long getshaahzmanismga();
 
 #endif

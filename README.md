@@ -39,6 +39,8 @@ for further examples see the test.c file that implements a basic wrapper to show
 ```
 ./teststatic is interchangeable with ./testshared.
 
+note: due to the limitations of the C snadard library all times will show as if they in the computers timezone even though they are correctly calculated in the given timezone.
+
 ## License
 sms-bot is Copyright (c) 2018 [Yparitcher](https://github.com/yparitcher).
 licensed under the [LGPL 2.1](https://opensource.org/licenses/LGPL-2.1) license. 

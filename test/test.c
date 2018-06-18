@@ -39,71 +39,72 @@ int main(int argc, char *argv[])
 	float timezone = -4.0;
 	time_t now = time(NULL);
 	long int offset = (long int) 3600 * timezone;
+	struct tm *pltm = localtime(&now);
+	struct tm ltm = *pltm;
 
-	if ( argc != 1 ) {
-			if ( argc != 7 )
-			{
-				printf("usage: year month day latitude longitude timezone\n       2018 01 01 40.66896 -73.94284 -4.0\n");
-				return 1;
-			}
-			struct tm *pltm = localtime(&now);
-			struct tm ltm = *pltm;
-			if ( atoi(argv[1]) )
-			{
-				ltm.tm_year = (atoi(argv[1]) - 1900 );
-			}
-			else
-			{
-				printf("%s: is not a valid year\n", argv[1]);
-				return 1;
-			}
-			if ( atoi(argv[2]) )
-			{
-				ltm.tm_mon = (atoi(argv[2]) -1);
-			}
-			else
-			{
-				printf("%s: is not a valid month\n", argv[2]);
-				return 1;
-			}
-			if ( atoi(argv[3]) )
-			{
-				ltm.tm_mday = atoi(argv[3]);
-			}
-			else
-			{
-				printf("%s: is not a valid year\n", argv[3]);
-				return 1;
-			}
-			now = mktime(&ltm);
-			if ( atof(argv[4]) && -90 < atof(argv[4]) && atof(argv[4]) < 90 )
-			{
-				latitude = atof(argv[4]);
-			}
-			else
-			{
-				printf("Latitude must be between -90 and 90!\n");
-				return 1;
-			}
-			if (atof(argv[5]) && -180 < atof(argv[5]) && atof(argv[5]) < 180)
-			{
-				longitude = atof(argv[5]);
-			}
-			else
-			{
-				printf("Longitude must be between -180 and 180!\n");
-				return 1;
-			}
-			if( atof(argv[6]) && -13 < atof(argv[6]) && atof(argv[6]) < 15 )
-			{
-				timezone = atof(argv[6]);
-			}
-			else
-			{
-				printf("%s: is not a valid timezone\n", argv[6]);
-				return 1;
-			}
+	if ( argc != 1 )
+	{
+		if ( argc != 7 )
+		{
+			printf("usage: year month day latitude longitude timezone\n       2018 01 01 40.66896 -73.94284 -4.0\n");
+			return 1;
 		}
+		if ( atoi(argv[1]) )
+		{
+			ltm.tm_year = (atoi(argv[1]) - 1900 );
+		}
+		else
+		{
+			printf("%s: is not a valid year\n", argv[1]);
+			return 1;
+		}
+		if ( atoi(argv[2]) )
+		{
+			ltm.tm_mon = (atoi(argv[2]) -1);
+		}
+		else
+		{
+			printf("%s: is not a valid month\n", argv[2]);
+			return 1;
+		}
+		if ( atoi(argv[3]) )
+		{
+			ltm.tm_mday = atoi(argv[3]);
+		}
+		else
+		{
+			printf("%s: is not a valid year\n", argv[3]);
+			return 1;
+		}
+		now = mktime(&ltm);
+		if ( atof(argv[4]) && -90 < atof(argv[4]) && atof(argv[4]) < 90 )
+		{
+			latitude = atof(argv[4]);
+		}
+		else
+		{
+			printf("Latitude must be between -90 and 90!\n");
+			return 1;
+		}
+		if (atof(argv[5]) && -180 < atof(argv[5]) && atof(argv[5]) < 180)
+		{
+			longitude = atof(argv[5]);
+		}
+		else
+		{
+			printf("Longitude must be between -180 and 180!\n");
+			return 1;
+		}
+		if( atof(argv[6]) && -13 < atof(argv[6]) && atof(argv[6]) < 15 )
+		{
+			timezone = atof(argv[6]);
+		}
+		else
+		{
+			printf("%s: is not a valid timezone\n", argv[6]);
+			return 1;
+		}
+	}
 
 
 	setall(&now, offset, latitude, longitude, elevation);
@@ -113,9 +114,19 @@ int main(int argc, char *argv[])
 /*	for (int i = 100; i > 0; i--)
 	{
 */
-		printf("sunrise: %s\n", formattime(getsunrise()));
-		printf("shma:    %s\n", formattime(getshmabaalhatanya()));
-		printf("sunset:  %s\n", formattime(getsunset()));
+		printf("alos:            %s\n", formattime(getalosbaalhatanya()));
+		printf("misheyakir:      %s\n", formattime(getmisheyakir10p2degrees()));
+		printf("sunrise:         %s\n", formattime(getsunrise()));
+		printf("shma:            %s\n", formattime(getshmabaalhatanya()));
+		printf("tefila:          %s\n", formattime(gettefilabaalhatanya()));
+		printf("chatzos:         %s\n", formattime(getchatzosbaalhatanya()));
+		printf("mincha gedola:   %s\n", formattime(getminchagedolabaalhatanya()));
+		printf("mincha ketana:   %s\n", formattime(getminchaketanabaalhatanya()));
+		printf("plag hamincha:   %s\n", formattime(getplagbaalhatanya()));
+		if (ltm.tm_wday == 5) printf("candle lighting: %s\n", formattime(getcandlelighting()));
+		printf("sunset:          %s\n", formattime(getsunset()));
+		printf("tzais:           %s\n", formattime(gettzaisbaalhatanya()));
+		if (ltm.tm_wday == 6) printf("shabbos ends:    %s\n", formattime(gettzais8p5()));
 /*	}
 */
 	return 0;

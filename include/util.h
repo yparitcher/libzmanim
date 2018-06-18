@@ -48,6 +48,8 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 #define MINUTES96 (96 * 60000)
 #define MINUTES120 (120 * 60000)
 
+#define MINUTES18 (18 * 60000)
+
 typedef struct {
   struct tm tm;
   int tmz_msec;

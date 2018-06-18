@@ -31,7 +31,7 @@ int settime(time_t *time)
 
 int setoffset(double offset)
 {
-	if ( -86400000 < offset && offset < 86400000 )
+	if ( -46800000 < offset && offset < 54000000 )
 	{
 		utmz.tmz_gmtoff = offset;
 		setup.bf.of |= 1;
@@ -136,4 +136,347 @@ ltime calctimeoffset(ltime time, long offset)
 {
 	if (time == 0 || offset == 0) return 0;
 	return time + offset;
+}
+
+ltime getalos()
+{
+	return calcsunrise(&utmz, &ulocation, ZENITH_16_P_1, 0);
+}
+
+ltime getalosbaalhatanya()
+{
+	return calcsunrise(&utmz, &ulocation, ZENITH_16_P_9, 0);
+}
+
+ltime getalos26degrees()
+{
+	return calcsunrise(&utmz, &ulocation, ZENITH_26_D, 0);
+}
+
+ltime getalos19p8degrees()
+{
+	return calcsunrise(&utmz, &ulocation, ZENITH_19_P_8, 0);
+}
+
+ltime getalos18degrees()
+{
+	return calcsunrise(&utmz, &ulocation, ZENITH_18_D, 0);
+}
+
+ltime getalos120()
+{
+	return calctimeoffset(getsunrise(), -MINUTES120);
+}
+
+ltime getalos120zmanis()
+{
+	long shaahzmanis = getshaahzmanisgra();
+	if (shaahzmanis == 0) return 0;
+	return calctimeoffset(getsunrise(), shaahzmanis * -2);
+}
+
+ltime getalos96()
+{
+	return calctimeoffset(getsunrise(), -MINUTES96);
+}
+
+ltime getalos96zmanis()
+{
+	long shaahzmanis = getshaahzmanisgra();
+	if (shaahzmanis == 0) return 0;
+	return calctimeoffset(getsunrise(), shaahzmanis * -1.6);
+}
+
+ltime getalos90()
+{
+	return calctimeoffset(getsunrise(), -MINUTES90);
+}
+
+ltime getalos90zmanis()
+{
+	long shaahzmanis = getshaahzmanisgra();
+	if (shaahzmanis == 0) return 0;
+	return calctimeoffset(getsunrise(), shaahzmanis * -1.5);
+}
+
+ltime getalos72()
+{
+	return calctimeoffset(getsunrise(), -MINUTES72);
+}
+
+ltime getalos72zmanis()
+{
+	long shaahzmanis = getshaahzmanisgra();
+	if (shaahzmanis == 0) return 0;
+	return calctimeoffset(getsunrise(), shaahzmanis * -1.2);
+}
+
+ltime getalos60()
+{
+	return calctimeoffset(getsunrise(), -MINUTES60);
+}
+
+ltime getmisheyakir11p5degrees()
+{
+	return calcsunrise(&utmz, &ulocation, ZENITH_11_P_5, 0);
+}
+
+ltime getmisheyakir11degrees()
+{
+	return calcsunrise(&utmz, &ulocation, ZENITH_11_D, 0);
+}
+
+ltime getmisheyakir10p2degrees()
+{
+	return calcsunrise(&utmz, &ulocation, ZENITH_10_P_2, 0);
+}
+
+ltime getsunrise()
+{
+	return calcsunrise(&utmz, &ulocation, GEOMETRIC_ZENITH, 0);
+}
+
+ltime getsunrisebaalhatanya()
+{
+	return calcsunrise(&utmz, &ulocation, ZENITH_AMITIS, 0);
+}
+
+ltime getelevationsunrise()
+{
+	return calcsunrise(&utmz, &ulocation, GEOMETRIC_ZENITH, 1);
+}
+
+ltime calcshma(ltime startday, ltime endday)
+{
+	long shaahzmanis = calcshaahzmanis(startday, endday);
+	return calctimeoffset(startday, shaahzmanis * 3);
+}
+
+ltime getshmabaalhatanya()
+{
+	return calcshma(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+}
+
+ltime getshmagra()
+{
+	return calcshma(getsunrise(), getsunset());
+}
+
+ltime getshmamga()
+{
+	return calcshma(getalos72(), gettzais72());
+}
+
+ltime calctefila(ltime startday, ltime endday)
+{
+	long shaahzmanis = calcshaahzmanis(startday, endday);
+	return calctimeoffset(startday, shaahzmanis * 4);
+}
+
+ltime gettefilabaalhatanya()
+{
+	return calctefila(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+}
+
+ltime gettefilagra()
+{
+	return calctefila(getsunrise(), getsunset());
+}
+
+ltime gettefilamga()
+{
+	return calctefila(getalos72(), gettzais72());
+}
+
+ltime getachilaschometzbaalhatanya()
+{
+	return calctefila(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+}
+
+ltime getachilaschometzgra()
+{
+	return calctefila(getsunrise(), getsunset());
+}
+
+ltime getachilaschometzmga()
+{
+	return calctefila(getalos72(), gettzais72());
+}
+
+ltime calcbiurchometz(ltime startday, ltime endday)
+{
+	long shaahzmanis = calcshaahzmanis(startday, endday);
+	return calctimeoffset(startday, shaahzmanis * 5);
+}
+
+ltime getbiurchometzbaalhatanya()
+{
+	return calcbiurchometz(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+}
+
+ltime getbiurchometzgra()
+{
+	return calcbiurchometz(getsunrise(), getsunset());
+}
+
+ltime getbiurchometzmga()
+{
+	return calcbiurchometz(getalos72(), gettzais72());
+}
+
+ltime calcchatzos(ltime startday, ltime endday)
+{
+	long shaahzmanis = calcshaahzmanis(startday, endday);
+	return calctimeoffset(startday, shaahzmanis * 6);
+}
+
+ltime getchatzosbaalhatanya()
+{
+	return calcchatzos(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+}
+
+ltime getchatzosgra()
+{
+	return calcchatzos(getsunrise(), getsunset());
+}
+
+ltime calcminchagedola(ltime startday, ltime endday)
+{
+	long shaahzmanis = calcshaahzmanis(startday, endday);
+	return calctimeoffset(startday, shaahzmanis * 6.5);
+}
+
+ltime getminchagedolabaalhatanya()
+{
+	return calcminchagedola(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+}
+
+ltime getminchagedolagra()
+{
+	return calcminchagedola(getsunrise(), getsunset());
+}
+
+ltime getminchagedolamga()
+{
+	return calcminchagedola(getalos72(), gettzais72());
+}
+
+ltime calcminchagedola30min(ltime startday, ltime endday)
+{
+	long shaahzmanis = calcshaahzmanis(startday, endday);
+	return calctimeoffset(startday, (shaahzmanis * 6) + 1800000);
+}
+
+ltime calcminchagedolagreater30min(ltime startday, ltime endday)
+{
+	ltime mg = calcminchagedola(startday, endday);
+	ltime mg30 = calcminchagedola30min(startday, endday);
+	return (mg >= mg30) ? mg : mg30;
+}
+
+ltime getminchagedolabaalhatanyag30m()
+{
+	return calcminchagedolagreater30min(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+}
+
+ltime getminchagedolagrag30m()
+{
+	return calcminchagedolagreater30min(getsunrise(), getsunset());
+}
+
+ltime getminchagedolamgag30m()
+{
+	return calcminchagedolagreater30min(getalos72(), gettzais72());
+}
+
+ltime calcminchaketana(ltime startday, ltime endday)
+{
+	long shaahzmanis = calcshaahzmanis(startday, endday);
+	return calctimeoffset(startday, shaahzmanis * 9.5);
+}
+
+ltime getminchaketanabaalhatanya()
+{
+	return calcminchaketana(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+}
+
+ltime getminchaketanagra()
+{
+	return calcminchaketana(getsunrise(), getsunset());
+}
+
+ltime getminchaketanamga()
+{
+	return calcminchaketana(getalos72(), gettzais72());
+}
+
+ltime calcplag(ltime startday, ltime endday)
+{
+	long shaahzmanis = calcshaahzmanis(startday, endday);
+	return calctimeoffset(startday, shaahzmanis * 10.75);
+}
+
+ltime getplagbaalhatanya()
+{
+	return calcplag(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+}
+
+ltime getplaggra()
+{
+	return calcplag(getsunrise(), getsunset());
+}
+
+ltime getplagmga()
+{
+	return calcplag(getalos72(), gettzais72());
+}
+
+ltime getcandlelighting()
+{
+	return calctimeoffset(calcsunset(&utmz, &ulocation, GEOMETRIC_ZENITH, 0), -MINUTES18);
+}
+
+ltime getsunset()
+{
+	return calcsunset(&utmz, &ulocation, GEOMETRIC_ZENITH, 0);
+}
+
+ltime getsunsetbaalhatanya()
+{
+	return calcsunset(&utmz, &ulocation, ZENITH_AMITIS, 0);
+}
+
+ltime getelevationsunset()
+{
+	return calcsunset(&utmz, &ulocation, GEOMETRIC_ZENITH, 1);
+}
+
+ltime gettzaisbaalhatanya()
+{
+	return calcsunset(&utmz, &ulocation, ZENITH_6_D, 1);
+}
+
+ltime gettzais8p5()
+{
+	return calcsunset(&utmz, &ulocation, ZENITH_8_P_5, 1);
+}
+
+ltime gettzais72()
+{
+	return calctimeoffset(getsunset(), MINUTES72);
+}
+
+long getshaahzmanisbaalhatanya()
+{
+	return calcshaahzmanis(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+}
+
+long getshaahzmanisgra()
+{
+	return calcshaahzmanis(getsunrise(), getsunset());
+}
+
+long getshaahzmanismga()
+{
+	return calcshaahzmanis(getalos72(), gettzais72());
 }
