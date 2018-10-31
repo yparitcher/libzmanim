@@ -1,6 +1,6 @@
 # Libzmanim
 
-a C library for zmanim
+a C library for zmanim and hebrew date
 
 a port of [KosherJava/Zmanim](https://github.com/KosherJava/zmanim) developed by Eliyahu Hershfeld.
 
@@ -14,7 +14,7 @@ this creates a shared and static library that can be used by including `zmanim.h
 
 ## Usage
 
-this library has a new type `ltime` which is a `long long int` used to store a time instance with milisecond precision (simalar to `time_t`).
+this library has a new type `ltime` which is a `long long int` used to store a time instance with milisecond precision (similar to `time_t`).
 
 the library need to be initialized with the desired date and location using the setall function.
 ```c
@@ -39,8 +39,8 @@ for further examples see the test.c file that implements a basic wrapper to show
 ```
 ./teststatic is interchangeable with ./testshared.
 
-note: due to the limitations of the C snadard library all times will show as if they in the computers timezone even though they are correctly calculated in the given timezone.
+note: due to the limitations of the C standard library all times will show as if they in the computers timezone even though they are correctly calculated in the given timezone.
 
 ## License
-sms-bot is Copyright (c) 2018 [Yparitcher](https://github.com/yparitcher).
+Libzmanim is Copyright (c) 2018 [Yparitcher](https://github.com/yparitcher).
 licensed under the [LGPL 2.1](https://opensource.org/licenses/LGPL-2.1) license. 

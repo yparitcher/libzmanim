@@ -12,11 +12,15 @@ if not, write tothe Free Software Foundation, Inc., 51 Franklin Street, Fifth Fl
 or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 ****/
 
-#ifndef NOAACALCULATOR_H
-#define NOAACALCULATOR_H
+#ifndef HEBREW_CALENDAR_H
+#define HEBREW_CALENDAR_H
 
-double calcJD(struct tm *date);
-double getUTCSunrise(struct tm *date, location *here, double zenith, unsigned int adjustForElevation);
-double getUTCSunset(struct tm *date, location *here, double zenith, unsigned int adjustForElevation);
+typedef struct {
+  int year;
+  int month;
+  int day;
+} hdate;
+
+void convertDate(struct tm *date, hdate *result);
 
 #endif

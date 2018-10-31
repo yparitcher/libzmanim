@@ -17,6 +17,7 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 #include <stdlib.h>
 #include <time.h>
 #include "zmanim.h"
+#include "hebrewcalendar.h"
 
 char* formattime(ltime ltime)
 {
@@ -41,6 +42,7 @@ int main(int argc, char *argv[])
 	long int offset = (long int) 3600 * timezone;
 	struct tm *pltm = localtime(&now);
 	struct tm ltm = *pltm;
+	hdate hebrewDate;
 
 	if ( argc != 1 )
 	{
@@ -114,6 +116,8 @@ int main(int argc, char *argv[])
 /*	for (int i = 100; i > 0; i--)
 	{
 */
+	convertDate(&ltm, &hebrewDate);
+		printf("date:            %d/%d/%d\n", hebrewDate.month, hebrewDate.day, hebrewDate.year);
 		printf("alos:            %s\n", formattime(getalosbaalhatanya()));
 		printf("misheyakir:      %s\n", formattime(getmisheyakir10p2degrees()));
 		printf("sunrise:         %s\n", formattime(getsunrise()));
