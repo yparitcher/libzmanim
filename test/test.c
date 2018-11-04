@@ -40,7 +40,6 @@ int main(int argc, char *argv[])
 	double elevation = 34;
 	float timezone = -4.0;
 	time_t now = time(NULL);
-	long int offset = (long int) 3600 * timezone;
 	struct tm *pltm = localtime(&now);
 	struct tm ltm = *pltm;
 	hdate hebrewDate;
@@ -109,7 +108,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-
+	long int offset = (long int) 3600 * timezone;
 	setall(&now, offset, latitude, longitude, elevation);
 /*	printf("%li\n%f\n%f\n%f\n%f\n", gettime(), getoffset(), getlatitude(), getlongitude(), getelevation());
 */
