@@ -29,6 +29,24 @@ once this setup is complete:
 
 call any of the get functions to get that zman as a ltime that can easily be converted to a `time_t` by `/ 1000`
 
+```
+./test
+date:            כ״ה חשון תשע״ט
+date:            8/25/5779
+alos:            11/03/2018 06:01:16.612 AM EDT
+misheyakir:      11/03/2018 06:37:02.166 AM EDT
+sunrise:         11/03/2018 07:28:19.327 AM EDT
+shma:            11/03/2018 10:01:35.206 AM EDT
+tefila:          11/03/2018 10:54:04.203 AM EDT
+chatzos:         11/03/2018 12:39:02.197 PM EDT
+mincha gedola:   11/03/2018 01:05:16.695 PM EDT
+mincha ketana:   11/03/2018 03:42:43.686 PM EDT
+plag hamincha:   11/03/2018 04:48:19.932 PM EDT
+sunset:          11/03/2018 05:49:45.203 PM EDT
+tzais:           11/03/2018 06:18:16.197 PM EDT
+shabbos ends:    11/03/2018 06:31:50.630 PM EDT
+```
+
 for further examples see the test.c file that implements a basic wrapper to show daily zmanim
 
 ### test usage:

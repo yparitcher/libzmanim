@@ -23,6 +23,7 @@ int setlatitude(double latitude);
 int setlongitude(double longitude);
 int setelevation(double elevation);
 int setall(time_t *time, double offset, double latitude, double longitude, double elevation);
+unsigned int  checksetup();
 
 time_t gettime();
 double getoffset();

@@ -20,11 +20,12 @@ staticobjects := $(patsubst $(SRCDIR)%.c,$(STATICDIR)%.o,$(wildcard $(SRCDIR)*.c
 TESTDIR=test/
 TESTLDFLAGS=-L$(LIBDIR)
 TESTLDLIBS=-lzmanim
+TESTLDLIB=-l:libzmanim.a
 testobjects := $(patsubst %.c,%.o,$(wildcard $(TESTDIR)*.c))
 
 VPATH = src $(INC_DIR)
 
-.PHONY: clean cleaner all shared static test teststatic testshared kindle fresh
+.PHONY: clean cleaner all shared static test teststatic testshared teststandard kindle fresh
 
 all:
 	$(MAKE) shared static
@@ -39,11 +40,13 @@ shared: $(LIBDIR)libzmanim.so
 
 static: $(LIBDIR)libzmanim.a
 
-test: teststatic testshared
+test: teststatic testshared teststandard
 
 teststatic: static $(TESTDIR)teststatic
 
 testshared: shared $(TESTDIR)testshared
+
+teststandard: static $(TESTDIR)test
 
 $(LIBDIR)libzmanim.so: $(sharedobjects)
 	$(CC) -shared $(LDFLAGS) $^ $(LDLIBS) -o $@
@@ -67,13 +70,16 @@ $(TESTDIR)teststatic: $(testobjects)
 $(TESTDIR)testshared: $(testobjects)
 		$(CC) $(TESTLDFLAGS) $^ $(TESTLDLIBS) -o $@
 
+$(TESTDIR)test: $(testobjects)
+		$(CC) $(TESTLDFLAGS) $^ $(TESTLDLIB) -lm -o $@
+
 testobjects: shared static
 
 clean:
 	rm -f $(SHAREDDIR)*.o $(STATICDIR)*.o $(TESTDIR)test.o
 
 cleaner: clean
-	rm -f $(LIBDIR)libzmanim.so $(LIBDIR)libzmanim.a $(TESTDIR)testshared $(TESTDIR)teststatic
+	rm -f $(LIBDIR)libzmanim.so $(LIBDIR)libzmanim.a $(TESTDIR)testshared $(TESTDIR)teststatic $(TESTDIR)test
 
 fresh:
 	$(MAKE) cleaner

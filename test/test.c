@@ -18,6 +18,7 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 #include <time.h>
 #include "zmanim.h"
 #include "hebrewcalendar.h"
+#include "hdateformat.h"
 
 char* formattime(ltime ltime)
 {
@@ -117,6 +118,7 @@ int main(int argc, char *argv[])
 	{
 */
 	convertDate(&ltm, &hebrewDate);
+		printf("date:            %s\n", hdateformat(&hebrewDate));
 		printf("date:            %d/%d/%d\n", hebrewDate.month, hebrewDate.day, hebrewDate.year);
 		printf("alos:            %s\n", formattime(getalosbaalhatanya()));
 		printf("misheyakir:      %s\n", formattime(getmisheyakir10p2degrees()));

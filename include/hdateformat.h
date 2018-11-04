@@ -12,16 +12,11 @@ if not, write tothe Free Software Foundation, Inc., 51 Franklin Street, Fifth Fl
 or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 ****/
 
-#ifndef HEBREW_CALENDAR_H
-#define HEBREW_CALENDAR_H
+#ifndef HDATE_FORMAT_H
+#define HDATE_FORMAT_H
 
-typedef struct {
-  int year;
-  int month;
-  int day;
-  int leap;
-} hdate;
-
-void convertDate(struct tm *date, hdate *result);
+char* numtohchar(int innum);
+const char* numtohmonth(int month, int leap);
+char* hdateformat(hdate *date);
 
 #endif
