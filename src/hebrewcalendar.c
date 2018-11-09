@@ -178,9 +178,9 @@ void convertDate(struct tm *date, hdate *result)
   		year++;
   	}
     long int ys  = HebrewCalendarElapsedDays(year);
-    int dayOfYear = (d - ys);
+    int dayOfYear = (d - ys)+1;
     int nissanStart = nissanCount(year);
-    if (dayOfYear < nissanStart) {
+    if (dayOfYear <= nissanStart) {
 	  month = 7;  //  Start at Tishri
 	  dayCount = 0;
     } else {
@@ -189,11 +189,12 @@ void convertDate(struct tm *date, hdate *result)
   	}
     while (dayOfYear > (dayCount + LastDayOfHebrewMonth(month, year)))
     {
-      month++;
       dayCount += LastDayOfHebrewMonth(month, year);
+      month++;
   	}
-    int day = dayOfYear - dayCount + 1;
+    int day = dayOfYear - dayCount ;
 	result->year = year;
 	result->month = month;
 	result->day = day;
+	result->leap = HebrewLeapYear(year);
 }
