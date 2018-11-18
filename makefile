@@ -71,7 +71,7 @@ $(TESTDIR)testshared: $(testobjects)
 		$(CC) $(TESTLDFLAGS) $^ $(TESTLDLIBS) -o $@
 
 $(TESTDIR)test: $(testobjects)
-		$(CC) $(TESTLDFLAGS) $^ $(TESTLDLIB) -lm -o $@
+		$(CC) $(TESTLDFLAGS) $^ $(TESTLDLIB) $(LDLIBS) -o $@
 
 testobjects: shared static
 

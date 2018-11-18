@@ -18,5 +18,6 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 char* numtohchar(int innum);
 const char* numtohmonth(int month, int leap);
 char* hdateformat(hdate *date);
+const char* parshahformat(parshah current);
 
 #endif

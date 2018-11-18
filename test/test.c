@@ -119,6 +119,17 @@ int main(int argc, char *argv[])
 	convertDate(&ltm, &hebrewDate);
 		printf("date:            %s\n", hdateformat(&hebrewDate));
 		printf("date:            %d/%d/%d\n", hebrewDate.month, hebrewDate.day, hebrewDate.year);
+		if (ltm.tm_wday == 6)
+		{
+			printf("parshah:         פרשת %s\n", parshahformat(getparshah(&hebrewDate)));
+		} else {
+			struct tm sat = ltm;
+			sat.tm_mday += (6-ltm.tm_wday);
+			mktime(&sat);
+			hdate shabbos;
+			convertDate(&sat, &shabbos);
+			printf("parshah:         פרשת %s\n", parshahformat(getparshah(&shabbos)));
+		}
 		printf("alos:            %s\n", formattime(getalosbaalhatanya()));
 		printf("misheyakir:      %s\n", formattime(getmisheyakir10p2degrees()));
 		printf("sunrise:         %s\n", formattime(getsunrise()));
