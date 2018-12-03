@@ -206,3 +206,108 @@ const char* parshahformat(parshah current)
 {
 	return parshahchar[current];
 }
+
+const char* yomtovformat(yomtov current)
+{
+	switch(current)
+	{
+		case CHOL:
+			break;
+		case PESACH_DAY1:
+		case PESACH_DAY2:
+			return "פסח";
+		case SHVEI_SHEL_PESACH:
+			return "שביעי של פסח";
+		case ACHRON_SHEL_PESACH:
+			return "אחרון של פסח";
+		case SHAVOUS_DAY1:
+		case SHAVOUS_DAY2:
+			return "שבועות";
+		case ROSH_HASHANAH_DAY1:
+		case ROSH_HASHANAH_DAY2:
+			return "ראש השנה";
+		case YOM_KIPPUR:
+			return "יום כיפור";
+		case SUKKOS_DAY1:
+		case SUKKOS_DAY2:
+			return "סוכות";
+		case SHMEINI_ATZERES:
+			return "שמיני עצרת";
+		case SIMCHAS_TORAH:
+			return "שמחת תורה";
+		case CHOL_HAMOED_PESACH_DAY1:
+		case CHOL_HAMOED_PESACH_DAY2:
+		case CHOL_HAMOED_PESACH_DAY3:
+		case CHOL_HAMOED_PESACH_DAY4:
+		case CHOL_HAMOED_PESACH_DAY5:
+			return "חול המועד פסח";
+		case CHOL_HAMOED_SUKKOS_DAY1:
+		case CHOL_HAMOED_SUKKOS_DAY2:
+		case CHOL_HAMOED_SUKKOS_DAY3:
+		case CHOL_HAMOED_SUKKOS_DAY4:
+		case CHOL_HAMOED_SUKKOS_DAY5:
+			return "חול המועד סוכות";
+		case HOSHANA_RABBAH:
+			return "הושענא רבה";
+		case PESACH_SHEINI:
+			return "פסח שני";
+		case LAG_BAOMER:
+			return "ל״ג בעומר";
+		case TU_BAV:
+			return "ט״ו באב";
+		case CHANUKAH_DAY1:
+		case CHANUKAH_DAY2:
+		case CHANUKAH_DAY3:
+		case CHANUKAH_DAY4:
+		case CHANUKAH_DAY5:
+		case CHANUKAH_DAY6:
+		case CHANUKAH_DAY7:
+		case CHANUKAH_DAY8:
+			return "חנוכה";
+		case TU_BISHVAT:
+			return "ט״ו בשבט";
+		case PURIM_KATAN:
+			return "פורים קטן";
+		case SHUSHAN_PURIM_KATAN:
+			return "שושן פורים קטן";
+		case PURIM:
+			return "פורים";
+		case SHUSHAN_PURIM:
+			return "שושן פורים";
+		case SHIVA_ASAR_BTAAMUZ:
+			return "שבעה עשר בתמוז";
+		case TISHA_BAV:
+			return "ט׳ באב";
+		case TZOM_GEDALIA:
+			return "צום גדליה";
+		case ASARAH_BTEVES:
+			return "עשרה בטבת";
+		case TAANIS_ESTER:
+			return "תענית אסתר";
+		case EREV_PESACH:
+			return "ערב פסח";
+		case EREV_SHAVOUS:
+			return "ערב שבועות";
+		case EREV_ROSH_HASHANAH:
+			return "ערב ראש השנה";
+		case EREV_YOM_KIPPUR:
+			return "ערב יום כיפור";
+		case EREV_SUKKOS:
+			return "ערב סוכות";
+		case SHKALIM:
+			return "שקלים";
+		case ZACHOR:
+			return "זכור";
+		case PARAH:
+			return "פרה";
+		case HACHODESH:
+			return "החודש";
+		case ROSH_CHODESH:
+			return "ראש חודש";
+		case MACHAR_CHODESH:
+			return "מחר חודש";
+		case SHABBOS_MEVORCHIM:
+			return "שבת מברכים";
+	}
+	return "\0";
+}

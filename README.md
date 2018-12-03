@@ -1,6 +1,6 @@
 # Libzmanim
 
-a C library for zmanim and hebrew date
+a C library for zmanim and hebrew dates
 
 a port of [KosherJava/Zmanim](https://github.com/KosherJava/zmanim) developed by Eliyahu Hershfeld.
 
