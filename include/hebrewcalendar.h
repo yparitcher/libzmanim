@@ -36,6 +36,8 @@ extern const parshah parshahlist[17][56];
 
 void convertDate(struct tm *date, hdate *result);
 void setEY(hdate *date, _Bool EY);
+double hdatejulian(hdate *date);
+void hdategregorian(hdate *date, struct tm *result);
 
 void hdateaddyear(hdate *date, int years);
 void hdateaddmonth(hdate *date, int months);

@@ -15,6 +15,8 @@ Based on code from Calendrical Calculations
 by Nachum Dershowitz and Edward M. Reingold, 
 Software---Practice & Experience, vol. 20, no. 9 (September, 1990), pp. 899--928.
 
+and code from Astronomical Algorithms by Jean Meeus
+
 and code from ICU licensed under the Unicode license
 	COPYRIGHT AND PERMISSION NOTICE (ICU 58 and later)
 
@@ -53,6 +55,7 @@ and code from ICU licensed under the Unicode license
 ****/
 
 #include <time.h>
+#include <math.h>
 #include "util.h"
 #include "NOAAcalculator.h"
 #include "hebrewcalendar.h"
@@ -226,6 +229,34 @@ void convertDate(struct tm *date, hdate *result)
 void setEY(hdate *date, _Bool EY)
 {
 	date->EY = EY;
+}
+
+double hdatejulian(hdate *date)
+{
+	double diff = 347996.5;
+	long int yearstart = HebrewCalendarElapsedDays(date->year);
+	return (date->dayofyear-1) + yearstart + diff;
+}
+
+void hdategregorian(hdate *date, struct tm *result)
+{
+	double jd = hdatejulian(date)+.5;
+	double A = floor((jd - 1867216.25)/36524.25);
+	double B = (jd + 1525 + A - floor(A/4));
+	double C = floor((B-122.1)/365.25);
+	double D = floor(C*365.25);
+	double E = floor((B-D)/30.6001);
+	int m,y;
+	if (E>13){m = E-13;}else{m = E-1;}
+	if (m>2){y = C-4716;}else{y = C-4715;}
+	result->tm_year = y-1900;
+	result->tm_mon = m-1;
+	result->tm_mday = (B - D - floor(E*30.6001));
+	result->tm_hour = date->hour;
+	result->tm_min = date->min;
+	result->tm_sec = date->sec;
+	result->tm_isdst=-1;
+	mktime(result);
 }
 
 void hdatesetdoy(hdate *date)
