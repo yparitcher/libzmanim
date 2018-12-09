@@ -124,40 +124,64 @@ int main(int argc, char *argv[])
 	{
 */
 	convertDate(&ltm, &hebrewDate);
-		printf("%-15.15s%d/%d/%d\n", "", (ltm.tm_mon+1), ltm.tm_mday, (ltm.tm_year+1900));
-		printf("%-15.15s%d/%d/%d\n", "", hebrewDate.month, hebrewDate.day, hebrewDate.year);
-		printf("%-15.15s%s\n", "", hdateformat(&hebrewDate));
-		if (getyomtov(&hebrewDate))
+//	printf("%-15.15s%d/%d/%d\n", "", (ltm.tm_mon+1), ltm.tm_mday, (ltm.tm_year+1900));
+//	printf("%-15.15s%d/%d/%d\n", "", hebrewDate.month, hebrewDate.day, hebrewDate.year);
+	printf("%-15.15s%s\n", "", hdateformat(&hebrewDate));
+	if (getyomtov(&hebrewDate))
+	{
+		printf("%-15.15s%s\n", "", yomtovformat(getyomtov(&hebrewDate)));
+	}
+	if (getroshchodesh(&hebrewDate))
+	{
+		printf("%-15.15s%s\n", "", yomtovformat(getroshchodesh(&hebrewDate)));
+	}
+	if (getshabbosmevorchim(&hebrewDate))
+	{
+		printf("%-15.15s%s\n", "", yomtovformat(getshabbosmevorchim(&hebrewDate)));
+	}
+	if (getparshah(&hebrewDate))
+	{
+		printf("%-15.15sפרשת %s\n", "", parshahformat(getparshah(&hebrewDate)));
+	} else {
+		hdate shabbos = hebrewDate;
+		hdateaddday(&shabbos, (7-hebrewDate.wday));
+		if (getparshah(&shabbos))
 		{
-			printf("%-15.15s%s\n", "", yomtovformat(getyomtov(&hebrewDate)));
+			printf("%-15.15sפרשת %s\n", "", parshahformat(getparshah(&shabbos)));
 		}
-		if (getparshah(&hebrewDate))
-		{
-			printf("%-15.15sפרשת %s\n", "", parshahformat(getparshah(&hebrewDate)));
-		} else {
-			struct tm sat = ltm;
-			sat.tm_mday += (6-ltm.tm_wday);
-			mktime(&sat);
-			hdate shabbos;
-			convertDate(&sat, &shabbos);
-			if (getparshah(&shabbos))
-			{
-				printf("%-15.15sפרשת %s\n", "", parshahformat(getparshah(&shabbos)));
-			}
-		}
-		printf("%-20.20s%s\n", "alos: ", formattime(getalosbaalhatanya()));
-		printf("%-20.20s%s\n", "misheyakir: ", formattime(getmisheyakir10p2degrees()));
-		printf("%-20.20s%s\n", "sunrise: ", formattime(getsunrise()));
-		printf("%-20.20s%s\n", "shma: ", formattime(getshmabaalhatanya()));
-		printf("%-20.20s%s\n", "tefila: ", formattime(gettefilabaalhatanya()));
-		printf("%-20.20s%s\n", "chatzos: ", formattime(getchatzosbaalhatanya()));
-		printf("%-20.20s%s\n", "mincha gedola: ", formattime(getminchagedolabaalhatanya()));
-		printf("%-20.20s%s\n", "mincha ketana: ", formattime(getminchaketanabaalhatanya()));
-		printf("%-20.20s%s\n", "plag hamincha: ", formattime(getplagbaalhatanya()));
-		if (ltm.tm_wday == 5) printf("%-20.20s%s\n", "candle lighting: ", formattime(getcandlelighting()));
-		printf("%-20.20s%s\n", "sunset: ", formattime(getsunset()));
+	}
+	if (getmacharchodesh(&hebrewDate))
+	{
+		printf("%-15.15s%s\n", "", yomtovformat(getmacharchodesh(&hebrewDate)));
+	}
+	if (getspecialshabbos(&hebrewDate))
+	{
+		printf("%-15.15sפרשת %s\n", "", yomtovformat(getspecialshabbos(&hebrewDate)));
+	}
+
+	printf("%-20.20s%s\n", "alos: ", formattime(getalosbaalhatanya()));
+	printf("%-20.20s%s\n", "misheyakir: ", formattime(getmisheyakir10p2degrees()));
+	printf("%-20.20s%s\n", "sunrise: ", formattime(getsunrise()));
+	printf("%-20.20s%s\n", "shma: ", formattime(getshmabaalhatanya()));
+	printf("%-20.20s%s\n", "tefila: ", formattime(gettefilabaalhatanya()));
+	printf("%-20.20s%s\n", "chatzos: ", formattime(getchatzosbaalhatanya()));
+	printf("%-20.20s%s\n", "mincha gedola: ", formattime(getminchagedolabaalhatanya()));
+	printf("%-20.20s%s\n", "mincha ketana: ", formattime(getminchaketanabaalhatanya()));
+	printf("%-20.20s%s\n", "plag hamincha: ", formattime(getplagbaalhatanya()));
+	if (iscandlelighting(&hebrewDate) == 1)
+	{
+		printf("%-20.20s%s\n", "candle lighting: ", formattime(getcandlelighting()));
+	}
+	printf("%-20.20s%s\n", "sunset: ", formattime(getsunset()));
+	if (iscandlelighting(&hebrewDate) == 2)
+	{
+		printf("%-20.20s%s\n", "candle lighting: ", formattime(gettzais8p5()));
+		printf("%-20.20s%s\n", "tzais: ", formattime(gettzais8p5()));
+	} else if (hebrewDate.wday == 7 || isassurbemelachah(&hebrewDate)){
+		printf("%-20.20s%s\n", "shabbos ends: ", formattime(gettzais8p5()));
+	} else {
 		printf("%-20.20s%s\n", "tzais: ", formattime(gettzaisbaalhatanya()));
-		if (ltm.tm_wday == 6) printf("%-20.20s%s\n", "shabbos ends: ", formattime(gettzais8p5()));
+	}
 /*	}
 */
 	return 0;
