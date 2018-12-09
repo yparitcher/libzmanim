@@ -86,7 +86,7 @@ ltime getDateFromTime(tmz *current, double time, location *here, int isSunrise)
 	result.tm_mon = current->tm.tm_mon;
 	result.tm_mday = current->tm.tm_mday;
 	result.tm_isdst = -1;
-	result.tm_mon += adjustment;
+	result.tm_mday += adjustment;
 
 	int hours = (int)calculatedTime;
 	calculatedTime -= hours;

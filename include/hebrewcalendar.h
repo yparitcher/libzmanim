@@ -19,6 +19,9 @@ typedef struct {
   int year;
   int month;
   int day;
+  int hour;
+  int min;
+  int sec;
   int wday;
   int dayofyear;
   _Bool leap;
@@ -33,6 +36,14 @@ extern const parshah parshahlist[17][56];
 
 void convertDate(struct tm *date, hdate *result);
 void setEY(hdate *date, _Bool EY);
+
+void hdateaddyear(hdate *date, int years);
+void hdateaddmonth(hdate *date, int months);
+void hdateaddday(hdate *date, int days);
+void hdateaddhour(hdate *date, int hours);
+void hdateaddminute(hdate *date, int minutes);
+void hdateaddsecond(hdate *date, int seconds);
+void hdateadd(hdate *date, int years, int months, int days, int hours, int minutes, int seconds);
 
 parshah getparshah(hdate *date);
 yomtov getyomtov(hdate *date);

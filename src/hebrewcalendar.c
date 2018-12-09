@@ -218,11 +218,210 @@ void convertDate(struct tm *date, hdate *result)
 	result->wday = (HebrewCalendarElapsedDays(year)+dayOfYear)%7;
 	result->dayofyear = dayOfYear;
 	result->leap = HebrewLeapYear(year);
+	result->hour = date->tm_hour;
+	result->min = date->tm_min;
+	result->sec = date->tm_sec;
 }
 
 void setEY(hdate *date, _Bool EY)
 {
 	date->EY = EY;
+}
+
+void hdatesetdoy(hdate *date)
+{
+	int year = date->year;
+	int month = date->month;
+	int day = date->day;
+	if (day == 30 && LastDayOfHebrewMonth(month, year) == 29){day = 29;}
+	int monthcount;
+    int dayOfYear;
+	if (month < 7)
+	{
+		monthcount = 1;
+		dayOfYear = nissanCount(year);
+	} else {
+		monthcount = 7;
+		dayOfYear = 0;
+	}
+	while (monthcount < month)
+	{
+		dayOfYear += LastDayOfHebrewMonth(monthcount, year);
+		monthcount++;
+	}
+	dayOfYear += day;
+	date->dayofyear = dayOfYear;
+	date->wday = (HebrewCalendarElapsedDays(year)+dayOfYear)%7;
+	date->leap = HebrewLeapYear(year);
+}
+
+void hdateaddyear(hdate *date, int years)
+{
+	int year = date->year;
+	int month = date->month;
+	int leap1 = date->leap;
+	year += years;
+	int leap2 = HebrewLeapYear(year);
+	if (leap1 != leap2)
+	{
+		if (leap1 && month == 13){month = 12;}
+		if (!leap1 && month == 12){month = 13;}
+	}
+	date->year = year;
+	date->month = month;
+	hdatesetdoy(date);
+}
+
+void hdateaddmonth(hdate *date, int months)
+{
+	_Bool last = 0;
+	if (date->day == 30) {last = 1;}
+	int monthcount = months;
+	while (monthcount > 0)
+	{
+		switch (date->month)
+		{
+			case 12:
+				if (date->leap){date->month++;}
+				else{date->month = 1;}
+				monthcount--;
+				break;
+			case 13:
+				date->month = 1;
+				monthcount--;
+				break;
+			case 6:
+				date->month++;
+				hdateaddyear(date, 1);
+				monthcount--;
+				break;
+			default:
+				date->month++;
+				monthcount--;
+				break;
+		 }
+	}
+	while (monthcount < 0)
+	{
+		switch (date->month)
+		{
+			case 1:
+				if (date->leap){date->month = 13;}
+				else{date->month = 12;}
+				monthcount++;
+				break;
+			case 7:
+				date->month--;
+				hdateaddyear(date, -1);
+				monthcount++;
+				break;
+			default:
+				date->month--;
+				monthcount++;
+				break;
+		 }
+	}
+	if (last && LastDayOfHebrewMonth(date->month, date->year) == 30){date->day = 30;}
+	hdatesetdoy(date);
+}
+
+void hdateaddday(hdate *date, int days)
+{
+	int daycount = days;
+	while (daycount > 0)
+	{
+		switch (date->day)
+		{
+			case 30:
+				date->day = 1;
+				hdateaddmonth(date, 1);
+				daycount--;
+				break;
+			case 29:
+				if (LastDayOfHebrewMonth(date->month, date->year) == 29)
+				{
+					date->day = 1;
+					hdateaddmonth(date, 1);
+				} else {
+					date->day++;
+				}
+				daycount--;
+				break;
+			default:
+				date->day++;
+				daycount--;
+				break;
+		}
+	}
+	while (daycount < 0)
+	{
+		switch (date->day)
+		{
+			case 1:
+				hdateaddmonth(date, -1);
+				if (LastDayOfHebrewMonth(date->month, date->year) == 30)
+				{
+					date->day = 30;
+				} else {
+					date->day = 29;
+				}
+				daycount++;
+				break;
+			default:
+				date->day--;
+				daycount++;
+				break;
+		}
+	}
+	hdatesetdoy(date);
+}
+
+void divideandcarry(int start, int *finish, int *carry, int divisor)
+{
+	*finish = start%divisor;
+	*carry = start/divisor;
+	if (*finish < 0)
+	{
+		*finish +=divisor;
+		--*carry;
+	}
+}
+
+void hdateaddhour(hdate *date, int hours)
+{
+	int hour = date->hour + hours;
+	int carry = 0;
+	divideandcarry(hour, &date->hour, &carry, 24);
+	if (carry){hdateaddday(date, carry);}
+	hdatesetdoy(date);
+}
+
+void hdateaddminute(hdate *date, int minutes)
+{
+	int minute = date->min + minutes;
+	int carry = 0;
+	divideandcarry(minute, &date->min, &carry, 60);
+	if (carry){hdateaddhour(date, carry);}
+	hdatesetdoy(date);
+}
+
+void hdateaddsecond(hdate *date, int seconds)
+{
+	int second = date->sec + seconds;
+	int carry = 0;
+	divideandcarry(second, &date->sec, &carry, 60);
+	if (carry){hdateaddminute(date, carry);}
+	hdatesetdoy(date);
+}
+
+void hdateadd(hdate *date, int years, int months, int days, int hours, int minutes, int seconds)
+{
+	if (years) {hdateaddyear(date, years);}
+	if (months) {hdateaddmonth(date, months);}
+	if (days) {hdateaddday(date, days);}
+	if (hours) {hdateaddhour(date, hours);}
+	if (minutes) {hdateaddminute(date, minutes);}
+	if (seconds) {hdateaddsecond(date, seconds);}
 }
 
 int getYearType(hdate *date)
