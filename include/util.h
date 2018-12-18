@@ -51,6 +51,21 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 #define MINUTES18 (18 * 60000)
 
 typedef struct {
+	int year;
+	int month;
+	int day;
+	int hour;
+	int min;
+	int sec;
+	int msec;
+	int wday;
+	int dayofyear;
+	long int offset;
+	_Bool leap;
+	_Bool EY;
+} hdate;
+
+typedef struct {
   struct tm tm;
   int tmz_msec;
   long int tmz_gmtoff;

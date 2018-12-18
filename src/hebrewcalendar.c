@@ -57,7 +57,6 @@ and code from ICU licensed under the Unicode license
 #include <time.h>
 #include <math.h>
 #include "util.h"
-#include "NOAAcalculator.h"
 #include "hebrewcalendar.h"
 
 const parshah parshahlist[17][56] = {
@@ -186,9 +185,10 @@ int nissanCount(int year)
 	return count;
 }
 
-void convertDate(struct tm *date, hdate *result)
+hdate convertDate(struct tm *date)
 {
-    double julianDay = calcJD(date);
+    hdate result;
+    double julianDay = gregorianjulian(date);
     long int d = (long int)julianDay - 347996;
 	double m = ((d * (double)25920) / (double)765433);
 	int year = (int)((19. * m) / 235.);
@@ -215,15 +215,16 @@ void convertDate(struct tm *date, hdate *result)
       month++;
   	}
     int day = dayOfYear - dayCount ;
-	result->year = year;
-	result->month = month;
-	result->day = day;
-	result->wday = (HebrewCalendarElapsedDays(year)+dayOfYear)%7;
-	result->dayofyear = dayOfYear;
-	result->leap = HebrewLeapYear(year);
-	result->hour = date->tm_hour;
-	result->min = date->tm_min;
-	result->sec = date->tm_sec;
+	result.year = year;
+	result.month = month;
+	result.day = day;
+	result.wday = (HebrewCalendarElapsedDays(year)+dayOfYear)%7;
+	result.dayofyear = dayOfYear;
+	result.leap = HebrewLeapYear(year);
+	result.hour = date->tm_hour;
+	result.min = date->tm_min;
+	result.sec = date->tm_sec;
+	return result;
 }
 
 void setEY(hdate *date, _Bool EY)
@@ -257,6 +258,30 @@ void hdategregorian(hdate *date, struct tm *result)
 	result->tm_sec = date->sec;
 	result->tm_isdst=-1;
 	mktime(result);
+}
+
+time_t hdatetime_t(hdate *date)
+{
+	time_t result = (HebrewCalendarElapsedDays(date->year)+(date->dayofyear-1))-2092591;
+	result = ((((((result*24)+date->hour)*60)+date->min)*60)+date->sec);
+	result -= date->offset;
+	return result;
+}
+
+double gregorianjulian(struct tm *date)
+{
+	int year = date->tm_year + 1900;
+	int month = date->tm_mon + 1;
+	int day = date->tm_mday;
+	if (month <= 2) {
+		year -= 1;
+		month += 12;
+	}
+	int A = floor(year/100);
+	int B = 2 - A + floor(A/4);
+
+	double JD = floor(365.25*(year + 4716)) + floor(30.6001*(month+1)) + day + B - 1524.5;
+	return JD;
 }
 
 void hdatesetdoy(hdate *date)
@@ -445,7 +470,16 @@ void hdateaddsecond(hdate *date, int seconds)
 	hdatesetdoy(date);
 }
 
-void hdateadd(hdate *date, int years, int months, int days, int hours, int minutes, int seconds)
+void hdateaddmsecond(hdate *date, int mseconds)
+{
+	int msecond = date->msec + mseconds;
+	int carry = 0;
+	divideandcarry(msecond, &date->msec, &carry, 1000);
+	if (carry){hdateaddsecond(date, carry);}
+	hdatesetdoy(date);
+}
+
+void hdateadd(hdate *date, int years, int months, int days, int hours, int minutes, int seconds, int mseconds)
 {
 	if (years) {hdateaddyear(date, years);}
 	if (months) {hdateaddmonth(date, months);}
@@ -453,6 +487,7 @@ void hdateadd(hdate *date, int years, int months, int days, int hours, int minut
 	if (hours) {hdateaddhour(date, hours);}
 	if (minutes) {hdateaddminute(date, minutes);}
 	if (seconds) {hdateaddsecond(date, seconds);}
+	if (mseconds) {hdateaddmsecond(date, mseconds);}
 }
 
 int getYearType(hdate *date)

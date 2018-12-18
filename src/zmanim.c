@@ -14,6 +14,7 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 
 #include <time.h>
 #include "util.h"
+#include "hebrewcalendar.h"
 #include "zmanim.h"
 #include "NOAAcalculator.h"
 #include "calculatorutil.h"
@@ -21,6 +22,7 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 settings setup;
 tmz utmz;
 location ulocation;
+hdate invalid = {0};
 
 int settime(time_t *time)
 {
@@ -112,371 +114,377 @@ unsigned int  checksetup()
 {
 	return ((unsigned int) FULLSETUP & setup.s);
 }
-ltime calcsunrise(tmz *date, location *here, double zenith, unsigned int adjustForElevation)
+hdate calcsunrise(hdate *date, location *here, double zenith, unsigned int adjustForElevation)
 {
-	if (checksetup() != FULLSETUP) return 0;
-	double sunrise = getUTCSunrise(&(date->tm), here, zenith, adjustForElevation);
+	double sunrise = getUTCSunrise(hdatejulian(date), here, zenith, adjustForElevation);
 	return getDateFromTime(date, sunrise, here, 1);
 }
 
-ltime calcsunset(tmz *date, location *here, double zenith, unsigned int adjustForElevation)
+hdate calcsunset(hdate *date, location *here, double zenith, unsigned int adjustForElevation)
 {
-	if (checksetup() != FULLSETUP) return 0;
-	double sunset = getUTCSunset(&(date->tm), here, zenith, adjustForElevation);
+	double sunset = getUTCSunset(hdatejulian(date), here, zenith, adjustForElevation);
 	return getDateFromTime(date, sunset, here, 0);
 }
 
-long calcshaahzmanis(ltime startday, ltime endday)
+long calcshaahzmanis(hdate startday, hdate endday)
 {
-	if (startday == 0 || endday == 0) return 0;
-	return (endday - startday) / 12;
+	long int start = HebrewCalendarElapsedDays(startday.year)+(startday.dayofyear-1);
+	long int end = HebrewCalendarElapsedDays(endday.year)+(endday.dayofyear-1);
+	long int diff = end - start;
+	diff = (diff * 24) + (endday.hour - startday.hour);
+	diff = (diff * 60) + (endday.min - startday.min);
+	diff = (diff * 60) + (endday.sec - startday.sec);
+	diff = (diff * 1000) + (endday.msec - startday.msec);
+	if (startday.year == 0 || endday.year == 0) return 0;
+	return diff / 12;
 }
 
-ltime calctimeoffset(ltime time, long offset)
+hdate calctimeoffset(hdate time, long offset)
 {
-	if (time == 0 || offset == 0) return 0;
-	return time + offset;
+	hdate result = {0};
+	if (time.year == 0 || offset == 0) return result;
+	result = time;
+	hdateaddmsecond(&result, offset);
+	return result;
 }
 
-ltime getalos()
+hdate getalos(hdate *date)
 {
-	return calcsunrise(&utmz, &ulocation, ZENITH_16_P_1, 0);
+	return calcsunrise(date, &ulocation, ZENITH_16_P_1, 0);
 }
 
-ltime getalosbaalhatanya()
+hdate getalosbaalhatanya(hdate *date)
 {
-	return calcsunrise(&utmz, &ulocation, ZENITH_16_P_9, 0);
+	return calcsunrise(date, &ulocation, ZENITH_16_P_9, 0);
 }
 
-ltime getalos26degrees()
+hdate getalos26degrees(hdate *date)
 {
-	return calcsunrise(&utmz, &ulocation, ZENITH_26_D, 0);
+	return calcsunrise(date, &ulocation, ZENITH_26_D, 0);
 }
 
-ltime getalos19p8degrees()
+hdate getalos19p8degrees(hdate *date)
 {
-	return calcsunrise(&utmz, &ulocation, ZENITH_19_P_8, 0);
+	return calcsunrise(date, &ulocation, ZENITH_19_P_8, 0);
 }
 
-ltime getalos18degrees()
+hdate getalos18degrees(hdate *date)
 {
-	return calcsunrise(&utmz, &ulocation, ZENITH_18_D, 0);
+	return calcsunrise(date, &ulocation, ZENITH_18_D, 0);
 }
 
-ltime getalos120()
+hdate getalos120(hdate *date)
 {
-	return calctimeoffset(getsunrise(), -MINUTES120);
+	return calctimeoffset(getsunrise(date), -MINUTES120);
 }
 
-ltime getalos120zmanis()
+hdate getalos120zmanis(hdate *date)
 {
-	long shaahzmanis = getshaahzmanisgra();
-	if (shaahzmanis == 0) return 0;
-	return calctimeoffset(getsunrise(), shaahzmanis * -2);
+	long shaahzmanis = getshaahzmanisgra(date);
+	if (shaahzmanis == 0) return invalid;
+	return calctimeoffset(getsunrise(date), shaahzmanis * -2);
 }
 
-ltime getalos96()
+hdate getalos96(hdate *date)
 {
-	return calctimeoffset(getsunrise(), -MINUTES96);
+	return calctimeoffset(getsunrise(date), -MINUTES96);
 }
 
-ltime getalos96zmanis()
+hdate getalos96zmanis(hdate *date)
 {
-	long shaahzmanis = getshaahzmanisgra();
-	if (shaahzmanis == 0) return 0;
-	return calctimeoffset(getsunrise(), shaahzmanis * -1.6);
+	long shaahzmanis = getshaahzmanisgra(date);
+	if (shaahzmanis == 0) return invalid;
+	return calctimeoffset(getsunrise(date), shaahzmanis * -1.6);
 }
 
-ltime getalos90()
+hdate getalos90(hdate *date)
 {
-	return calctimeoffset(getsunrise(), -MINUTES90);
+	return calctimeoffset(getsunrise(date), -MINUTES90);
 }
 
-ltime getalos90zmanis()
+hdate getalos90zmanis(hdate *date)
 {
-	long shaahzmanis = getshaahzmanisgra();
-	if (shaahzmanis == 0) return 0;
-	return calctimeoffset(getsunrise(), shaahzmanis * -1.5);
+	long shaahzmanis = getshaahzmanisgra(date);
+	if (shaahzmanis == 0) return invalid;
+	return calctimeoffset(getsunrise(date), shaahzmanis * -1.5);
 }
 
-ltime getalos72()
+hdate getalos72(hdate *date)
 {
-	return calctimeoffset(getsunrise(), -MINUTES72);
+	return calctimeoffset(getsunrise(date), -MINUTES72);
 }
 
-ltime getalos72zmanis()
+hdate getalos72zmanis(hdate *date)
 {
-	long shaahzmanis = getshaahzmanisgra();
-	if (shaahzmanis == 0) return 0;
-	return calctimeoffset(getsunrise(), shaahzmanis * -1.2);
+	long shaahzmanis = getshaahzmanisgra(date);
+	if (shaahzmanis == 0) return invalid;
+	return calctimeoffset(getsunrise(date), shaahzmanis * -1.2);
 }
 
-ltime getalos60()
+hdate getalos60(hdate *date)
 {
-	return calctimeoffset(getsunrise(), -MINUTES60);
+	return calctimeoffset(getsunrise(date), -MINUTES60);
 }
 
-ltime getmisheyakir11p5degrees()
+hdate getmisheyakir11p5degrees(hdate *date)
 {
-	return calcsunrise(&utmz, &ulocation, ZENITH_11_P_5, 0);
+	return calcsunrise(date, &ulocation, ZENITH_11_P_5, 0);
 }
 
-ltime getmisheyakir11degrees()
+hdate getmisheyakir11degrees(hdate *date)
 {
-	return calcsunrise(&utmz, &ulocation, ZENITH_11_D, 0);
+	return calcsunrise(date, &ulocation, ZENITH_11_D, 0);
 }
 
-ltime getmisheyakir10p2degrees()
+hdate getmisheyakir10p2degrees(hdate *date)
 {
-	return calcsunrise(&utmz, &ulocation, ZENITH_10_P_2, 0);
+	return calcsunrise(date, &ulocation, ZENITH_10_P_2, 0);
 }
 
-ltime getsunrise()
+hdate getsunrise(hdate *date)
 {
-	return calcsunrise(&utmz, &ulocation, GEOMETRIC_ZENITH, 0);
+	return calcsunrise(date, &ulocation, GEOMETRIC_ZENITH, 0);
 }
 
-ltime getsunrisebaalhatanya()
+hdate getsunrisebaalhatanya(hdate *date)
 {
-	return calcsunrise(&utmz, &ulocation, ZENITH_AMITIS, 0);
+	return calcsunrise(date, &ulocation, ZENITH_AMITIS, 0);
 }
 
-ltime getelevationsunrise()
+hdate getelevationsunrise(hdate *date)
 {
-	return calcsunrise(&utmz, &ulocation, GEOMETRIC_ZENITH, 1);
+	return calcsunrise(date, &ulocation, GEOMETRIC_ZENITH, 1);
 }
 
-ltime calcshma(ltime startday, ltime endday)
+hdate calcshma(hdate startday, hdate endday)
 {
 	long shaahzmanis = calcshaahzmanis(startday, endday);
 	return calctimeoffset(startday, shaahzmanis * 3);
 }
 
-ltime getshmabaalhatanya()
+hdate getshmabaalhatanya(hdate *date)
 {
-	return calcshma(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+	return calcshma(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
 }
 
-ltime getshmagra()
+hdate getshmagra(hdate *date)
 {
-	return calcshma(getsunrise(), getsunset());
+	return calcshma(getsunrise(date), getsunset(date));
 }
 
-ltime getshmamga()
+hdate getshmamga(hdate *date)
 {
-	return calcshma(getalos72(), gettzais72());
+	return calcshma(getalos72(date), gettzais72(date));
 }
 
-ltime calctefila(ltime startday, ltime endday)
+hdate calctefila(hdate startday, hdate endday)
 {
 	long shaahzmanis = calcshaahzmanis(startday, endday);
 	return calctimeoffset(startday, shaahzmanis * 4);
 }
 
-ltime gettefilabaalhatanya()
+hdate gettefilabaalhatanya(hdate *date)
 {
-	return calctefila(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+	return calctefila(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
 }
 
-ltime gettefilagra()
+hdate gettefilagra(hdate *date)
 {
-	return calctefila(getsunrise(), getsunset());
+	return calctefila(getsunrise(date), getsunset(date));
 }
 
-ltime gettefilamga()
+hdate gettefilamga(hdate *date)
 {
-	return calctefila(getalos72(), gettzais72());
+	return calctefila(getalos72(date), gettzais72(date));
 }
 
-ltime getachilaschometzbaalhatanya()
+hdate getachilaschometzbaalhatanya(hdate *date)
 {
-	return calctefila(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+	return calctefila(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
 }
 
-ltime getachilaschometzgra()
+hdate getachilaschometzgra(hdate *date)
 {
-	return calctefila(getsunrise(), getsunset());
+	return calctefila(getsunrise(date), getsunset(date));
 }
 
-ltime getachilaschometzmga()
+hdate getachilaschometzmga(hdate *date)
 {
-	return calctefila(getalos72(), gettzais72());
+	return calctefila(getalos72(date), gettzais72(date));
 }
 
-ltime calcbiurchometz(ltime startday, ltime endday)
+hdate calcbiurchometz(hdate startday, hdate endday)
 {
 	long shaahzmanis = calcshaahzmanis(startday, endday);
 	return calctimeoffset(startday, shaahzmanis * 5);
 }
 
-ltime getbiurchometzbaalhatanya()
+hdate getbiurchometzbaalhatanya(hdate *date)
 {
-	return calcbiurchometz(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+	return calcbiurchometz(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
 }
 
-ltime getbiurchometzgra()
+hdate getbiurchometzgra(hdate *date)
 {
-	return calcbiurchometz(getsunrise(), getsunset());
+	return calcbiurchometz(getsunrise(date), getsunset(date));
 }
 
-ltime getbiurchometzmga()
+hdate getbiurchometzmga(hdate *date)
 {
-	return calcbiurchometz(getalos72(), gettzais72());
+	return calcbiurchometz(getalos72(date), gettzais72(date));
 }
 
-ltime calcchatzos(ltime startday, ltime endday)
+hdate calcchatzos(hdate startday, hdate endday)
 {
 	long shaahzmanis = calcshaahzmanis(startday, endday);
 	return calctimeoffset(startday, shaahzmanis * 6);
 }
 
-ltime getchatzosbaalhatanya()
+hdate getchatzosbaalhatanya(hdate *date)
 {
-	return calcchatzos(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+	return calcchatzos(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
 }
 
-ltime getchatzosgra()
+hdate getchatzosgra(hdate *date)
 {
-	return calcchatzos(getsunrise(), getsunset());
+	return calcchatzos(getsunrise(date), getsunset(date));
 }
 
-ltime calcminchagedola(ltime startday, ltime endday)
+hdate calcminchagedola(hdate startday, hdate endday)
 {
 	long shaahzmanis = calcshaahzmanis(startday, endday);
 	return calctimeoffset(startday, shaahzmanis * 6.5);
 }
 
-ltime getminchagedolabaalhatanya()
+hdate getminchagedolabaalhatanya(hdate *date)
 {
-	return calcminchagedola(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+	return calcminchagedola(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
 }
 
-ltime getminchagedolagra()
+hdate getminchagedolagra(hdate *date)
 {
-	return calcminchagedola(getsunrise(), getsunset());
+	return calcminchagedola(getsunrise(date), getsunset(date));
 }
 
-ltime getminchagedolamga()
+hdate getminchagedolamga(hdate *date)
 {
-	return calcminchagedola(getalos72(), gettzais72());
+	return calcminchagedola(getalos72(date), gettzais72(date));
 }
 
-ltime calcminchagedola30min(ltime startday, ltime endday)
+hdate calcminchagedola30min(hdate startday, hdate endday)
 {
 	long shaahzmanis = calcshaahzmanis(startday, endday);
 	return calctimeoffset(startday, (shaahzmanis * 6) + 1800000);
 }
 
-ltime calcminchagedolagreater30min(ltime startday, ltime endday)
+hdate calcminchagedolagreater30min(hdate startday, hdate endday)
 {
-	ltime mg = calcminchagedola(startday, endday);
-	ltime mg30 = calcminchagedola30min(startday, endday);
-	return (mg >= mg30) ? mg : mg30;
+	return ((calcshaahzmanis(startday, endday)*0.5) >= 1800000) ? calcminchagedola(startday, endday) : calcminchagedola30min(startday, endday);
 }
 
-ltime getminchagedolabaalhatanyag30m()
+hdate getminchagedolabaalhatanyag30m(hdate *date)
 {
-	return calcminchagedolagreater30min(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+	return calcminchagedolagreater30min(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
 }
 
-ltime getminchagedolagrag30m()
+hdate getminchagedolagrag30m(hdate *date)
 {
-	return calcminchagedolagreater30min(getsunrise(), getsunset());
+	return calcminchagedolagreater30min(getsunrise(date), getsunset(date));
 }
 
-ltime getminchagedolamgag30m()
+hdate getminchagedolamgag30m(hdate *date)
 {
-	return calcminchagedolagreater30min(getalos72(), gettzais72());
+	return calcminchagedolagreater30min(getalos72(date), gettzais72(date));
 }
 
-ltime calcminchaketana(ltime startday, ltime endday)
+hdate calcminchaketana(hdate startday, hdate endday)
 {
 	long shaahzmanis = calcshaahzmanis(startday, endday);
 	return calctimeoffset(startday, shaahzmanis * 9.5);
 }
 
-ltime getminchaketanabaalhatanya()
+hdate getminchaketanabaalhatanya(hdate *date)
 {
-	return calcminchaketana(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+	return calcminchaketana(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
 }
 
-ltime getminchaketanagra()
+hdate getminchaketanagra(hdate *date)
 {
-	return calcminchaketana(getsunrise(), getsunset());
+	return calcminchaketana(getsunrise(date), getsunset(date));
 }
 
-ltime getminchaketanamga()
+hdate getminchaketanamga(hdate *date)
 {
-	return calcminchaketana(getalos72(), gettzais72());
+	return calcminchaketana(getalos72(date), gettzais72(date));
 }
 
-ltime calcplag(ltime startday, ltime endday)
+hdate calcplag(hdate startday, hdate endday)
 {
 	long shaahzmanis = calcshaahzmanis(startday, endday);
 	return calctimeoffset(startday, shaahzmanis * 10.75);
 }
 
-ltime getplagbaalhatanya()
+hdate getplagbaalhatanya(hdate *date)
 {
-	return calcplag(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+	return calcplag(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
 }
 
-ltime getplaggra()
+hdate getplaggra(hdate *date)
 {
-	return calcplag(getsunrise(), getsunset());
+	return calcplag(getsunrise(date), getsunset(date));
 }
 
-ltime getplagmga()
+hdate getplagmga(hdate *date)
 {
-	return calcplag(getalos72(), gettzais72());
+	return calcplag(getalos72(date), gettzais72(date));
 }
 
-ltime getcandlelighting()
+hdate getcandlelighting(hdate *date)
 {
-	return calctimeoffset(calcsunset(&utmz, &ulocation, GEOMETRIC_ZENITH, 0), -MINUTES18);
+	return calctimeoffset(calcsunset(date, &ulocation, GEOMETRIC_ZENITH, 0), -MINUTES18);
 }
 
-ltime getsunset()
+hdate getsunset(hdate *date)
 {
-	return calcsunset(&utmz, &ulocation, GEOMETRIC_ZENITH, 0);
+	return calcsunset(date, &ulocation, GEOMETRIC_ZENITH, 0);
 }
 
-ltime getsunsetbaalhatanya()
+hdate getsunsetbaalhatanya(hdate *date)
 {
-	return calcsunset(&utmz, &ulocation, ZENITH_AMITIS, 0);
+	return calcsunset(date, &ulocation, ZENITH_AMITIS, 0);
 }
 
-ltime getelevationsunset()
+hdate getelevationsunset(hdate *date)
 {
-	return calcsunset(&utmz, &ulocation, GEOMETRIC_ZENITH, 1);
+	return calcsunset(date, &ulocation, GEOMETRIC_ZENITH, 1);
 }
 
-ltime gettzaisbaalhatanya()
+hdate gettzaisbaalhatanya(hdate *date)
 {
-	return calcsunset(&utmz, &ulocation, ZENITH_6_D, 1);
+	return calcsunset(date, &ulocation, ZENITH_6_D, 1);
 }
 
-ltime gettzais8p5()
+hdate gettzais8p5(hdate *date)
 {
-	return calcsunset(&utmz, &ulocation, ZENITH_8_P_5, 1);
+	return calcsunset(date, &ulocation, ZENITH_8_P_5, 1);
 }
 
-ltime gettzais72()
+hdate gettzais72(hdate *date)
 {
-	return calctimeoffset(getsunset(), MINUTES72);
+	return calctimeoffset(getsunset(date), MINUTES72);
 }
 
-long getshaahzmanisbaalhatanya()
+long getshaahzmanisbaalhatanya(hdate *date)
 {
-	return calcshaahzmanis(getsunrisebaalhatanya(), getsunsetbaalhatanya());
+	return calcshaahzmanis(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
 }
 
-long getshaahzmanisgra()
+long getshaahzmanisgra(hdate *date)
 {
-	return calcshaahzmanis(getsunrise(), getsunset());
+	return calcshaahzmanis(getsunrise(date), getsunset(date));
 }
 
-long getshaahzmanismga()
+long getshaahzmanismga(hdate *date)
 {
-	return calcshaahzmanis(getalos72(), gettzais72());
+	return calcshaahzmanis(getalos72(date), gettzais72(date));
 }

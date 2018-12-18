@@ -14,6 +14,7 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 
 #include <time.h>
 #include "util.h"
+#include "hebrewcalendar.h"
 #include "zmanim.h"
 #include "calculatorutil.h"
 #include <math.h>
@@ -32,12 +33,12 @@ double degToRad(double angleDeg)
 	return (M_PI * angleDeg / 180.0);
 }
 
-long int getLocalMeanTimeOffset(tmz *now, location *here)
+long int getLocalMeanTimeOffset(hdate *now, location *here)
 {
-	return (long int) (here->longitude * 4 * 60 - now->tmz_gmtoff);
+	return (long int) (here->longitude * 4 * 60 - now->offset);
 }
 
-int getAntimeridianAdjustment(tmz *now, location *here)
+int getAntimeridianAdjustment(hdate *now, location *here)
 {
 	double localHoursOffset = getLocalMeanTimeOffset(now, here) / (double)3600;
 	/*if the offset is 20 hours or more in the future (never expected anywhere other
@@ -74,19 +75,20 @@ double adjustZenith(double zenith, double elevation)
 	return adjustedZenith;
 }
 
-ltime getDateFromTime(tmz *current, double time, location *here, int isSunrise)
+hdate getDateFromTime(hdate *current, double time, location *here, int isSunrise)
 {
-	struct tm result;
+	hdate result = {0};
 	if (isnan(time)) {
-		return 0;
+		return result;
 	}
 	int adjustment = getAntimeridianAdjustment(current, here);
 	double calculatedTime = time;
-	result.tm_year = current->tm.tm_year;
-	result.tm_mon = current->tm.tm_mon;
-	result.tm_mday = current->tm.tm_mday;
-	result.tm_isdst = -1;
-	result.tm_mday += adjustment;
+	result.year = current->year;
+	result.EY = current->EY;
+	result.offset = current->offset;
+	result.month = current->month;
+	result.day = current->day;
+	if (adjustment){hdateaddday(&result, adjustment);}
 
 	int hours = (int)calculatedTime;
 	calculatedTime -= hours;
@@ -97,16 +99,15 @@ ltime getDateFromTime(tmz *current, double time, location *here, int isSunrise)
 	int miliseconds = (int)(calculatedTime * 1000);
 	int localTimeHours = (int)here->longitude / 15;
 	if (isSunrise && localTimeHours + hours > 18) {
-		result.tm_mday -= 1;
+		hdateaddday(&result, -1);
 	} else if (!isSunrise && localTimeHours + hours < 6) {
-		result.tm_mday += 1;
+		hdateaddday(&result, +1);
 	}
 
-	result.tm_hour = hours;
-	result.tm_min = minutes;
-	result.tm_sec = seconds;
-	result.tm_sec += current->tmz_gmtoff;
-	time_t datet = mktime(&result);
-	ltime date = ((long long) datet * 1000) + miliseconds;
-	return date;
+	result.hour = hours;
+	result.min = minutes;
+	result.sec = seconds;
+	result.msec = miliseconds;
+	hdateaddsecond(&result, current->offset);
+	return result;
 }

@@ -15,8 +15,7 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 #ifndef NOAACALCULATOR_H
 #define NOAACALCULATOR_H
 
-double calcJD(struct tm *date);
-double getUTCSunrise(struct tm *date, location *here, double zenith, unsigned int adjustForElevation);
-double getUTCSunset(struct tm *date, location *here, double zenith, unsigned int adjustForElevation);
+double getUTCSunrise(double JD, location *here, double zenith, unsigned int adjustForElevation);
+double getUTCSunset(double JD, location *here, double zenith, unsigned int adjustForElevation);
 
 #endif

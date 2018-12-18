@@ -16,15 +16,16 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include "util.h"
 #include "zmanim.h"
 #include "hebrewcalendar.h"
 #include "hdateformat.h"
 
-char* formattime(ltime ltime)
+char* formattime(hdate date)
 {
 	static char final[32];
 	final[0] = '\0';
-	time_t time = ltime / 1000;
+	time_t time = hdatetime_t(&date);
 	struct tm *tm = localtime(&time);
 	strftime(final, 13, "%I:%M %p %Z", tm);
 	return final;
@@ -39,8 +40,7 @@ int main(int argc, char *argv[])
 	time_t now = time(NULL);
 	struct tm *pltm = localtime(&now);
 	struct tm ltm = *pltm;
-	hdate hebrewDate;
-	setEY(&hebrewDate, 0);
+	_Bool ey = 0;
 
 	if ( argc != 1 )
 	{
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 		}
 		if( -1 < atof(argv[7]) && atof(argv[7]) < 2 )
 		{
-				setEY(&hebrewDate, atof(argv[7]));
+				ey = atof(argv[7]);
 		}
 		else
 		{
@@ -123,7 +123,9 @@ int main(int argc, char *argv[])
 /*	for (int i = 100; i > 0; i--)
 	{
 */
-	convertDate(&ltm, &hebrewDate);
+	hdate hebrewDate = convertDate(&ltm);
+	hebrewDate.offset=offset;
+	setEY(&hebrewDate, ey);
 //	printf("%-15.15s%d/%d/%d\n", "", (ltm.tm_mon+1), ltm.tm_mday, (ltm.tm_year+1900));
 //	printf("%-15.15s%d/%d/%d\n", "", hebrewDate.month, hebrewDate.day, hebrewDate.year);
 	printf("%-15.15s%s\n", "", hdateformat(&hebrewDate));
@@ -159,28 +161,28 @@ int main(int argc, char *argv[])
 		printf("%-15.15sפרשת %s\n", "", yomtovformat(getspecialshabbos(&hebrewDate)));
 	}
 
-	printf("%-20.20s%s\n", "alos: ", formattime(getalosbaalhatanya()));
-	printf("%-20.20s%s\n", "misheyakir: ", formattime(getmisheyakir10p2degrees()));
-	printf("%-20.20s%s\n", "sunrise: ", formattime(getsunrise()));
-	printf("%-20.20s%s\n", "shma: ", formattime(getshmabaalhatanya()));
-	printf("%-20.20s%s\n", "tefila: ", formattime(gettefilabaalhatanya()));
-	printf("%-20.20s%s\n", "chatzos: ", formattime(getchatzosbaalhatanya()));
-	printf("%-20.20s%s\n", "mincha gedola: ", formattime(getminchagedolabaalhatanya()));
-	printf("%-20.20s%s\n", "mincha ketana: ", formattime(getminchaketanabaalhatanya()));
-	printf("%-20.20s%s\n", "plag hamincha: ", formattime(getplagbaalhatanya()));
+	printf("%-20.20s%s\n", "alos: ", formattime(getalosbaalhatanya(&hebrewDate)));
+	printf("%-20.20s%s\n", "misheyakir: ", formattime(getmisheyakir10p2degrees(&hebrewDate)));
+	printf("%-20.20s%s\n", "sunrise: ", formattime(getsunrise(&hebrewDate)));
+	printf("%-20.20s%s\n", "shma: ", formattime(getshmabaalhatanya(&hebrewDate)));
+	printf("%-20.20s%s\n", "tefila: ", formattime(gettefilabaalhatanya(&hebrewDate)));
+	printf("%-20.20s%s\n", "chatzos: ", formattime(getchatzosbaalhatanya(&hebrewDate)));
+	printf("%-20.20s%s\n", "mincha gedola: ", formattime(getminchagedolabaalhatanya(&hebrewDate)));
+	printf("%-20.20s%s\n", "mincha ketana: ", formattime(getminchaketanabaalhatanya(&hebrewDate)));
+	printf("%-20.20s%s\n", "plag hamincha: ", formattime(getplagbaalhatanya(&hebrewDate)));
 	if (iscandlelighting(&hebrewDate) == 1)
 	{
-		printf("%-20.20s%s\n", "candle lighting: ", formattime(getcandlelighting()));
+		printf("%-20.20s%s\n", "candle lighting: ", formattime(getcandlelighting(&hebrewDate)));
 	}
-	printf("%-20.20s%s\n", "sunset: ", formattime(getsunset()));
+	printf("%-20.20s%s\n", "sunset: ", formattime(getsunset(&hebrewDate)));
 	if (iscandlelighting(&hebrewDate) == 2)
 	{
-		printf("%-20.20s%s\n", "candle lighting: ", formattime(gettzais8p5()));
-		printf("%-20.20s%s\n", "tzais: ", formattime(gettzais8p5()));
+		printf("%-20.20s%s\n", "candle lighting: ", formattime(gettzais8p5(&hebrewDate)));
+		printf("%-20.20s%s\n", "tzais: ", formattime(gettzais8p5(&hebrewDate)));
 	} else if (hebrewDate.wday == 7 || isassurbemelachah(&hebrewDate)){
-		printf("%-20.20s%s\n", "shabbos ends: ", formattime(gettzais8p5()));
+		printf("%-20.20s%s\n", "shabbos ends: ", formattime(gettzais8p5(&hebrewDate)));
 	} else {
-		printf("%-20.20s%s\n", "tzais: ", formattime(gettzaisbaalhatanya()));
+		printf("%-20.20s%s\n", "tzais: ", formattime(gettzaisbaalhatanya(&hebrewDate)));
 	}
 /*	}
 */

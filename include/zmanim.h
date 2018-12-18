@@ -15,8 +15,6 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 #ifndef ZMANIM_H
 #define ZMANIM_H
 
-typedef long long int ltime;
-
 int settime(time_t *time);
 int setoffset(double offset);
 int setlatitude(double latitude);
@@ -31,75 +29,75 @@ double getlatitude();
 double getlongitude();
 double getelevation();
 
-ltime getalos();
-ltime getalosbaalhatanya();
-ltime getalos26degrees();
-ltime getalos19p8degrees();
-ltime getalos18degrees();
-ltime getalos120();
-ltime getalos120zmanis();
-ltime getalos96();
-ltime getalos96zmanis();
-ltime getalos90();
-ltime getalos90zmanis();
-ltime getalos72();
-ltime getalos72zmanis();
-ltime getalos60();
+hdate getalos(hdate *date);
+hdate getalosbaalhatanya(hdate *date);
+hdate getalos26degrees(hdate *date);
+hdate getalos19p8degrees(hdate *date);
+hdate getalos18degrees(hdate *date);
+hdate getalos120(hdate *date);
+hdate getalos120zmanis(hdate *date);
+hdate getalos96(hdate *date);
+hdate getalos96zmanis(hdate *date);
+hdate getalos90(hdate *date);
+hdate getalos90zmanis(hdate *date);
+hdate getalos72(hdate *date);
+hdate getalos72zmanis(hdate *date);
+hdate getalos60(hdate *date);
 
-ltime getmisheyakir11p5degrees();
-ltime getmisheyakir11degrees();
-ltime getmisheyakir10p2degrees();
+hdate getmisheyakir11p5degrees(hdate *date);
+hdate getmisheyakir11degrees(hdate *date);
+hdate getmisheyakir10p2degrees(hdate *date);
 
-ltime getsunrise();
-ltime getsunrisebaalhatanya();
-ltime getelevationsunrise();
+hdate getsunrise(hdate *date);
+hdate getsunrisebaalhatanya(hdate *date);
+hdate getelevationsunrise(hdate *date);
 
-ltime getshmabaalhatanya();
-ltime getshmagra();
-ltime getshmamga();
+hdate getshmabaalhatanya(hdate *date);
+hdate getshmagra(hdate *date);
+hdate getshmamga(hdate *date);
 
-ltime gettefilabaalhatanya();
-ltime gettefilagra();
-ltime gettefilamga();
+hdate gettefilabaalhatanya(hdate *date);
+hdate gettefilagra(hdate *date);
+hdate gettefilamga(hdate *date);
 
-ltime getachilaschometzbaalhatanya();
-ltime getachilaschometzgra();
-ltime getachilaschometzmga();
+hdate getachilaschometzbaalhatanya(hdate *date);
+hdate getachilaschometzgra(hdate *date);
+hdate getachilaschometzmga(hdate *date);
 
-ltime getbiurchometzbaalhatanya();
-ltime getbiurchometzgra();
-ltime getbiurchometzmga();
+hdate getbiurchometzbaalhatanya(hdate *date);
+hdate getbiurchometzgra(hdate *date);
+hdate getbiurchometzmga(hdate *date);
 
-ltime getchatzosbaalhatanya();
-ltime getchatzosgra();
+hdate getchatzosbaalhatanya(hdate *date);
+hdate getchatzosgra(hdate *date);
 
-ltime getminchagedolabaalhatanya();
-ltime getminchagedolagra();
-ltime getminchagedolamga();
-ltime getminchagedolabaalhatanyag30m();
-ltime getminchagedolagrag30m();
-ltime getminchagedolamgag30m();
+hdate getminchagedolabaalhatanya(hdate *date);
+hdate getminchagedolagra(hdate *date);
+hdate getminchagedolamga(hdate *date);
+hdate getminchagedolabaalhatanyag30m(hdate *date);
+hdate getminchagedolagrag30m(hdate *date);
+hdate getminchagedolamgag30m(hdate *date);
 
-ltime getminchaketanabaalhatanya();
-ltime getminchaketanagra();
-ltime getminchaketanamga();
+hdate getminchaketanabaalhatanya(hdate *date);
+hdate getminchaketanagra(hdate *date);
+hdate getminchaketanamga(hdate *date);
 
-ltime getplagbaalhatanya();
-ltime getplaggra();
-ltime getplagmga();
+hdate getplagbaalhatanya(hdate *date);
+hdate getplaggra(hdate *date);
+hdate getplagmga(hdate *date);
 
-ltime getcandlelighting();
+hdate getcandlelighting(hdate *date);
 
-ltime getsunset();
-ltime getsunsetbaalhatanya();
-ltime getelevationsunset();
+hdate getsunset(hdate *date);
+hdate getsunsetbaalhatanya(hdate *date);
+hdate getelevationsunset(hdate *date);
 
-ltime gettzaisbaalhatanya();
-ltime gettzais8p5();
-ltime gettzais72();
+hdate gettzaisbaalhatanya(hdate *date);
+hdate gettzais8p5(hdate *date);
+hdate gettzais72(hdate *date);
 
-long getshaahzmanisbaalhatanya();
-long getshaahzmanisgra();
-long getshaahzmanismga();
+long getshaahzmanisbaalhatanya(hdate *date);
+long getshaahzmanisgra(hdate *date);
+long getshaahzmanismga(hdate *date);
 
 #endif

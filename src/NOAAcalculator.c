@@ -25,22 +25,6 @@ https://github.com/KosherJava/zmanim/blob/master/src/net/sourceforge/zmanim/util
 #include "calculatorutil.h"
 #include <math.h>
 
-double calcJD(struct tm *date)
-{
-	int year = date->tm_year + 1900;
-	int month = date->tm_mon + 1;
-	int day = date->tm_mday;
-	if (month <= 2) {
-		year -= 1;
-		month += 12;
-	}
-	int A = floor(year/100);
-	int B = 2 - A + floor(A/4);
-
-	double JD = floor(365.25*(year + 4716)) + floor(30.6001*(month+1)) + day + B - 1524.5;
-	return JD;
-}
-
 double calcTimeJulianCent(double jd)
 {
 	double jcent = (jd - 2451545.0)/36525.0;
@@ -245,12 +229,12 @@ double calcSunsetUTC(double JD, double latitude, double longitude, double zenith
 	return timeUTC;
 }
 
-double getUTCSunrise(struct tm *date, location *here, double zenith, unsigned int adjustForElevation)
+double getUTCSunrise(double JD, location *here, double zenith, unsigned int adjustForElevation)
 {
 	double elevation = adjustForElevation ? here->elevation : 0;
 	double adjustedZenith = adjustZenith(zenith, elevation);
 
-	double sunrise = calcSunriseUTC(calcJD(date), here->latitude, -here->longitude, adjustedZenith);
+	double sunrise = calcSunriseUTC(JD, here->latitude, -here->longitude, adjustedZenith);
 	sunrise = sunrise / 60;
 
 	while (sunrise < 0.0)
@@ -264,12 +248,12 @@ double getUTCSunrise(struct tm *date, location *here, double zenith, unsigned in
 	return sunrise;
 }
 
-double getUTCSunset(struct tm *date, location *here, double zenith, unsigned int adjustForElevation)
+double getUTCSunset(double JD, location *here, double zenith, unsigned int adjustForElevation)
 {
 	double elevation = adjustForElevation ? here->elevation : 0;
 	double adjustedZenith = adjustZenith(zenith, elevation);
 
-	double sunset = calcSunsetUTC(calcJD(date), here->latitude, -here->longitude, adjustedZenith);
+	double sunset = calcSunsetUTC(JD, here->latitude, -here->longitude, adjustedZenith);
 	sunset = sunset / 60;
 
 	while (sunset < 0.0)

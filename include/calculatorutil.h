@@ -22,6 +22,6 @@ double degToRad(double angleDeg);
 
 double adjustZenith(double zenith, double elevation);
 
-ltime getDateFromTime(tmz *current, double time, location *here, int isSunrise);
+hdate getDateFromTime(hdate *current, double time, location *here, int isSunrise);
 
 #endif
