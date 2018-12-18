@@ -115,14 +115,9 @@ int main(int argc, char *argv[])
 
 	long int offset = (long int) 3600 * timezone;
 
-/*	for (int i = 100; i > 0; i--)
-	{
-*/
 	hdate hebrewDate = convertDate(&ltm);
 	hebrewDate.offset=offset;
 	setEY(&hebrewDate, ey);
-//	printf("%-15.15s%d/%d/%d\n", "", (ltm.tm_mon+1), ltm.tm_mday, (ltm.tm_year+1900));
-//	printf("%-15.15s%d/%d/%d\n", "", hebrewDate.month, hebrewDate.day, hebrewDate.year);
 	printf("%-15.15s%s\n", "", hdateformat(&hebrewDate));
 	if (getyomtov(&hebrewDate))
 	{
@@ -179,7 +174,5 @@ int main(int argc, char *argv[])
 	} else {
 		printf("%-20.20s%s\n", "tzais: ", formattime(gettzaisbaalhatanya(&hebrewDate, &here)));
 	}
-/*	}
-*/
 	return 0;
 }
