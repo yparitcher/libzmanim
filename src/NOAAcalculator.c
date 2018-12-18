@@ -22,8 +22,21 @@ https://github.com/KosherJava/zmanim/blob/master/src/net/sourceforge/zmanim/util
 #include "util.h"
 #include "zmanim.h"
 #include "NOAAcalculator.h"
-#include "calculatorutil.h"
 #include <math.h>
+
+const double refraction = 34 / 60.0;
+const double solarradius = 16 / 60.0;
+const double earthradius = 6356.9;
+
+double radToDeg(double angleRad)
+{
+	return (180.0 * angleRad / M_PI);
+}
+
+double degToRad(double angleDeg)
+{
+	return (M_PI * angleDeg / 180.0);
+}
 
 double calcTimeJulianCent(double jd)
 {
@@ -227,6 +240,22 @@ double calcSunsetUTC(double JD, double latitude, double longitude, double zenith
 	timeUTC = 720 + timeDiff - eqTime;
 
 	return timeUTC;
+}
+
+double getElevationAdjustment(double elevation)
+{
+	double elevationAdjustment = radToDeg(acos(earthradius / (earthradius + (elevation / 1000))));
+	return elevationAdjustment;
+}
+
+double adjustZenith(double zenith, double elevation)
+{
+	double adjustedZenith = zenith;
+	if (zenith == GEOMETRIC_ZENITH)
+	{
+		adjustedZenith = zenith + (solarradius + refraction + getElevationAdjustment(elevation));
+	}
+	return adjustedZenith;
 }
 
 double getUTCSunrise(double JD, location *here, double zenith, unsigned int adjustForElevation)
