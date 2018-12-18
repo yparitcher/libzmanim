@@ -13,11 +13,10 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 ****/
 
 #include <time.h>
-#include "util.h"
-#include "hebrewcalendar.h"
-#include "zmanim.h"
-#include "NOAAcalculator.h"
 #include <math.h>
+#include "hebrewcalendar.h"
+#include "NOAAcalculator.h"
+#include "zmanim.h"
 
 const hdate invalid = {0};
 

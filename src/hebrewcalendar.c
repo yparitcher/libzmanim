@@ -56,7 +56,6 @@ and code from ICU licensed under the Unicode license
 
 #include <time.h>
 #include <math.h>
-#include "util.h"
 #include "hebrewcalendar.h"
 
 const parshah parshahlist[17][56] = {

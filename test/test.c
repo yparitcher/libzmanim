@@ -12,13 +12,12 @@ if not, write tothe Free Software Foundation, Inc., 51 Franklin Street, Fifth Fl
 or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 ****/
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include <time.h>
-#include "util.h"
-#include "zmanim.h"
 #include "hebrewcalendar.h"
+#include "zmanim.h"
 #include "hdateformat.h"
 
 char* formattime(hdate date)

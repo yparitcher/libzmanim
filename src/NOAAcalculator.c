@@ -19,10 +19,9 @@ https://github.com/KosherJava/zmanim/blob/master/src/net/sourceforge/zmanim/util
 ************/
 
 #include <time.h>
-#include "util.h"
-#include "zmanim.h"
-#include "NOAAcalculator.h"
 #include <math.h>
+#include "hebrewcalendar.h"
+#include "NOAAcalculator.h"
 
 const double refraction = 34 / 60.0;
 const double solarradius = 16 / 60.0;
@@ -251,7 +250,7 @@ double getElevationAdjustment(double elevation)
 double adjustZenith(double zenith, double elevation)
 {
 	double adjustedZenith = zenith;
-	if (zenith == GEOMETRIC_ZENITH)
+	if (zenith == 90.0)
 	{
 		adjustedZenith = zenith + (solarradius + refraction + getElevationAdjustment(elevation));
 	}

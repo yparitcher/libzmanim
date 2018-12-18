@@ -14,7 +14,6 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 
 #include <string.h>
 #include <time.h>
-#include "util.h"
 #include "hebrewcalendar.h"
 #include "hdateformat.h"
 
