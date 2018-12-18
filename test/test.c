@@ -33,9 +33,7 @@ char* formattime(hdate date)
 
 int main(int argc, char *argv[])
 {
-	double latitude = 40.66896;
-	double longitude = -73.94284;
-	double elevation = 34;
+	location here ={.latitude = 40.66896, .longitude = -73.94284, .elevation = 34};
 	float timezone = -4.0;
 	time_t now = time(NULL);
 	struct tm *pltm = localtime(&now);
@@ -79,7 +77,7 @@ int main(int argc, char *argv[])
 		now = mktime(&ltm);
 		if ( -90 < atof(argv[4]) && atof(argv[4]) < 90 )
 		{
-			latitude = atof(argv[4]);
+			here.latitude = atof(argv[4]);
 		}
 		else
 		{
@@ -88,7 +86,7 @@ int main(int argc, char *argv[])
 		}
 		if ( -180 < atof(argv[5]) && atof(argv[5]) < 180)
 		{
-			longitude = atof(argv[5]);
+			here.longitude = atof(argv[5]);
 		}
 		else
 		{
@@ -116,9 +114,6 @@ int main(int argc, char *argv[])
 	}
 
 	long int offset = (long int) 3600 * timezone;
-	setall(&now, offset, latitude, longitude, elevation);
-/*	printf("%li\n%f\n%f\n%f\n%f\n", gettime(), getoffset(), getlatitude(), getlongitude(), getelevation());
-*/
 
 /*	for (int i = 100; i > 0; i--)
 	{
@@ -161,28 +156,28 @@ int main(int argc, char *argv[])
 		printf("%-15.15sפרשת %s\n", "", yomtovformat(getspecialshabbos(&hebrewDate)));
 	}
 
-	printf("%-20.20s%s\n", "alos: ", formattime(getalosbaalhatanya(&hebrewDate)));
-	printf("%-20.20s%s\n", "misheyakir: ", formattime(getmisheyakir10p2degrees(&hebrewDate)));
-	printf("%-20.20s%s\n", "sunrise: ", formattime(getsunrise(&hebrewDate)));
-	printf("%-20.20s%s\n", "shma: ", formattime(getshmabaalhatanya(&hebrewDate)));
-	printf("%-20.20s%s\n", "tefila: ", formattime(gettefilabaalhatanya(&hebrewDate)));
-	printf("%-20.20s%s\n", "chatzos: ", formattime(getchatzosbaalhatanya(&hebrewDate)));
-	printf("%-20.20s%s\n", "mincha gedola: ", formattime(getminchagedolabaalhatanya(&hebrewDate)));
-	printf("%-20.20s%s\n", "mincha ketana: ", formattime(getminchaketanabaalhatanya(&hebrewDate)));
-	printf("%-20.20s%s\n", "plag hamincha: ", formattime(getplagbaalhatanya(&hebrewDate)));
+	printf("%-20.20s%s\n", "alos: ", formattime(getalosbaalhatanya(&hebrewDate, &here)));
+	printf("%-20.20s%s\n", "misheyakir: ", formattime(getmisheyakir10p2degrees(&hebrewDate, &here)));
+	printf("%-20.20s%s\n", "sunrise: ", formattime(getsunrise(&hebrewDate, &here)));
+	printf("%-20.20s%s\n", "shma: ", formattime(getshmabaalhatanya(&hebrewDate, &here)));
+	printf("%-20.20s%s\n", "tefila: ", formattime(gettefilabaalhatanya(&hebrewDate, &here)));
+	printf("%-20.20s%s\n", "chatzos: ", formattime(getchatzosbaalhatanya(&hebrewDate, &here)));
+	printf("%-20.20s%s\n", "mincha gedola: ", formattime(getminchagedolabaalhatanya(&hebrewDate, &here)));
+	printf("%-20.20s%s\n", "mincha ketana: ", formattime(getminchaketanabaalhatanya(&hebrewDate, &here)));
+	printf("%-20.20s%s\n", "plag hamincha: ", formattime(getplagbaalhatanya(&hebrewDate, &here)));
 	if (iscandlelighting(&hebrewDate) == 1)
 	{
-		printf("%-20.20s%s\n", "candle lighting: ", formattime(getcandlelighting(&hebrewDate)));
+		printf("%-20.20s%s\n", "candle lighting: ", formattime(getcandlelighting(&hebrewDate, &here)));
 	}
-	printf("%-20.20s%s\n", "sunset: ", formattime(getsunset(&hebrewDate)));
+	printf("%-20.20s%s\n", "sunset: ", formattime(getsunset(&hebrewDate, &here)));
 	if (iscandlelighting(&hebrewDate) == 2)
 	{
-		printf("%-20.20s%s\n", "candle lighting: ", formattime(gettzais8p5(&hebrewDate)));
-		printf("%-20.20s%s\n", "tzais: ", formattime(gettzais8p5(&hebrewDate)));
+		printf("%-20.20s%s\n", "candle lighting: ", formattime(gettzais8p5(&hebrewDate, &here)));
+		printf("%-20.20s%s\n", "tzais: ", formattime(gettzais8p5(&hebrewDate, &here)));
 	} else if (hebrewDate.wday == 7 || isassurbemelachah(&hebrewDate)){
-		printf("%-20.20s%s\n", "shabbos ends: ", formattime(gettzais8p5(&hebrewDate)));
+		printf("%-20.20s%s\n", "shabbos ends: ", formattime(gettzais8p5(&hebrewDate, &here)));
 	} else {
-		printf("%-20.20s%s\n", "tzais: ", formattime(gettzaisbaalhatanya(&hebrewDate)));
+		printf("%-20.20s%s\n", "tzais: ", formattime(gettzaisbaalhatanya(&hebrewDate, &here)));
 	}
 /*	}
 */

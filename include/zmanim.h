@@ -15,89 +15,75 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 #ifndef ZMANIM_H
 #define ZMANIM_H
 
-int settime(time_t *time);
-int setoffset(double offset);
-int setlatitude(double latitude);
-int setlongitude(double longitude);
-int setelevation(double elevation);
-int setall(time_t *time, double offset, double latitude, double longitude, double elevation);
-unsigned int  checksetup();
+hdate getalos(hdate *date, location *here);
+hdate getalosbaalhatanya(hdate *date, location *here);
+hdate getalos26degrees(hdate *date, location *here);
+hdate getalos19p8degrees(hdate *date, location *here);
+hdate getalos18degrees(hdate *date, location *here);
+hdate getalos120(hdate *date, location *here);
+hdate getalos120zmanis(hdate *date, location *here);
+hdate getalos96(hdate *date, location *here);
+hdate getalos96zmanis(hdate *date, location *here);
+hdate getalos90(hdate *date, location *here);
+hdate getalos90zmanis(hdate *date, location *here);
+hdate getalos72(hdate *date, location *here);
+hdate getalos72zmanis(hdate *date, location *here);
+hdate getalos60(hdate *date, location *here);
 
-time_t gettime();
-double getoffset();
-double getlatitude();
-double getlongitude();
-double getelevation();
+hdate getmisheyakir11p5degrees(hdate *date, location *here);
+hdate getmisheyakir11degrees(hdate *date, location *here);
+hdate getmisheyakir10p2degrees(hdate *date, location *here);
 
-hdate getalos(hdate *date);
-hdate getalosbaalhatanya(hdate *date);
-hdate getalos26degrees(hdate *date);
-hdate getalos19p8degrees(hdate *date);
-hdate getalos18degrees(hdate *date);
-hdate getalos120(hdate *date);
-hdate getalos120zmanis(hdate *date);
-hdate getalos96(hdate *date);
-hdate getalos96zmanis(hdate *date);
-hdate getalos90(hdate *date);
-hdate getalos90zmanis(hdate *date);
-hdate getalos72(hdate *date);
-hdate getalos72zmanis(hdate *date);
-hdate getalos60(hdate *date);
+hdate getsunrise(hdate *date, location *here);
+hdate getsunrisebaalhatanya(hdate *date, location *here);
+hdate getelevationsunrise(hdate *date, location *here);
 
-hdate getmisheyakir11p5degrees(hdate *date);
-hdate getmisheyakir11degrees(hdate *date);
-hdate getmisheyakir10p2degrees(hdate *date);
+hdate getshmabaalhatanya(hdate *date, location *here);
+hdate getshmagra(hdate *date, location *here);
+hdate getshmamga(hdate *date, location *here);
 
-hdate getsunrise(hdate *date);
-hdate getsunrisebaalhatanya(hdate *date);
-hdate getelevationsunrise(hdate *date);
+hdate gettefilabaalhatanya(hdate *date, location *here);
+hdate gettefilagra(hdate *date, location *here);
+hdate gettefilamga(hdate *date, location *here);
 
-hdate getshmabaalhatanya(hdate *date);
-hdate getshmagra(hdate *date);
-hdate getshmamga(hdate *date);
+hdate getachilaschometzbaalhatanya(hdate *date, location *here);
+hdate getachilaschometzgra(hdate *date, location *here);
+hdate getachilaschometzmga(hdate *date, location *here);
 
-hdate gettefilabaalhatanya(hdate *date);
-hdate gettefilagra(hdate *date);
-hdate gettefilamga(hdate *date);
+hdate getbiurchometzbaalhatanya(hdate *date, location *here);
+hdate getbiurchometzgra(hdate *date, location *here);
+hdate getbiurchometzmga(hdate *date, location *here);
 
-hdate getachilaschometzbaalhatanya(hdate *date);
-hdate getachilaschometzgra(hdate *date);
-hdate getachilaschometzmga(hdate *date);
+hdate getchatzosbaalhatanya(hdate *date, location *here);
+hdate getchatzosgra(hdate *date, location *here);
 
-hdate getbiurchometzbaalhatanya(hdate *date);
-hdate getbiurchometzgra(hdate *date);
-hdate getbiurchometzmga(hdate *date);
+hdate getminchagedolabaalhatanya(hdate *date, location *here);
+hdate getminchagedolagra(hdate *date, location *here);
+hdate getminchagedolamga(hdate *date, location *here);
+hdate getminchagedolabaalhatanyag30m(hdate *date, location *here);
+hdate getminchagedolagrag30m(hdate *date, location *here);
+hdate getminchagedolamgag30m(hdate *date, location *here);
 
-hdate getchatzosbaalhatanya(hdate *date);
-hdate getchatzosgra(hdate *date);
+hdate getminchaketanabaalhatanya(hdate *date, location *here);
+hdate getminchaketanagra(hdate *date, location *here);
+hdate getminchaketanamga(hdate *date, location *here);
 
-hdate getminchagedolabaalhatanya(hdate *date);
-hdate getminchagedolagra(hdate *date);
-hdate getminchagedolamga(hdate *date);
-hdate getminchagedolabaalhatanyag30m(hdate *date);
-hdate getminchagedolagrag30m(hdate *date);
-hdate getminchagedolamgag30m(hdate *date);
+hdate getplagbaalhatanya(hdate *date, location *here);
+hdate getplaggra(hdate *date, location *here);
+hdate getplagmga(hdate *date, location *here);
 
-hdate getminchaketanabaalhatanya(hdate *date);
-hdate getminchaketanagra(hdate *date);
-hdate getminchaketanamga(hdate *date);
+hdate getcandlelighting(hdate *date, location *here);
 
-hdate getplagbaalhatanya(hdate *date);
-hdate getplaggra(hdate *date);
-hdate getplagmga(hdate *date);
+hdate getsunset(hdate *date, location *here);
+hdate getsunsetbaalhatanya(hdate *date, location *here);
+hdate getelevationsunset(hdate *date, location *here);
 
-hdate getcandlelighting(hdate *date);
+hdate gettzaisbaalhatanya(hdate *date, location *here);
+hdate gettzais8p5(hdate *date, location *here);
+hdate gettzais72(hdate *date, location *here);
 
-hdate getsunset(hdate *date);
-hdate getsunsetbaalhatanya(hdate *date);
-hdate getelevationsunset(hdate *date);
-
-hdate gettzaisbaalhatanya(hdate *date);
-hdate gettzais8p5(hdate *date);
-hdate gettzais72(hdate *date);
-
-long getshaahzmanisbaalhatanya(hdate *date);
-long getshaahzmanisgra(hdate *date);
-long getshaahzmanismga(hdate *date);
+long getshaahzmanisbaalhatanya(hdate *date, location *here);
+long getshaahzmanisgra(hdate *date, location *here);
+long getshaahzmanismga(hdate *date, location *here);
 
 #endif

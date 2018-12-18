@@ -66,28 +66,9 @@ typedef struct {
 } hdate;
 
 typedef struct {
-  struct tm tm;
-  int tmz_msec;
-  long int tmz_gmtoff;
-} tmz;
-
-typedef struct {
 	double latitude;
 	double longitude;
 	double elevation;
 } location;
-
-typedef union {
-	unsigned int s;
-	struct t {
-		unsigned int tm :1;
-		unsigned int of :1;
-		unsigned int la :1;
-		unsigned int lo :1;
-		unsigned int el :1;
-	}bf;
-}settings;
-
-#define FULLSETUP 31
 
 #endif

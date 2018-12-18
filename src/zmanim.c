@@ -19,101 +19,8 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 #include "NOAAcalculator.h"
 #include "calculatorutil.h"
 
-settings setup;
-tmz utmz;
-location ulocation;
-hdate invalid = {0};
+const hdate invalid = {0};
 
-int settime(time_t *time)
-{
-	utmz.tm = *localtime(time);
-	setup.bf.tm |= 1;
-	return 0;
-}
-
-int setoffset(double offset)
-{
-	if ( -46800000 < offset && offset < 54000000 )
-	{
-		utmz.tmz_gmtoff = offset;
-		setup.bf.of |= 1;
-		return 0;
-	}
-	return 2;
-}
-
-int setlatitude(double latitude)
-{
-	if ( -90 < latitude && latitude < 90 )
-	{
-		ulocation.latitude = latitude;
-		setup.bf.la |= 1;
-		return 0;
-	}
-	return 4;
-}
-
-int setlongitude(double longitude)
-{
-	if ( -180 < longitude && longitude < 180 )
-	{
-		ulocation.longitude = longitude;
-		setup.bf.lo |= 1;
-		return 0;
-	}
-	return 8;
-}
-
-int setelevation(double elevation)
-{
-	if ( -5000 < elevation && elevation < 5000 )
-	{
-		ulocation.elevation = elevation;
-		setup.bf.el |= 1;
-		return 0;
-	}
-	return 16;
-}
-
-time_t gettime()
-{
-	return mktime(&(utmz.tm));
-}
-
-double getoffset()
-{
-	return utmz.tmz_gmtoff;
-}
-
-double getlatitude()
-{
-	return ulocation.latitude;
-}
-
-double getlongitude()
-{
-	return ulocation.longitude;
-}
-
-double getelevation()
-{
-	return ulocation.elevation;
-}
-
-int setall(time_t *time, double offset, double latitude, double longitude, double elevation)
-{
-	int ti = settime(time);
-	int of = setoffset(offset);
-	int la = setlatitude(latitude);
-	int lo = setlongitude(longitude);
-	int el = setelevation(elevation);
-	return (ti + of + la + lo + el);
-}
-
-unsigned int  checksetup()
-{
-	return ((unsigned int) FULLSETUP & setup.s);
-}
 hdate calcsunrise(hdate *date, location *here, double zenith, unsigned int adjustForElevation)
 {
 	double sunrise = getUTCSunrise(hdatejulian(date), here, zenith, adjustForElevation);
@@ -148,112 +55,112 @@ hdate calctimeoffset(hdate time, long offset)
 	return result;
 }
 
-hdate getalos(hdate *date)
+hdate getalos(hdate *date, location *here)
 {
-	return calcsunrise(date, &ulocation, ZENITH_16_P_1, 0);
+	return calcsunrise(date, here, ZENITH_16_P_1, 0);
 }
 
-hdate getalosbaalhatanya(hdate *date)
+hdate getalosbaalhatanya(hdate *date, location *here)
 {
-	return calcsunrise(date, &ulocation, ZENITH_16_P_9, 0);
+	return calcsunrise(date, here, ZENITH_16_P_9, 0);
 }
 
-hdate getalos26degrees(hdate *date)
+hdate getalos26degrees(hdate *date, location *here)
 {
-	return calcsunrise(date, &ulocation, ZENITH_26_D, 0);
+	return calcsunrise(date, here, ZENITH_26_D, 0);
 }
 
-hdate getalos19p8degrees(hdate *date)
+hdate getalos19p8degrees(hdate *date, location *here)
 {
-	return calcsunrise(date, &ulocation, ZENITH_19_P_8, 0);
+	return calcsunrise(date, here, ZENITH_19_P_8, 0);
 }
 
-hdate getalos18degrees(hdate *date)
+hdate getalos18degrees(hdate *date, location *here)
 {
-	return calcsunrise(date, &ulocation, ZENITH_18_D, 0);
+	return calcsunrise(date, here, ZENITH_18_D, 0);
 }
 
-hdate getalos120(hdate *date)
+hdate getalos120(hdate *date, location *here)
 {
-	return calctimeoffset(getsunrise(date), -MINUTES120);
+	return calctimeoffset(getsunrise(date, here), -MINUTES120);
 }
 
-hdate getalos120zmanis(hdate *date)
+hdate getalos120zmanis(hdate *date, location *here)
 {
-	long shaahzmanis = getshaahzmanisgra(date);
+	long shaahzmanis = getshaahzmanisgra(date, here);
 	if (shaahzmanis == 0) return invalid;
-	return calctimeoffset(getsunrise(date), shaahzmanis * -2);
+	return calctimeoffset(getsunrise(date, here), shaahzmanis * -2);
 }
 
-hdate getalos96(hdate *date)
+hdate getalos96(hdate *date, location *here)
 {
-	return calctimeoffset(getsunrise(date), -MINUTES96);
+	return calctimeoffset(getsunrise(date, here), -MINUTES96);
 }
 
-hdate getalos96zmanis(hdate *date)
+hdate getalos96zmanis(hdate *date, location *here)
 {
-	long shaahzmanis = getshaahzmanisgra(date);
+	long shaahzmanis = getshaahzmanisgra(date, here);
 	if (shaahzmanis == 0) return invalid;
-	return calctimeoffset(getsunrise(date), shaahzmanis * -1.6);
+	return calctimeoffset(getsunrise(date, here), shaahzmanis * -1.6);
 }
 
-hdate getalos90(hdate *date)
+hdate getalos90(hdate *date, location *here)
 {
-	return calctimeoffset(getsunrise(date), -MINUTES90);
+	return calctimeoffset(getsunrise(date, here), -MINUTES90);
 }
 
-hdate getalos90zmanis(hdate *date)
+hdate getalos90zmanis(hdate *date, location *here)
 {
-	long shaahzmanis = getshaahzmanisgra(date);
+	long shaahzmanis = getshaahzmanisgra(date, here);
 	if (shaahzmanis == 0) return invalid;
-	return calctimeoffset(getsunrise(date), shaahzmanis * -1.5);
+	return calctimeoffset(getsunrise(date, here), shaahzmanis * -1.5);
 }
 
-hdate getalos72(hdate *date)
+hdate getalos72(hdate *date, location *here)
 {
-	return calctimeoffset(getsunrise(date), -MINUTES72);
+	return calctimeoffset(getsunrise(date, here), -MINUTES72);
 }
 
-hdate getalos72zmanis(hdate *date)
+hdate getalos72zmanis(hdate *date, location *here)
 {
-	long shaahzmanis = getshaahzmanisgra(date);
+	long shaahzmanis = getshaahzmanisgra(date, here);
 	if (shaahzmanis == 0) return invalid;
-	return calctimeoffset(getsunrise(date), shaahzmanis * -1.2);
+	return calctimeoffset(getsunrise(date, here), shaahzmanis * -1.2);
 }
 
-hdate getalos60(hdate *date)
+hdate getalos60(hdate *date, location *here)
 {
-	return calctimeoffset(getsunrise(date), -MINUTES60);
+	return calctimeoffset(getsunrise(date, here), -MINUTES60);
 }
 
-hdate getmisheyakir11p5degrees(hdate *date)
+hdate getmisheyakir11p5degrees(hdate *date, location *here)
 {
-	return calcsunrise(date, &ulocation, ZENITH_11_P_5, 0);
+	return calcsunrise(date, here, ZENITH_11_P_5, 0);
 }
 
-hdate getmisheyakir11degrees(hdate *date)
+hdate getmisheyakir11degrees(hdate *date, location *here)
 {
-	return calcsunrise(date, &ulocation, ZENITH_11_D, 0);
+	return calcsunrise(date, here, ZENITH_11_D, 0);
 }
 
-hdate getmisheyakir10p2degrees(hdate *date)
+hdate getmisheyakir10p2degrees(hdate *date, location *here)
 {
-	return calcsunrise(date, &ulocation, ZENITH_10_P_2, 0);
+	return calcsunrise(date, here, ZENITH_10_P_2, 0);
 }
 
-hdate getsunrise(hdate *date)
+hdate getsunrise(hdate *date, location *here)
 {
-	return calcsunrise(date, &ulocation, GEOMETRIC_ZENITH, 0);
+	return calcsunrise(date, here, GEOMETRIC_ZENITH, 0);
 }
 
-hdate getsunrisebaalhatanya(hdate *date)
+hdate getsunrisebaalhatanya(hdate *date, location *here)
 {
-	return calcsunrise(date, &ulocation, ZENITH_AMITIS, 0);
+	return calcsunrise(date, here, ZENITH_AMITIS, 0);
 }
 
-hdate getelevationsunrise(hdate *date)
+hdate getelevationsunrise(hdate *date, location *here)
 {
-	return calcsunrise(date, &ulocation, GEOMETRIC_ZENITH, 1);
+	return calcsunrise(date, here, GEOMETRIC_ZENITH, 1);
 }
 
 hdate calcshma(hdate startday, hdate endday)
@@ -262,19 +169,19 @@ hdate calcshma(hdate startday, hdate endday)
 	return calctimeoffset(startday, shaahzmanis * 3);
 }
 
-hdate getshmabaalhatanya(hdate *date)
+hdate getshmabaalhatanya(hdate *date, location *here)
 {
-	return calcshma(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
+	return calcshma(getsunrisebaalhatanya(date, here), getsunsetbaalhatanya(date, here));
 }
 
-hdate getshmagra(hdate *date)
+hdate getshmagra(hdate *date, location *here)
 {
-	return calcshma(getsunrise(date), getsunset(date));
+	return calcshma(getsunrise(date, here), getsunset(date, here));
 }
 
-hdate getshmamga(hdate *date)
+hdate getshmamga(hdate *date, location *here)
 {
-	return calcshma(getalos72(date), gettzais72(date));
+	return calcshma(getalos72(date, here), gettzais72(date, here));
 }
 
 hdate calctefila(hdate startday, hdate endday)
@@ -283,34 +190,34 @@ hdate calctefila(hdate startday, hdate endday)
 	return calctimeoffset(startday, shaahzmanis * 4);
 }
 
-hdate gettefilabaalhatanya(hdate *date)
+hdate gettefilabaalhatanya(hdate *date, location *here)
 {
-	return calctefila(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
+	return calctefila(getsunrisebaalhatanya(date, here), getsunsetbaalhatanya(date, here));
 }
 
-hdate gettefilagra(hdate *date)
+hdate gettefilagra(hdate *date, location *here)
 {
-	return calctefila(getsunrise(date), getsunset(date));
+	return calctefila(getsunrise(date, here), getsunset(date, here));
 }
 
-hdate gettefilamga(hdate *date)
+hdate gettefilamga(hdate *date, location *here)
 {
-	return calctefila(getalos72(date), gettzais72(date));
+	return calctefila(getalos72(date, here), gettzais72(date, here));
 }
 
-hdate getachilaschometzbaalhatanya(hdate *date)
+hdate getachilaschometzbaalhatanya(hdate *date, location *here)
 {
-	return calctefila(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
+	return calctefila(getsunrisebaalhatanya(date, here), getsunsetbaalhatanya(date, here));
 }
 
-hdate getachilaschometzgra(hdate *date)
+hdate getachilaschometzgra(hdate *date, location *here)
 {
-	return calctefila(getsunrise(date), getsunset(date));
+	return calctefila(getsunrise(date, here), getsunset(date, here));
 }
 
-hdate getachilaschometzmga(hdate *date)
+hdate getachilaschometzmga(hdate *date, location *here)
 {
-	return calctefila(getalos72(date), gettzais72(date));
+	return calctefila(getalos72(date, here), gettzais72(date, here));
 }
 
 hdate calcbiurchometz(hdate startday, hdate endday)
@@ -319,19 +226,19 @@ hdate calcbiurchometz(hdate startday, hdate endday)
 	return calctimeoffset(startday, shaahzmanis * 5);
 }
 
-hdate getbiurchometzbaalhatanya(hdate *date)
+hdate getbiurchometzbaalhatanya(hdate *date, location *here)
 {
-	return calcbiurchometz(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
+	return calcbiurchometz(getsunrisebaalhatanya(date, here), getsunsetbaalhatanya(date, here));
 }
 
-hdate getbiurchometzgra(hdate *date)
+hdate getbiurchometzgra(hdate *date, location *here)
 {
-	return calcbiurchometz(getsunrise(date), getsunset(date));
+	return calcbiurchometz(getsunrise(date, here), getsunset(date, here));
 }
 
-hdate getbiurchometzmga(hdate *date)
+hdate getbiurchometzmga(hdate *date, location *here)
 {
-	return calcbiurchometz(getalos72(date), gettzais72(date));
+	return calcbiurchometz(getalos72(date, here), gettzais72(date, here));
 }
 
 hdate calcchatzos(hdate startday, hdate endday)
@@ -340,14 +247,14 @@ hdate calcchatzos(hdate startday, hdate endday)
 	return calctimeoffset(startday, shaahzmanis * 6);
 }
 
-hdate getchatzosbaalhatanya(hdate *date)
+hdate getchatzosbaalhatanya(hdate *date, location *here)
 {
-	return calcchatzos(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
+	return calcchatzos(getsunrisebaalhatanya(date, here), getsunsetbaalhatanya(date, here));
 }
 
-hdate getchatzosgra(hdate *date)
+hdate getchatzosgra(hdate *date, location *here)
 {
-	return calcchatzos(getsunrise(date), getsunset(date));
+	return calcchatzos(getsunrise(date, here), getsunset(date, here));
 }
 
 hdate calcminchagedola(hdate startday, hdate endday)
@@ -356,19 +263,19 @@ hdate calcminchagedola(hdate startday, hdate endday)
 	return calctimeoffset(startday, shaahzmanis * 6.5);
 }
 
-hdate getminchagedolabaalhatanya(hdate *date)
+hdate getminchagedolabaalhatanya(hdate *date, location *here)
 {
-	return calcminchagedola(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
+	return calcminchagedola(getsunrisebaalhatanya(date, here), getsunsetbaalhatanya(date, here));
 }
 
-hdate getminchagedolagra(hdate *date)
+hdate getminchagedolagra(hdate *date, location *here)
 {
-	return calcminchagedola(getsunrise(date), getsunset(date));
+	return calcminchagedola(getsunrise(date, here), getsunset(date, here));
 }
 
-hdate getminchagedolamga(hdate *date)
+hdate getminchagedolamga(hdate *date, location *here)
 {
-	return calcminchagedola(getalos72(date), gettzais72(date));
+	return calcminchagedola(getalos72(date, here), gettzais72(date, here));
 }
 
 hdate calcminchagedola30min(hdate startday, hdate endday)
@@ -382,19 +289,19 @@ hdate calcminchagedolagreater30min(hdate startday, hdate endday)
 	return ((calcshaahzmanis(startday, endday)*0.5) >= 1800000) ? calcminchagedola(startday, endday) : calcminchagedola30min(startday, endday);
 }
 
-hdate getminchagedolabaalhatanyag30m(hdate *date)
+hdate getminchagedolabaalhatanyag30m(hdate *date, location *here)
 {
-	return calcminchagedolagreater30min(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
+	return calcminchagedolagreater30min(getsunrisebaalhatanya(date, here), getsunsetbaalhatanya(date, here));
 }
 
-hdate getminchagedolagrag30m(hdate *date)
+hdate getminchagedolagrag30m(hdate *date, location *here)
 {
-	return calcminchagedolagreater30min(getsunrise(date), getsunset(date));
+	return calcminchagedolagreater30min(getsunrise(date, here), getsunset(date, here));
 }
 
-hdate getminchagedolamgag30m(hdate *date)
+hdate getminchagedolamgag30m(hdate *date, location *here)
 {
-	return calcminchagedolagreater30min(getalos72(date), gettzais72(date));
+	return calcminchagedolagreater30min(getalos72(date, here), gettzais72(date, here));
 }
 
 hdate calcminchaketana(hdate startday, hdate endday)
@@ -403,19 +310,19 @@ hdate calcminchaketana(hdate startday, hdate endday)
 	return calctimeoffset(startday, shaahzmanis * 9.5);
 }
 
-hdate getminchaketanabaalhatanya(hdate *date)
+hdate getminchaketanabaalhatanya(hdate *date, location *here)
 {
-	return calcminchaketana(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
+	return calcminchaketana(getsunrisebaalhatanya(date, here), getsunsetbaalhatanya(date, here));
 }
 
-hdate getminchaketanagra(hdate *date)
+hdate getminchaketanagra(hdate *date, location *here)
 {
-	return calcminchaketana(getsunrise(date), getsunset(date));
+	return calcminchaketana(getsunrise(date, here), getsunset(date, here));
 }
 
-hdate getminchaketanamga(hdate *date)
+hdate getminchaketanamga(hdate *date, location *here)
 {
-	return calcminchaketana(getalos72(date), gettzais72(date));
+	return calcminchaketana(getalos72(date, here), gettzais72(date, here));
 }
 
 hdate calcplag(hdate startday, hdate endday)
@@ -424,67 +331,67 @@ hdate calcplag(hdate startday, hdate endday)
 	return calctimeoffset(startday, shaahzmanis * 10.75);
 }
 
-hdate getplagbaalhatanya(hdate *date)
+hdate getplagbaalhatanya(hdate *date, location *here)
 {
-	return calcplag(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
+	return calcplag(getsunrisebaalhatanya(date, here), getsunsetbaalhatanya(date, here));
 }
 
-hdate getplaggra(hdate *date)
+hdate getplaggra(hdate *date, location *here)
 {
-	return calcplag(getsunrise(date), getsunset(date));
+	return calcplag(getsunrise(date, here), getsunset(date, here));
 }
 
-hdate getplagmga(hdate *date)
+hdate getplagmga(hdate *date, location *here)
 {
-	return calcplag(getalos72(date), gettzais72(date));
+	return calcplag(getalos72(date, here), gettzais72(date, here));
 }
 
-hdate getcandlelighting(hdate *date)
+hdate getcandlelighting(hdate *date, location *here)
 {
-	return calctimeoffset(calcsunset(date, &ulocation, GEOMETRIC_ZENITH, 0), -MINUTES18);
+	return calctimeoffset(calcsunset(date, here, GEOMETRIC_ZENITH, 0), -MINUTES18);
 }
 
-hdate getsunset(hdate *date)
+hdate getsunset(hdate *date, location *here)
 {
-	return calcsunset(date, &ulocation, GEOMETRIC_ZENITH, 0);
+	return calcsunset(date, here, GEOMETRIC_ZENITH, 0);
 }
 
-hdate getsunsetbaalhatanya(hdate *date)
+hdate getsunsetbaalhatanya(hdate *date, location *here)
 {
-	return calcsunset(date, &ulocation, ZENITH_AMITIS, 0);
+	return calcsunset(date, here, ZENITH_AMITIS, 0);
 }
 
-hdate getelevationsunset(hdate *date)
+hdate getelevationsunset(hdate *date, location *here)
 {
-	return calcsunset(date, &ulocation, GEOMETRIC_ZENITH, 1);
+	return calcsunset(date, here, GEOMETRIC_ZENITH, 1);
 }
 
-hdate gettzaisbaalhatanya(hdate *date)
+hdate gettzaisbaalhatanya(hdate *date, location *here)
 {
-	return calcsunset(date, &ulocation, ZENITH_6_D, 1);
+	return calcsunset(date, here, ZENITH_6_D, 1);
 }
 
-hdate gettzais8p5(hdate *date)
+hdate gettzais8p5(hdate *date, location *here)
 {
-	return calcsunset(date, &ulocation, ZENITH_8_P_5, 1);
+	return calcsunset(date, here, ZENITH_8_P_5, 1);
 }
 
-hdate gettzais72(hdate *date)
+hdate gettzais72(hdate *date, location *here)
 {
-	return calctimeoffset(getsunset(date), MINUTES72);
+	return calctimeoffset(getsunset(date, here), MINUTES72);
 }
 
-long getshaahzmanisbaalhatanya(hdate *date)
+long getshaahzmanisbaalhatanya(hdate *date, location *here)
 {
-	return calcshaahzmanis(getsunrisebaalhatanya(date), getsunsetbaalhatanya(date));
+	return calcshaahzmanis(getsunrisebaalhatanya(date, here), getsunsetbaalhatanya(date, here));
 }
 
-long getshaahzmanisgra(hdate *date)
+long getshaahzmanisgra(hdate *date, location *here)
 {
-	return calcshaahzmanis(getsunrise(date), getsunset(date));
+	return calcshaahzmanis(getsunrise(date, here), getsunset(date, here));
 }
 
-long getshaahzmanismga(hdate *date)
+long getshaahzmanismga(hdate *date, location *here)
 {
-	return calcshaahzmanis(getalos72(date), gettzais72(date));
+	return calcshaahzmanis(getalos72(date, here), gettzais72(date, here));
 }
