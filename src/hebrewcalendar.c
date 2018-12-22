@@ -283,6 +283,23 @@ double gregorianjulian(struct tm *date)
 	return JD;
 }
 
+int hdatecompare(hdate date1, hdate date2)
+{
+	if (date1.year < date2.year){return 1;}
+	else if (date1.year > date2.year){return -1;}
+	else if (date1.dayofyear < date2.dayofyear){return 1;}
+	else if (date1.dayofyear > date2.dayofyear){return -1;}
+	else if (date1.hour < date2.hour){return 1;}
+	else if (date1.hour > date2.hour){return -1;}
+	else if (date1.min < date2.min){return 1;}
+	else if (date1.min > date2.min){return -1;}
+	else if (date1.sec < date2.sec){return 1;}
+	else if (date1.sec > date2.sec){return -1;}
+	else if (date1.msec < date2.msec){return 1;}
+	else if (date1.msec > date2.msec){return -1;}
+	else {return 0;}
+}
+
 void hdatesetdoy(hdate *date)
 {
 	int year = date->year;

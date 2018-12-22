@@ -61,6 +61,12 @@ double gregorianjulian(struct tm *date);
 // convert a hdate to a time_t
 time_t hdatetime_t(hdate *date);
 
+//compare 2 hdate:
+// returns 0 if they are the same
+// 1 if date1 < date2
+// and -1 if date1 > date2
+int hdatecompare(hdate date1, hdate date2);
+
 // functions to add or subtract from a hdate field and then normalize the result
 void hdateaddyear(hdate *date, int years);
 void hdateaddmonth(hdate *date, int months);
