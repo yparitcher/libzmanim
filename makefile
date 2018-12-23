@@ -10,12 +10,12 @@ CFLAGS=-Wall -Wextra -Wno-format-truncation -O2 -std=c99 -pedantic $(INC_DIR:%=-
 LDLIBS=-lm
 
 INC_DIR = include
-STATICDIR=build/static/
-SHAREDDIR=build/shared/
-LIBDIR=lib/
+STATICDIR=build/static
+SHAREDDIR=build/shared
+LIBDIR=lib
 SRCDIR=src/
-sharedobjects := $(patsubst $(SRCDIR)%.c,$(SHAREDDIR)%.o,$(wildcard $(SRCDIR)*.c))
-staticobjects := $(patsubst $(SRCDIR)%.c,$(STATICDIR)%.o,$(wildcard $(SRCDIR)*.c))
+sharedobjects := $(patsubst $(SRCDIR)%.c,$(SHAREDDIR)/%.o,$(wildcard $(SRCDIR)*.c))
+staticobjects := $(patsubst $(SRCDIR)%.c,$(STATICDIR)/%.o,$(wildcard $(SRCDIR)*.c))
 
 TESTDIR=test/
 TESTLDFLAGS=-L$(LIBDIR)
@@ -25,20 +25,23 @@ testobjects := $(patsubst %.c,%.o,$(wildcard $(TESTDIR)*.c))
 
 VPATH = src $(INC_DIR)
 
-.PHONY: clean cleaner all shared static test teststatic testshared teststandard kindle fresh
+.PHONY: clean cleaner all shared static test directories teststatic testshared teststandard kindle fresh
 
 all:
+	$(MAKE) directories
 	$(MAKE) shared static
 	$(MAKE) test
 
 kindle: CC = $(PREFIX)gcc
 kindle: AR = $(PREFIX)ar
 kindle: RANLIB = $(PREFIX)ranlib
-kindle: shared static test
+kindle: directories shared static test
 
-shared: $(LIBDIR)libzmanim.so
+directories: | $(SHAREDDIR) $(STATICDIR) $(LIBDIR)
 
-static: $(LIBDIR)libzmanim.a
+shared: $(LIBDIR)/libzmanim.so
+
+static: $(LIBDIR)/libzmanim.a
 
 test: teststatic testshared teststandard
 
@@ -48,17 +51,26 @@ testshared: shared $(TESTDIR)testshared
 
 teststandard: static $(TESTDIR)test
 
-$(LIBDIR)libzmanim.so: $(sharedobjects)
+$(LIBDIR):
+	mkdir -p $(LIBDIR)
+
+$(STATICDIR):
+	mkdir -p $(STATICDIR)
+
+$(SHAREDDIR):
+	mkdir -p $(SHAREDDIR)
+
+$(LIBDIR)/libzmanim.so: $(sharedobjects)
 	$(CC) -shared $(LDFLAGS) $^ $(LDLIBS) -o $@
 
-$(LIBDIR)libzmanim.a: $(staticobjects)
+$(LIBDIR)/libzmanim.a: $(staticobjects)
 	$(AR) rc $@ $^
 	$(RANLIB) $@
 
-$(SHAREDDIR)%.o: $(SRCDIR)%.c
+$(SHAREDDIR)/%.o: $(SRCDIR)%.c
 	$(CC) -fPIC -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
-$(STATICDIR)%.o: $(SRCDIR)%.c
+$(STATICDIR)/%.o: $(SRCDIR)%.c
 	$(CC) -static -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
 $(TESTDIR)%.o: $(TESTDIR)%.c
@@ -76,10 +88,10 @@ $(TESTDIR)test: $(testobjects)
 testobjects: shared static
 
 clean:
-	rm -f $(SHAREDDIR)*.o $(STATICDIR)*.o $(TESTDIR)test.o
+	rm -f $(SHAREDDIR)/*.o $(STATICDIR)/*.o $(TESTDIR)test.o
 
 cleaner: clean
-	rm -f $(LIBDIR)libzmanim.so $(LIBDIR)libzmanim.a $(TESTDIR)testshared $(TESTDIR)teststatic $(TESTDIR)test
+	rm -f $(LIBDIR)/libzmanim.so $(LIBDIR)/libzmanim.a $(TESTDIR)testshared $(TESTDIR)teststatic $(TESTDIR)test
 
 fresh:
 	$(MAKE) cleaner
