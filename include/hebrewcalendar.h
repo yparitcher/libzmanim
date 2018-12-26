@@ -33,15 +33,15 @@ extern const parshah parshahlist[17][56];
 
 // hdate struct
 typedef struct {
-	int year;
-	int month; // starts from nissan
-	int day;
-	int hour;
-	int min;
-	int sec;
+	int year; // 0 - ∞
+	int month; // starts from nissan 1 - 13
+	int day; // 1 - 30
+	int hour; // 0 - 23
+	int min; // 0 - 59
+	int sec; // 0 - 59
 	int msec;
-	int wday; // weekday
-	int dayofyear;
+	int wday; // weekdays 1 - 7
+	int dayofyear; // starts from tishrei
 	long int offset; // timezone offset in milliseconds
 	_Bool leap; // if leap year
 	_Bool EY; // if Eretz Yisroel (for yomtov & parshah)
