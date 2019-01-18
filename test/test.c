@@ -129,6 +129,8 @@ int main(int argc, char *argv[])
 	if (getshabbosmevorchim(&hebrewDate))
 	{
 		printf("%-15.15s%s\n", "", yomtovformat(getshabbosmevorchim(&hebrewDate)));
+		molad molad = getmolad(hebrewDate.year, hebrewDate.month+1);
+		printf("%-20.20s%d:%02d:%02d on %d\n", "molad: ", molad.hour, molad.min, molad.sec, molad.wday);
 	}
 	if (getparshah(&hebrewDate))
 	{

@@ -8,7 +8,7 @@ This library is distributed in the hope that it will be useful,but WITHOUT ANY W
 without even the impliedwarranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
 See the GNU Lesser General Public License for more details. 
 You should have received a copy of the GNU Lesser General Public License along with this library; 
-if not, write tothe Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA, 
+if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA, 
 or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 ****/
 
@@ -47,6 +47,11 @@ typedef struct {
 	_Bool EY; // if Eretz Yisroel (for yomtov & parshah)
 } hdate;
 
+// molad type: beware that the seconds are actually chalakim 1/1080 of an hour
+// and that the hebrew date is actually the next one when the hour > 18
+// also the molad is calculated in Yerushalayim Mean Time so cannot be easily converted.
+typedef hdate molad;
+
 // day from molad tohu until Rosh Hashana
 long int HebrewCalendarElapsedDays(int year);
 // convert struct tm to hdate
@@ -76,6 +81,13 @@ void hdateaddminute(hdate *date, int minutes);
 void hdateaddsecond(hdate *date, int seconds);
 void hdateaddmsecond(hdate *date, int mseconds);
 void hdateadd(hdate *date, int years, int months, int days, int hours, int minutes, int seconds, int mseconds);
+
+
+// Returns the molad of the given month remember month 1 is Nissan
+// beware that the seconds are actually chalakim 1/1080 of an hour
+// and that the hebrew date is actually the next one when the hour > 18
+// also the molad is calculated in Yerushalayim Mean Time so cannot be easily converted.
+molad getmolad(int year, int month);
 
 // if Shabbos get the current parshah otherwise return 0
 parshah getparshah(hdate *date);

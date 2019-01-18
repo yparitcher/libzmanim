@@ -506,6 +506,41 @@ void hdateadd(hdate *date, int years, int months, int days, int hours, int minut
 	if (mseconds) {hdateaddmsecond(date, mseconds);}
 }
 
+molad getmolad(int year, int month)
+{
+	hdate result ={0};
+	int MonthsElapsed =
+	(235 * ((year - 1) / 19))           // Months in complete cycles so far.
+	+ (12 * ((year - 1) % 19))          // Regular months in this cycle.
+	+ (7 * ((year - 1) % 19) + 1) / 19; // Leap months this cycle
+	if(month > 6)
+	{
+		MonthsElapsed += (month-7);
+	} else {
+		MonthsElapsed += (month+5);
+		if (HebrewLeapYear(year)){MonthsElapsed += 1;}
+	}
+
+	long int PartsElapsed = 204 + 793 * (MonthsElapsed % 1080);
+	long int HoursElapsed =
+	5 + 12 * MonthsElapsed + 793 * (MonthsElapsed  / 1080)
+	+ PartsElapsed / 1080;
+	long int ConjunctionDay = 29 * MonthsElapsed + (HoursElapsed) / 24;
+	int ConjunctionHour =(HoursElapsed % 24);
+	int ConjunctionMinute = (PartsElapsed % 1080) / 18;
+	int ConjunctionParts = (PartsElapsed % 1080) % 18;
+	result.year = 1;
+	result.month = 7;
+	result.day = 1;
+	hdateaddday(&result, ConjunctionDay);
+	result.hour = ConjunctionHour;
+	result.min = ConjunctionMinute;
+	result.sec = ConjunctionParts;
+	result.offset = 0;
+	hdateaddhour(&result, -6);
+	return result;
+}
+
 int getYearType(hdate *date)
 {
 	int yearWday = (HebrewCalendarElapsedDays(date->year)+1)%7;
