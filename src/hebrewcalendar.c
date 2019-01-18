@@ -784,6 +784,15 @@ yomtov getshabbosmevorchim(hdate *date)
 	return CHOL;
 }
 
+int getomer(hdate date)
+{
+	int omer = 0;
+	if (date.month == 1 && date.day >= 16) {omer = date.day - 15;}
+	if (date.month == 2) {omer = date.day + 15;}
+	if (date.month == 3 && date.day <= 5) {omer = date.day + 44;}
+	return omer;
+}
+
 _Bool istaanis(hdate *date)
 {
 	yomtov current = getyomtov(date);

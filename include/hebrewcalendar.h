@@ -101,6 +101,8 @@ yomtov getroshchodesh(hdate *date);
 yomtov getmacharchodesh(hdate *date);
 // if shabbos mevorchim return shabbos mevorchim otherwise return 0
 yomtov getshabbosmevorchim(hdate *date);
+// The omer count 1 - 49 or 0 if none
+int getomer(hdate date);
 
 _Bool istaanis(hdate *date);
 _Bool isassurbemelachah(hdate *date);
