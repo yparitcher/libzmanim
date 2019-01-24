@@ -52,6 +52,9 @@ typedef struct {
 // also the molad is calculated in Yerushalayim Mean Time so cannot be easily converted.
 typedef hdate molad;
 
+// get length of given month
+int LastDayOfHebrewMonth(int month, int year);
+
 // day from molad tohu until Rosh Hashana
 long int HebrewCalendarElapsedDays(int year);
 // convert struct tm to hdate
