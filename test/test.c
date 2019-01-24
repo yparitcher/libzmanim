@@ -19,6 +19,7 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 #include "hebrewcalendar.h"
 #include "zmanim.h"
 #include "hdateformat.h"
+#include "shuir.h"
 
 char* formattime(hdate date)
 {
@@ -180,5 +181,15 @@ int main(int argc, char *argv[])
 	} else {
 		printf("%-20.20s%s\n", "tzais: ", formattime(gettzaisbaalhatanya(&hebrewDate, &here)));
 	}
+
+	char chumashbuf[100];
+	chumash(hebrewDate, chumashbuf);
+	printf("%s\n", chumashbuf);
+	char tehillimbuf[100];
+	tehillim(hebrewDate, tehillimbuf);
+	printf("%s\n", tehillimbuf);
+	char rambambuf[100];
+	rambam(hebrewDate, rambambuf);
+	printf("%s\n", rambambuf);
 	return 0;
 }
