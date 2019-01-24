@@ -20,7 +20,8 @@ char* numtohchar(int innum);
 // convert int based Hebrew month (hdate.month) to char based representation.
 const char* numtohmonth(int month, int leap);
 // convert int based Hebrew weekday (hdate.wday) to char based representation.
-const char* numtowday(hdate date);
+// second argument is a booean if to use שבת (true) or שביעי (false)
+const char* numtowday(hdate date, _Bool shabbos);
 // convert hdate to char based representation.
 char* hdateformat(hdate *date);
 

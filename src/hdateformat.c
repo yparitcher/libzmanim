@@ -173,8 +173,9 @@ char* numtohchar(int innum)
 	return year;
 }
 
-const char* numtowday(hdate date)
+const char* numtowday(hdate date, _Bool shabbos)
 {
+	if (shabbos && (date.wday == 7)) {return hwday[0];}
 	return hwday[date.wday];
 }
 
