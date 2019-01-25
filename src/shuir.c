@@ -31,26 +31,26 @@ int chumash(hdate date, char* buffer)
 		if (date.day < st) {current = VZOT_HABERACHAH;}
 		else if  (date.day == st){
 			if (date.wday == 1){
-				return sprintf(buffer, "פרשת %s %s עם פירש״י", parshahformat(BERESHIT), numtowday(date, 0));
+				return sprintf(buffer, "פרשת %s\n%s עם פירש״י", parshahformat(BERESHIT), numtowday(date, 0));
 			}else if (date.wday == 7){
-				return sprintf(buffer, "פרשת %s %s עם פירש״י", parshahformat(VZOT_HABERACHAH), numtowday(date, 0));
+				return sprintf(buffer, "פרשת %s\n%s עם פירש״י", parshahformat(VZOT_HABERACHAH), numtowday(date, 0));
 			}else{
 				return sprintf(buffer, "פרשת %s %s - שביעי, %s ראשון - %s עם פירש״י", parshahformat(VZOT_HABERACHAH), numtowday(date, 0), parshahformat(BERESHIT), numtowday(date, 0));
 			}
 		}
 	}
-	return sprintf(buffer, "פרשת %s %s עם פירש״י", parshahformat(current), numtowday(date, 0));
+	return sprintf(buffer, "פרשת %s\n%s עם פירש״י", parshahformat(current), numtowday(date, 0));
 }
 
 int tehillim(hdate date, char* buffer)
 {
 	int current = date.day;
 	if (current == 29 && LastDayOfHebrewMonth(date.month, date.year) == 30) {current = 0;}
-	return sprintf(buffer, "%s %s", "תהלים", tehillimarray[current]);
+	return sprintf(buffer, "%s\n%s", "תהלים", tehillimarray[current]);
 }
 
 int rambam(hdate date, char* buffer)
 {
 	int current = ((HebrewCalendarElapsedDays(date.year)+date.dayofyear)- (2097823)) % 339;
-	return sprintf(buffer, "%s %s", "רמב״ם", rambamarray[current]);
+	return sprintf(buffer, "%s\n%s", "רמב״ם", rambamarray[current]);
 }
