@@ -184,7 +184,7 @@ int nissanCount(int year)
 	return count;
 }
 
-hdate convertDate(struct tm *date)
+hdate convertDate(struct tm date)
 {
     hdate result;
     double julianDay = gregorianjulian(date);
@@ -220,9 +220,9 @@ hdate convertDate(struct tm *date)
 	result.wday = (HebrewCalendarElapsedDays(year)+dayOfYear)%7;
 	result.dayofyear = dayOfYear;
 	result.leap = HebrewLeapYear(year);
-	result.hour = date->tm_hour;
-	result.min = date->tm_min;
-	result.sec = date->tm_sec;
+	result.hour = date.tm_hour;
+	result.min = date.tm_min;
+	result.sec = date.tm_sec;
 	return result;
 }
 
@@ -231,15 +231,16 @@ void setEY(hdate *date, _Bool EY)
 	date->EY = EY;
 }
 
-double hdatejulian(hdate *date)
+double hdatejulian(hdate date)
 {
 	double diff = 347996.5;
-	long int yearstart = HebrewCalendarElapsedDays(date->year);
-	return (date->dayofyear-1) + yearstart + diff;
+	long int yearstart = HebrewCalendarElapsedDays(date.year);
+	return (date.dayofyear-1) + yearstart + diff;
 }
 
-void hdategregorian(hdate *date, struct tm *result)
+struct tm hdategregorian(hdate date)
 {
+	struct tm result;
 	double jd = hdatejulian(date)+.5;
 	double A = floor((jd - 1867216.25)/36524.25);
 	double B = (jd + 1525 + A - floor(A/4));
@@ -249,29 +250,30 @@ void hdategregorian(hdate *date, struct tm *result)
 	int m,y;
 	if (E>13){m = E-13;}else{m = E-1;}
 	if (m>2){y = C-4716;}else{y = C-4715;}
-	result->tm_year = y-1900;
-	result->tm_mon = m-1;
-	result->tm_mday = (B - D - floor(E*30.6001));
-	result->tm_hour = date->hour;
-	result->tm_min = date->min;
-	result->tm_sec = date->sec;
-	result->tm_isdst=-1;
-	mktime(result);
-}
-
-time_t hdatetime_t(hdate *date)
-{
-	time_t result = (HebrewCalendarElapsedDays(date->year)+(date->dayofyear-1))-2092591;
-	result = ((((((result*24)+date->hour)*60)+date->min)*60)+date->sec);
-	result -= date->offset;
+	result.tm_year = y-1900;
+	result.tm_mon = m-1;
+	result.tm_mday = (B - D - floor(E*30.6001));
+	result.tm_hour = date.hour;
+	result.tm_min = date.min;
+	result.tm_sec = date.sec;
+	result.tm_isdst=-1;
+	mktime(&result);
 	return result;
 }
 
-double gregorianjulian(struct tm *date)
+time_t hdatetime_t(hdate date)
 {
-	int year = date->tm_year + 1900;
-	int month = date->tm_mon + 1;
-	int day = date->tm_mday;
+	time_t result = (HebrewCalendarElapsedDays(date.year)+(date.dayofyear-1))-2092591;
+	result = ((((((result*24)+date.hour)*60)+date.min)*60)+date.sec);
+	result -= date.offset;
+	return result;
+}
+
+double gregorianjulian(struct tm date)
+{
+	int year = date.tm_year + 1900;
+	int month = date.tm_mon + 1;
+	int day = date.tm_mday;
 	if (month <= 2) {
 		year -= 1;
 		month += 12;
@@ -541,38 +543,38 @@ molad getmolad(int year, int month)
 	return result;
 }
 
-int getYearType(hdate *date)
+int getYearType(hdate date)
 {
-	int yearWday = (HebrewCalendarElapsedDays(date->year)+1)%7;
-	if (date->leap)
+	int yearWday = (HebrewCalendarElapsedDays(date.year)+1)%7;
+	if (date.leap)
 	{
 		switch (yearWday)
 		{
 		case 2:
-			if (ShortKislev(date->year))
+			if (ShortKislev(date.year))
 			{
-				if (date->EY) { return 14;}
+				if (date.EY) { return 14;}
 				return 6;
 			}
-			if (LongHeshvan(date->year))
+			if (LongHeshvan(date.year))
 			{
-				if (date->EY) { return 15;}
+				if (date.EY) { return 15;}
 				return 7;
 			}
 			break;
 		case 3:
-			if (date->EY) { return 15;}
+			if (date.EY) { return 15;}
 			return 7;
 			break;
 		case 5:
-			if (ShortKislev(date->year)) {return 8;}
-			if (LongHeshvan(date->year)) {return 9;}
+			if (ShortKislev(date.year)) {return 8;}
+			if (LongHeshvan(date.year)) {return 9;}
 			break;
 		case 0:
-			if (ShortKislev(date->year)) {return 10;}
-			if (LongHeshvan(date->year))
+			if (ShortKislev(date.year)) {return 10;}
+			if (LongHeshvan(date.year))
 			{
-				if (date->EY) { return 16;}
+				if (date.EY) { return 16;}
 				return 11;
 			}
 			break;
@@ -581,41 +583,41 @@ int getYearType(hdate *date)
 		switch (yearWday)
 		{
 		case 2:
-			if (ShortKislev(date->year)) {return 0;}
-			if (LongHeshvan(date->year))
+			if (ShortKislev(date.year)) {return 0;}
+			if (LongHeshvan(date.year))
 			{
-				if (date->EY) { return 12;}
+				if (date.EY) { return 12;}
 				return 1;
 			}
 			break;
 		case 3:
-			if (date->EY) { return 12;}
+			if (date.EY) { return 12;}
 			return 1;
 			break;
 		case 5:
-			if (LongHeshvan(date->year)) {return 3;}
-			if (!ShortKislev(date->year))
+			if (LongHeshvan(date.year)) {return 3;}
+			if (!ShortKislev(date.year))
 			{
-				if (date->EY) { return 13;}
+				if (date.EY) { return 13;}
 				return 2;
 			}
 			break;
 		case 0:
-			if (ShortKislev(date->year)) {return 4;}
-			if (LongHeshvan(date->year)) {return 5;}
+			if (ShortKislev(date.year)) {return 4;}
+			if (LongHeshvan(date.year)) {return 5;}
 			break;
 		}
 	}
 	return -1;
 }
 
-parshah getparshah(hdate *date)
+parshah getparshah(hdate date)
 {
 	int yearType = getYearType(date);
 	//optimise
-	int yearWday = HebrewCalendarElapsedDays(date->year)%7;
-	int day = yearWday + date->dayofyear;
-	if (date->wday) {return NOPARSHAH;}
+	int yearWday = HebrewCalendarElapsedDays(date.year)%7;
+	int day = yearWday + date.dayofyear;
+	if (date.wday) {return NOPARSHAH;}
 	if (yearType >= 0)
 	{
 		return parshahlist[yearType][day/7];
@@ -623,164 +625,164 @@ parshah getparshah(hdate *date)
 	return NOPARSHAH;
 }
 
-yomtov getyomtov(hdate *date)
+yomtov getyomtov(hdate date)
 {
-	switch(date->month)
+	switch(date.month)
 	{
 		case 1:
-			if(date->day == 14) {return EREV_PESACH;}
-			if(date->day == 15) {return PESACH_DAY1;}
-			if(date->day == 16 && date->EY) {return CHOL_HAMOED_PESACH_DAY1;}
-			if(date->day == 16) {return PESACH_DAY2;}
-			if(date->day == 17 && date->EY) {return CHOL_HAMOED_PESACH_DAY2;}
-			if(date->day == 17) {return CHOL_HAMOED_PESACH_DAY1;}
-			if(date->day == 18 && date->EY) {return CHOL_HAMOED_PESACH_DAY3;}
-			if(date->day == 18) {return CHOL_HAMOED_PESACH_DAY2;}
-			if(date->day == 19 && date->EY) {return CHOL_HAMOED_PESACH_DAY4;}
-			if(date->day == 19) {return CHOL_HAMOED_PESACH_DAY3;}
-			if(date->day == 20 && date->EY) {return CHOL_HAMOED_PESACH_DAY5;}
-			if(date->day == 20) {return CHOL_HAMOED_PESACH_DAY4;}
-			if(date->day == 21) {return SHVEI_SHEL_PESACH;}
-			if(date->day == 22 && !date->EY) {return ACHRON_SHEL_PESACH;}
+			if(date.day == 14) {return EREV_PESACH;}
+			if(date.day == 15) {return PESACH_DAY1;}
+			if(date.day == 16 && date.EY) {return CHOL_HAMOED_PESACH_DAY1;}
+			if(date.day == 16) {return PESACH_DAY2;}
+			if(date.day == 17 && date.EY) {return CHOL_HAMOED_PESACH_DAY2;}
+			if(date.day == 17) {return CHOL_HAMOED_PESACH_DAY1;}
+			if(date.day == 18 && date.EY) {return CHOL_HAMOED_PESACH_DAY3;}
+			if(date.day == 18) {return CHOL_HAMOED_PESACH_DAY2;}
+			if(date.day == 19 && date.EY) {return CHOL_HAMOED_PESACH_DAY4;}
+			if(date.day == 19) {return CHOL_HAMOED_PESACH_DAY3;}
+			if(date.day == 20 && date.EY) {return CHOL_HAMOED_PESACH_DAY5;}
+			if(date.day == 20) {return CHOL_HAMOED_PESACH_DAY4;}
+			if(date.day == 21) {return SHVEI_SHEL_PESACH;}
+			if(date.day == 22 && !date.EY) {return ACHRON_SHEL_PESACH;}
 			break;
 		case 2:
-			if(date->day == 14) {return PESACH_SHEINI;}
-			if(date->day == 18) {return LAG_BAOMER;}
+			if(date.day == 14) {return PESACH_SHEINI;}
+			if(date.day == 18) {return LAG_BAOMER;}
 			break;
 		case 3:
-			if(date->day == 5) {return EREV_SHAVOUS;}
-			if(date->day == 6) {return SHAVOUS_DAY1;}
-			if(date->day == 7 && !date->EY) {return SHAVOUS_DAY2;}
+			if(date.day == 5) {return EREV_SHAVOUS;}
+			if(date.day == 6) {return SHAVOUS_DAY1;}
+			if(date.day == 7 && !date.EY) {return SHAVOUS_DAY2;}
 			break;
 		case 4:
-			if(date->day == 17 && date->wday) {return SHIVA_ASAR_BTAAMUZ;}
-			if(date->day == 18 && date->wday == 1) {return SHIVA_ASAR_BTAAMUZ;}
+			if(date.day == 17 && date.wday) {return SHIVA_ASAR_BTAAMUZ;}
+			if(date.day == 18 && date.wday == 1) {return SHIVA_ASAR_BTAAMUZ;}
 			break;
 		case 5:
-			if(date->day == 9 && date->wday) {return TISHA_BAV;}
-			if(date->day == 10 && date->wday == 1) {return TISHA_BAV;}
-			if(date->day == 15) {return TU_BAV;}
+			if(date.day == 9 && date.wday) {return TISHA_BAV;}
+			if(date.day == 10 && date.wday == 1) {return TISHA_BAV;}
+			if(date.day == 15) {return TU_BAV;}
 			break;
 		case 6:
-			if(date->day == 29) {return EREV_ROSH_HASHANAH;}
+			if(date.day == 29) {return EREV_ROSH_HASHANAH;}
 			break;
 		case 7:
-			if(date->day == 1) {return ROSH_HASHANAH_DAY1;}
-			if(date->day == 2) {return ROSH_HASHANAH_DAY2;}
-			if(date->day == 3 && date->wday) {return TZOM_GEDALIA;}
-			if(date->day == 4 && date->wday == 1) {return TZOM_GEDALIA;}
-			if(date->day == 9) {return EREV_YOM_KIPPUR;}
-			if(date->day == 10) {return YOM_KIPPUR;}
-			if(date->day == 14) {return EREV_SUKKOS;}
-			if(date->day == 15) {return SUKKOS_DAY1;}
-			if(date->day == 16 && date->EY) {return CHOL_HAMOED_SUKKOS_DAY1;}
-			if(date->day == 16) {return SUKKOS_DAY2;}
-			if(date->day == 17 && date->EY) {return CHOL_HAMOED_SUKKOS_DAY2;}
-			if(date->day == 17) {return CHOL_HAMOED_SUKKOS_DAY1;}
-			if(date->day == 18 && date->EY) {return CHOL_HAMOED_SUKKOS_DAY3;}
-			if(date->day == 18) {return CHOL_HAMOED_SUKKOS_DAY2;}
-			if(date->day == 19 && date->EY) {return CHOL_HAMOED_SUKKOS_DAY4;}
-			if(date->day == 19) {return CHOL_HAMOED_SUKKOS_DAY3;}
-			if(date->day == 20 && date->EY) {return CHOL_HAMOED_SUKKOS_DAY5;}
-			if(date->day == 20) {return CHOL_HAMOED_SUKKOS_DAY4;}
-			if(date->day == 21) {return HOSHANA_RABBAH;}
-			if(date->day == 22) {return SHMEINI_ATZERES;}
-			if(date->day == 23 && !date->EY) {return SIMCHAS_TORAH;}
+			if(date.day == 1) {return ROSH_HASHANAH_DAY1;}
+			if(date.day == 2) {return ROSH_HASHANAH_DAY2;}
+			if(date.day == 3 && date.wday) {return TZOM_GEDALIA;}
+			if(date.day == 4 && date.wday == 1) {return TZOM_GEDALIA;}
+			if(date.day == 9) {return EREV_YOM_KIPPUR;}
+			if(date.day == 10) {return YOM_KIPPUR;}
+			if(date.day == 14) {return EREV_SUKKOS;}
+			if(date.day == 15) {return SUKKOS_DAY1;}
+			if(date.day == 16 && date.EY) {return CHOL_HAMOED_SUKKOS_DAY1;}
+			if(date.day == 16) {return SUKKOS_DAY2;}
+			if(date.day == 17 && date.EY) {return CHOL_HAMOED_SUKKOS_DAY2;}
+			if(date.day == 17) {return CHOL_HAMOED_SUKKOS_DAY1;}
+			if(date.day == 18 && date.EY) {return CHOL_HAMOED_SUKKOS_DAY3;}
+			if(date.day == 18) {return CHOL_HAMOED_SUKKOS_DAY2;}
+			if(date.day == 19 && date.EY) {return CHOL_HAMOED_SUKKOS_DAY4;}
+			if(date.day == 19) {return CHOL_HAMOED_SUKKOS_DAY3;}
+			if(date.day == 20 && date.EY) {return CHOL_HAMOED_SUKKOS_DAY5;}
+			if(date.day == 20) {return CHOL_HAMOED_SUKKOS_DAY4;}
+			if(date.day == 21) {return HOSHANA_RABBAH;}
+			if(date.day == 22) {return SHMEINI_ATZERES;}
+			if(date.day == 23 && !date.EY) {return SIMCHAS_TORAH;}
 			break;
 		case 9:
-			if(date->day == 25) {return CHANUKAH_DAY1;}
-			if(date->day == 26) {return CHANUKAH_DAY2;}
-			if(date->day == 27) {return CHANUKAH_DAY3;}
-			if(date->day == 28) {return CHANUKAH_DAY4;}
-			if(date->day == 29) {return CHANUKAH_DAY5;}
-			if(date->day == 30) {return CHANUKAH_DAY6;}
+			if(date.day == 25) {return CHANUKAH_DAY1;}
+			if(date.day == 26) {return CHANUKAH_DAY2;}
+			if(date.day == 27) {return CHANUKAH_DAY3;}
+			if(date.day == 28) {return CHANUKAH_DAY4;}
+			if(date.day == 29) {return CHANUKAH_DAY5;}
+			if(date.day == 30) {return CHANUKAH_DAY6;}
 			break;
 		case 10:
-			if(date->day == 1)
-			{	if(ShortKislev(date->year)) {return CHANUKAH_DAY6;}
+			if(date.day == 1)
+			{	if(ShortKislev(date.year)) {return CHANUKAH_DAY6;}
 				else {return CHANUKAH_DAY7;}}
-			if(date->day == 2)
-			{	if(ShortKislev(date->year)) {return CHANUKAH_DAY7;}
+			if(date.day == 2)
+			{	if(ShortKislev(date.year)) {return CHANUKAH_DAY7;}
 				else {return CHANUKAH_DAY8;}}
-			if(date->day == 3 && ShortKislev(date->year)) {return CHANUKAH_DAY8;}
-			if(date->day == 10) {return ASARAH_BTEVES;}
+			if(date.day == 3 && ShortKislev(date.year)) {return CHANUKAH_DAY8;}
+			if(date.day == 10) {return ASARAH_BTEVES;}
 			break;
 		case 11:
-			if(date->day == 15) {return TU_BISHVAT;}
+			if(date.day == 15) {return TU_BISHVAT;}
 			break;
 		case 12:
-			if(!date->leap && date->day == 11 && date->wday == 5) {return TAANIS_ESTER;}
-			if(!date->leap && date->day == 13 && date->wday) {return TAANIS_ESTER;}
-			if(date->day == 14)
-			{	if(date->leap) {return PURIM_KATAN;}
+			if(!date.leap && date.day == 11 && date.wday == 5) {return TAANIS_ESTER;}
+			if(!date.leap && date.day == 13 && date.wday) {return TAANIS_ESTER;}
+			if(date.day == 14)
+			{	if(date.leap) {return PURIM_KATAN;}
 				else {return PURIM;}}
-			if(date->day == 15)
-			{	if(date->leap) {return SHUSHAN_PURIM_KATAN;}
+			if(date.day == 15)
+			{	if(date.leap) {return SHUSHAN_PURIM_KATAN;}
 				else {return SHUSHAN_PURIM;}}
 			break;
 		case 13:
-			if(date->day == 11 && date->wday == 5) {return TAANIS_ESTER;}
-			if(date->day == 13 && date->wday) {return TAANIS_ESTER;}
-			if(date->day == 14) {return PURIM;}
-			if(date->day == 15) {return SHUSHAN_PURIM;}
+			if(date.day == 11 && date.wday == 5) {return TAANIS_ESTER;}
+			if(date.day == 13 && date.wday) {return TAANIS_ESTER;}
+			if(date.day == 14) {return PURIM;}
+			if(date.day == 15) {return SHUSHAN_PURIM;}
 			break;
 	}
 	return CHOL;
 }
 
-yomtov getspecialshabbos(hdate *date)
+yomtov getspecialshabbos(hdate date)
 {
-	if(!date->wday)
+	if(!date.wday)
 	{
-		if((date->month == 11 && !date->leap) || (date->month == 12 && date->leap))
+		if((date.month == 11 && !date.leap) || (date.month == 12 && date.leap))
 		{
-			if(date->day == 25
-			|| date->day == 27
-			|| date->day == 29)
+			if(date.day == 25
+			|| date.day == 27
+			|| date.day == 29)
 			{return SHKALIM;}
 		}
-		if((date->month == 12 && !date->leap) || date->month == 13)
+		if((date.month == 12 && !date.leap) || date.month == 13)
 		{
-			if(date->day == 1) {return SHKALIM;}
-			if(date->day == 8
-			|| date->day == 9
-			|| date->day == 11
-			|| date->day == 13)
+			if(date.day == 1) {return SHKALIM;}
+			if(date.day == 8
+			|| date.day == 9
+			|| date.day == 11
+			|| date.day == 13)
 			{return ZACHOR;}
-			if(date->day == 18
-			|| date->day == 20
-			|| date->day == 22
-			|| date->day == 23)
+			if(date.day == 18
+			|| date.day == 20
+			|| date.day == 22
+			|| date.day == 23)
 			{return PARAH;}
-			if(date->day == 25
-			|| date->day == 27
-			|| date->day == 29)
+			if(date.day == 25
+			|| date.day == 27
+			|| date.day == 29)
 			{return HACHODESH;}
 		}
-		if(date->month == 1 && date->day == 1) {return HACHODESH;}
+		if(date.month == 1 && date.day == 1) {return HACHODESH;}
 	}
 	return CHOL;
 }
 
-yomtov getroshchodesh(hdate *date)
+yomtov getroshchodesh(hdate date)
 {
-	if (date->day == 30
-		|| (date->day == 1 && date->month != 7))
+	if (date.day == 30
+		|| (date.day == 1 && date.month != 7))
 	{return ROSH_CHODESH;}
 	return CHOL;
 }
 
-yomtov getmacharchodesh(hdate *date)
+yomtov getmacharchodesh(hdate date)
 {
-	if (date->wday) {return CHOL;}
-	if (date->day == 30 || date->day == 29) {return MACHAR_CHODESH;}
+	if (date.wday) {return CHOL;}
+	if (date.day == 30 || date.day == 29) {return MACHAR_CHODESH;}
 	return CHOL;
 }
 
-yomtov getshabbosmevorchim(hdate *date)
+yomtov getshabbosmevorchim(hdate date)
 {
-	if (date->wday) {return CHOL;}
-	if (date->day >= 23 && date->day <= 29) {return SHABBOS_MEVORCHIM;}
+	if (date.wday) {return CHOL;}
+	if (date.day >= 23 && date.day <= 29) {return SHABBOS_MEVORCHIM;}
 	return CHOL;
 }
 
@@ -793,7 +795,7 @@ int getomer(hdate date)
 	return omer;
 }
 
-_Bool istaanis(hdate *date)
+_Bool istaanis(hdate date)
 {
 	yomtov current = getyomtov(date);
 	if (current == YOM_KIPPUR
@@ -802,24 +804,24 @@ _Bool istaanis(hdate *date)
 	return 0;
 }
 
-_Bool isassurbemelachah(hdate *date)
+_Bool isassurbemelachah(hdate date)
 {
 	yomtov current = getyomtov(date);
-	if(!date->wday
+	if(!date.wday
 	|| (current >= PESACH_DAY1 && current <= SIMCHAS_TORAH))
 	{return 1;}
 	return 0;
 }
 
-int iscandlelighting(hdate *date)
+int iscandlelighting(hdate date)
 {
 	yomtov current = getyomtov(date);
 	if((current >= EREV_PESACH && current <= EREV_SUKKOS)
-	|| (current == CHOL_HAMOED_PESACH_DAY4 && !date->EY)
-	|| (current == CHOL_HAMOED_PESACH_DAY5 && date->EY)
+	|| (current == CHOL_HAMOED_PESACH_DAY4 && !date.EY)
+	|| (current == CHOL_HAMOED_PESACH_DAY5 && date.EY)
 	|| current == HOSHANA_RABBAH)
 	{
-		if(!date->wday){return 2;}
+		if(!date.wday){return 2;}
 		return 1;
 	}
 	if(current == PESACH_DAY1
@@ -832,12 +834,12 @@ int iscandlelighting(hdate *date)
 	|| current == SHAVOUS_DAY2
 	|| current == ROSH_HASHANAH_DAY2
 	|| current == SIMCHAS_TORAH)
-	&& date->wday == 6) {return 2;}
-	if(date->wday == 6) {return 1;}
-	if((date->month == 9 && date->day == 24)
+	&& date.wday == 6) {return 2;}
+	if(date.wday == 6) {return 1;}
+	if((date.month == 9 && date.day == 24)
 	|| (current >= CHANUKAH_DAY1 && current <= CHANUKAH_DAY7))
 	{
-		if(!date->wday){return 2;}
+		if(!date.wday){return 2;}
 		return 3;
 	}
 	return 0;

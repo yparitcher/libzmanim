@@ -16,7 +16,7 @@ this creates a shared and static library that can be used by including the heade
 
 this library has a new struct `hdate` which is like `struct tm` used to store a date instance in the hebrew calendar.
 
-one can initialize the members directly or use the `hdate convertDate(struct tm *date)` function to convert a gregorian date, along with other functions in `hebrewcalendar.c` to manipulate it or get yomtov parshah etc.
+one can initialize the members directly or use the `hdate convertDate(struct tm date)` function to convert a gregorian date, along with other functions in `hebrewcalendar.c` to manipulate it or get yomtov parshah etc.
 
 for more documentation read the header files.
 

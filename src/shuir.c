@@ -25,7 +25,7 @@ int chumash(hdate date, char* buffer)
 	parshah current = NOPARSHAH;
 	hdate shabbos = date;
 	int st = shabbos.EY ? 22 : 23;
-	for (hdateaddday(&shabbos, 7-shabbos.wday); (current = getparshah(&shabbos)) == NOPARSHAH; hdateaddday(&shabbos, 7)){}
+	for (hdateaddday(&shabbos, 7-shabbos.wday); (current = getparshah(shabbos)) == NOPARSHAH; hdateaddday(&shabbos, 7)){}
 	if (current == BERESHIT)
 	{
 		if (date.day < st) {current = VZOT_HABERACHAH;}

@@ -17,7 +17,7 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 
 #define M_PI	3.14159265358979323846	/* pi */
 
-double getUTCSunrise(double JD, location *here, double zenith, unsigned int adjustForElevation);
-double getUTCSunset(double JD, location *here, double zenith, unsigned int adjustForElevation);
+double getUTCSunrise(double JD, location here, double zenith, unsigned int adjustForElevation);
+double getUTCSunset(double JD, location here, double zenith, unsigned int adjustForElevation);
 
 #endif

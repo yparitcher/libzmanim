@@ -257,12 +257,12 @@ double adjustZenith(double zenith, double elevation)
 	return adjustedZenith;
 }
 
-double getUTCSunrise(double JD, location *here, double zenith, unsigned int adjustForElevation)
+double getUTCSunrise(double JD, location here, double zenith, unsigned int adjustForElevation)
 {
-	double elevation = adjustForElevation ? here->elevation : 0;
+	double elevation = adjustForElevation ? here.elevation : 0;
 	double adjustedZenith = adjustZenith(zenith, elevation);
 
-	double sunrise = calcSunriseUTC(JD, here->latitude, -here->longitude, adjustedZenith);
+	double sunrise = calcSunriseUTC(JD, here.latitude, -here.longitude, adjustedZenith);
 	sunrise = sunrise / 60;
 
 	while (sunrise < 0.0)
@@ -276,12 +276,12 @@ double getUTCSunrise(double JD, location *here, double zenith, unsigned int adju
 	return sunrise;
 }
 
-double getUTCSunset(double JD, location *here, double zenith, unsigned int adjustForElevation)
+double getUTCSunset(double JD, location here, double zenith, unsigned int adjustForElevation)
 {
-	double elevation = adjustForElevation ? here->elevation : 0;
+	double elevation = adjustForElevation ? here.elevation : 0;
 	double adjustedZenith = adjustZenith(zenith, elevation);
 
-	double sunset = calcSunsetUTC(JD, here->latitude, -here->longitude, adjustedZenith);
+	double sunset = calcSunsetUTC(JD, here.latitude, -here.longitude, adjustedZenith);
 	sunset = sunset / 60;
 
 	while (sunset < 0.0)

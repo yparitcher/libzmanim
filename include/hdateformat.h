@@ -23,7 +23,7 @@ const char* numtohmonth(int month, int leap);
 // second argument is a booean if to use שבת (true) or שביעי (false)
 const char* numtowday(hdate date, _Bool shabbos);
 // convert hdate to char based representation.
-char* hdateformat(hdate *date);
+char* hdateformat(hdate date);
 
 // convert parshah enum to char based representation.
 const char* parshahformat(parshah current);

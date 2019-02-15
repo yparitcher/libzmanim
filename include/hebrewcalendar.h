@@ -58,16 +58,16 @@ int LastDayOfHebrewMonth(int month, int year);
 // day from molad tohu until Rosh Hashana
 long int HebrewCalendarElapsedDays(int year);
 // convert struct tm to hdate
-hdate convertDate(struct tm *date);
+hdate convertDate(struct tm date);
 void setEY(hdate *date, _Bool EY);
 // convert a hdate to julian day
-double hdatejulian(hdate *date);
+double hdatejulian(hdate date);
 // convert a hdate to gregorian date
-void hdategregorian(hdate *date, struct tm *result);
+struct tm hdategregorian(hdate date);
 // convert a gregorian date to julian day
-double gregorianjulian(struct tm *date);
+double gregorianjulian(struct tm date);
 // convert a hdate to a time_t
-time_t hdatetime_t(hdate *date);
+time_t hdatetime_t(hdate date);
 
 //compare 2 hdate:
 // returns 0 if they are the same
@@ -93,23 +93,23 @@ void hdateadd(hdate *date, int years, int months, int days, int hours, int minut
 molad getmolad(int year, int month);
 
 // if Shabbos get the current parshah otherwise return 0
-parshah getparshah(hdate *date);
+parshah getparshah(hdate date);
 // if yomtov get the current yomtov otherwise return 0
-yomtov getyomtov(hdate *date);
+yomtov getyomtov(hdate date);
 // if Shabbos get the current special parshah otherwise return 0
-yomtov getspecialshabbos(hdate *date);
+yomtov getspecialshabbos(hdate date);
 // if rosh chodesh return rosh chodesh otherwise return 0
-yomtov getroshchodesh(hdate *date);
+yomtov getroshchodesh(hdate date);
 // if machar chodesh return machar chodesh otherwise return 0
-yomtov getmacharchodesh(hdate *date);
+yomtov getmacharchodesh(hdate date);
 // if shabbos mevorchim return shabbos mevorchim otherwise return 0
-yomtov getshabbosmevorchim(hdate *date);
+yomtov getshabbosmevorchim(hdate date);
 // The omer count 1 - 49 or 0 if none
 int getomer(hdate date);
 
-_Bool istaanis(hdate *date);
-_Bool isassurbemelachah(hdate *date);
+_Bool istaanis(hdate date);
+_Bool isassurbemelachah(hdate date);
 // return 1 if cadlelighting regular, 2 if at nightfall, 3 if chanukah, or 0 if none
-int iscandlelighting(hdate *date);
+int iscandlelighting(hdate date);
 
 #endif

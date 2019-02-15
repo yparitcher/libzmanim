@@ -190,22 +190,22 @@ const char* numtohmonth(int month, int leap)
 	return "\0";
 }
 
-char* hdateformat(hdate *date)
+char* hdateformat(hdate date)
 {
 	int fl = 32;
 	static char dateformat[32] = {"\0"};
 	dateformat[0] = (char)0;
 	int counter = 1;
-	strncat(dateformat, numtohchar(date->day), fl-counter);
-	counter+=strlen(numtohchar(date->day));
+	strncat(dateformat, numtohchar(date.day), fl-counter);
+	counter+=strlen(numtohchar(date.day));
 	strncat(dateformat, " ", fl-counter);
 	counter+=1;
-	strncat(dateformat, numtohmonth(date->month, date->leap), fl-counter);
-	counter+=strlen(numtohmonth(date->month, date->leap));
+	strncat(dateformat, numtohmonth(date.month, date.leap), fl-counter);
+	counter+=strlen(numtohmonth(date.month, date.leap));
 	strncat(dateformat, " ", fl-counter);
 	counter+=1;
-	strncat(dateformat, numtohchar(date->year), fl-counter);
-	counter+=strlen(numtohchar(date->year));
+	strncat(dateformat, numtohchar(date.year), fl-counter);
+	counter+=strlen(numtohchar(date.year));
 	return dateformat;
 }
 
