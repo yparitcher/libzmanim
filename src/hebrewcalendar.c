@@ -467,7 +467,7 @@ void hdateaddhour(hdate *date, int hours)
 	int carry = 0;
 	divideandcarry(hour, &date->hour, &carry, 24);
 	if (carry){hdateaddday(date, carry);}
-	hdatesetdoy(date);
+	else {hdatesetdoy(date);}
 }
 
 void hdateaddminute(hdate *date, int minutes)
@@ -476,7 +476,7 @@ void hdateaddminute(hdate *date, int minutes)
 	int carry = 0;
 	divideandcarry(minute, &date->min, &carry, 60);
 	if (carry){hdateaddhour(date, carry);}
-	hdatesetdoy(date);
+	else {hdatesetdoy(date);}
 }
 
 void hdateaddsecond(hdate *date, int seconds)
@@ -485,7 +485,7 @@ void hdateaddsecond(hdate *date, int seconds)
 	int carry = 0;
 	divideandcarry(second, &date->sec, &carry, 60);
 	if (carry){hdateaddminute(date, carry);}
-	hdatesetdoy(date);
+	else {hdatesetdoy(date);}
 }
 
 void hdateaddmsecond(hdate *date, int mseconds)
@@ -494,7 +494,7 @@ void hdateaddmsecond(hdate *date, int mseconds)
 	int carry = 0;
 	divideandcarry(msecond, &date->msec, &carry, 1000);
 	if (carry){hdateaddsecond(date, carry);}
-	hdatesetdoy(date);
+	else {hdatesetdoy(date);}
 }
 
 void hdateadd(hdate *date, int years, int months, int days, int hours, int minutes, int seconds, int mseconds)
