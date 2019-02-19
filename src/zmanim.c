@@ -443,6 +443,33 @@ hdate gettzais72(hdate date, location here)
 	return calctimeoffset(getsunset(date, here), MINUTES72);
 }
 
+hdate calcmoladoffset(hdate date, int offsetsec)
+{
+	molad result = getmolad(date.year, date.month);
+	int tz = (-result.offset) + date.offset;
+	int adjustment = ((result.sec * 10)/3) + tz + offsetsec;
+	result.sec = 0;
+	hdateaddsecond(&result, adjustment);
+	result.EY = date.EY;
+	result.offset = date.offset;
+	return result;
+}
+
+hdate getmolad7days(hdate date)
+{
+	return calcmoladoffset(date, 604800);
+}
+
+hdate getmoladhalfmonth(hdate date)
+{
+	return calcmoladoffset(date, 1275722);
+}
+
+hdate getmolad15days(hdate date)
+{
+	return calcmoladoffset(date, 1296000);
+}
+
 long getshaahzmanisbaalhatanya(hdate date, location here)
 {
 	return calcshaahzmanis(getsunrisebaalhatanya(date, here), getsunsetbaalhatanya(date, here));

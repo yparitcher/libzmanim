@@ -538,7 +538,7 @@ molad getmolad(int year, int month)
 	result.hour = ConjunctionHour;
 	result.min = ConjunctionMinute;
 	result.sec = ConjunctionParts;
-	result.offset = 0;
+	result.offset = 8456;
 	hdateaddhour(&result, -6);
 	return result;
 }

@@ -117,6 +117,10 @@ hdate gettzaisbaalhatanya(hdate date, location here);
 hdate gettzais8p5(hdate date, location here);
 hdate gettzais72(hdate date, location here);
 
+hdate getmolad7days(hdate date);
+hdate getmoladhalfmonth(hdate date);
+hdate getmolad15days(hdate date);
+
 long getshaahzmanisbaalhatanya(hdate date, location here);
 long getshaahzmanisgra(hdate date, location here);
 long getshaahzmanismga(hdate date, location here);

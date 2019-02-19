@@ -42,7 +42,7 @@ typedef struct {
 	int msec;
 	int wday; // weekdays 1 - 7
 	int dayofyear; // starts from tishrei
-	long int offset; // timezone offset in milliseconds
+	long int offset; // timezone offset in seconds
 	_Bool leap; // if leap year
 	_Bool EY; // if Eretz Yisroel (for yomtov & parshah)
 } hdate;
