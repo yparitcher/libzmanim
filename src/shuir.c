@@ -45,7 +45,7 @@ int chumash(hdate date, char* buffer)
 int tehillim(hdate date, char* buffer)
 {
 	int current = date.day;
-	if (current == 29 && LastDayOfHebrewMonth(date.month, date.year) == 30) {current = 0;}
+	if (current == 29 && LastDayOfHebrewMonth(date.month, date.year) != 30) {current = 0;}
 	return sprintf(buffer, "%s\n%s", "תהלים", tehillimarray[current]);
 }
 
