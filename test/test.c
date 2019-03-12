@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 		}
 		else
 		{
-			printf("%s: is not a valid boolean, use 0 or 1\n", argv[6]);
+			printf("%s: is not a valid boolean, use 0 or 1\n", argv[7]);
 			return 1;
 		}
 	}
