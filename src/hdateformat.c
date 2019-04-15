@@ -175,7 +175,7 @@ char* numtohchar(int innum)
 
 const char* numtowday(hdate date, _Bool shabbos)
 {
-	if (shabbos && (date.wday == 7)) {return hwday[0];}
+	if (shabbos && (!date.wday)) {return hwday[0];}
 	return hwday[date.wday];
 }
 

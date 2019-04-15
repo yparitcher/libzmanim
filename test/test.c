@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
 	{
 		printf("%-20.20s%s\n", "candle lighting: ", formattime(gettzais8p5(hebrewDate, here)));
 		printf("%-20.20s%s\n", "tzais: ", formattime(gettzais8p5(hebrewDate, here)));
-	} else if (hebrewDate.wday == 7 || isassurbemelachah(hebrewDate)){
+	} else if (isassurbemelachah(hebrewDate)){
 		printf("%-20.20s%s\n", "shabbos ends: ", formattime(gettzais8p5(hebrewDate, here)));
 	} else {
 		printf("%-20.20s%s\n", "tzais: ", formattime(gettzaisbaalhatanya(hebrewDate, here)));

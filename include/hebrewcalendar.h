@@ -40,7 +40,7 @@ typedef struct {
 	int min; // 0 - 59
 	int sec; // 0 - 59
 	int msec;
-	int wday; // weekdays 1 - 7
+	int wday; // weekdays 1 - 6, 0
 	int dayofyear; // starts from tishrei
 	long int offset; // timezone offset in seconds
 	_Bool leap; // if leap year
