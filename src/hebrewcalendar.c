@@ -844,3 +844,11 @@ int iscandlelighting(hdate date)
 	}
 	return 0;
 }
+
+_Bool isbirchashachama(hdate date)
+{
+	int yearstart = HebrewCalendarElapsedDays(date.year);
+	int day = yearstart + date.dayofyear;
+	if (day%10227 == 172){return 1;}
+	return 0;
+}

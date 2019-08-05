@@ -2,7 +2,7 @@
 
 a C library for zmanim and hebrew dates
 
-a port of [KosherJava/Zmanim](https://github.com/KosherJava/zmanim) developed by Eliyahu Hershfeld.
+a port of [KosherJava/Zmanim](https://github.com/KosherJava/zmanim) developed by Eliyahu Hershfeld. [https://kosherjava.com](https://kosherjava.com)
 
 ## Installation
 

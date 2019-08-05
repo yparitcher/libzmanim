@@ -112,4 +112,6 @@ _Bool isassurbemelachah(hdate date);
 // return 1 if cadlelighting regular, 2 if at nightfall, 3 if chanukah, or 0 if none
 int iscandlelighting(hdate date);
 
+// return true if birchas hachama on date
+_Bool isbirchashachama(hdate date);
 #endif
