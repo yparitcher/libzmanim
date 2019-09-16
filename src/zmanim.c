@@ -12,7 +12,6 @@ if not, write tothe Free Software Foundation, Inc., 51 Franklin Street, Fifth Fl
 or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 ****/
 
-#include <time.h>
 #include <math.h>
 #include "hebrewcalendar.h"
 #include "NOAAcalculator.h"
