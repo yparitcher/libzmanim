@@ -119,7 +119,9 @@ int main(int argc, char *argv[])
 	hebrewDate.offset=offset;
 	setEY(&hebrewDate, ey);
 
-	printf("%-15.15s%s\n", "", hdateformat(hebrewDate));
+	char today[32] = {"\0"};
+	hdateformat(today, 32, hebrewDate);
+	printf("%-15.15s%s\n", "", today);
 	if (getyomtov(hebrewDate))
 	{
 		printf("%-15.15s%s\n", "", yomtovformat(getyomtov(hebrewDate)));
@@ -155,7 +157,9 @@ int main(int argc, char *argv[])
 	}
 	if (getomer(hebrewDate))
 	{
-		printf("%-15.15sספירת העומר: %s\n", "", numtohchar(getomer(hebrewDate)));
+		char omer[7] = {"\0"};
+		numtohchar(omer, 6, getomer(hebrewDate));
+		printf("%-15.15sספירת העומר: %s\n", "", omer);
 	}
 
 	printf("%-20.20s%s\n", "alos: ", formattime(getalosbaalhatanya(hebrewDate, here)));

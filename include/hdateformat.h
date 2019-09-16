@@ -16,14 +16,14 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 #define HDATE_FORMAT_H
 
 //convert an int to a Hebrew char based representation. 5779 becomes תשע״ט
-char* numtohchar(int innum);
+int numtohchar(char* buf, size_t limit, int innum);
 // convert int based Hebrew month (hdate.month) to char based representation.
 const char* numtohmonth(int month, int leap);
 // convert int based Hebrew weekday (hdate.wday) to char based representation.
 // second argument is a booean if to use שבת (true) or שביעי (false)
 const char* numtowday(hdate date, _Bool shabbos);
 // convert hdate to char based representation.
-char* hdateformat(hdate date);
+int hdateformat(char* buf, size_t buflen, hdate date);
 
 // convert parshah enum to char based representation.
 const char* parshahformat(parshah current);
