@@ -17,8 +17,6 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 #include "NOAAcalculator.h"
 #include "zmanim.h"
 
-const hdate invalid = {0};
-
 long int getLocalMeanTimeOffset(hdate now, location here)
 {
 	return (long int) (here.longitude * 4 * 60 - now.offset);
@@ -149,7 +147,7 @@ hdate getalos120(hdate date, location here)
 hdate getalos120zmanis(hdate date, location here)
 {
 	long shaahzmanis = getshaahzmanisgra(date, here);
-	if (shaahzmanis == 0) return invalid;
+	if (shaahzmanis == 0)return (hdate) {0};
 	return calctimeoffset(getsunrise(date, here), shaahzmanis * -2);
 }
 
@@ -161,7 +159,7 @@ hdate getalos96(hdate date, location here)
 hdate getalos96zmanis(hdate date, location here)
 {
 	long shaahzmanis = getshaahzmanisgra(date, here);
-	if (shaahzmanis == 0) return invalid;
+	if (shaahzmanis == 0) return (hdate) {0};
 	return calctimeoffset(getsunrise(date, here), shaahzmanis * -1.6);
 }
 
@@ -173,7 +171,7 @@ hdate getalos90(hdate date, location here)
 hdate getalos90zmanis(hdate date, location here)
 {
 	long shaahzmanis = getshaahzmanisgra(date, here);
-	if (shaahzmanis == 0) return invalid;
+	if (shaahzmanis == 0) return (hdate) {0};
 	return calctimeoffset(getsunrise(date, here), shaahzmanis * -1.5);
 }
 
@@ -185,7 +183,7 @@ hdate getalos72(hdate date, location here)
 hdate getalos72zmanis(hdate date, location here)
 {
 	long shaahzmanis = getshaahzmanisgra(date, here);
-	if (shaahzmanis == 0) return invalid;
+	if (shaahzmanis == 0) return (hdate) {0};
 	return calctimeoffset(getsunrise(date, here), shaahzmanis * -1.2);
 }
 
