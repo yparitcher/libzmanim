@@ -15,6 +15,8 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 #ifndef HEBREW_CALENDAR_H
 #define HEBREW_CALENDAR_H
 
+#include <time.h>
+
 // location struct used to calculate zmanim
 typedef struct {
 	double latitude;

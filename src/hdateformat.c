@@ -13,13 +13,13 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 ****/
 
 #include <string.h>
-#include <time.h>
+#include <stdio.h>
 #include "hebrewcalendar.h"
 #include "hdateformat.h"
 
 const char* hchar[]={ "׆", "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ", "ק", "ר", "ש", "ת", "״", "׳"};
 const char* hmonth[]={ "אדר א׳", "ניסן", "אייר", "סיון", "תמוז", "אב", "אלול", "תשרי", "חשון", "כסלו", "טבת", "שבט", "אדר", "אדר ב׳"};
-const char* hwday[]={ "שבת", "ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שביעי"};
+const char* hwday[]={ "שביעי", "ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"};
 const char* parshahchar[]={"\0", "בראשית", "נח", "לך לך", "וירא", "חיי שרה", "תולדות", "ויצא", "וישלח", "וישב", "מקץ", "ויגש", "ויחי", "שמות", "וארא", "בא", "בשלח", "יתרו", "משפטים", "תרומה", "תצוה", "כי תשא", "ויקהל", "פקודי", "ויקרא", "צו", "שמיני", "תזריע", "מצורע", "אחרי מות", "קדושים", "אמור", "בהר", "בחוקותי", "במדבר", "נשא", "בהעלותך", "שלח", "קרח", "חקת", "בלק", "פנחס", "מטות", "מסעי", "דברים", "ואתחנן", "עקב", "ראה", "שופטים", "כי תצא", "כי תבוא", "נצבים", "וילך", "האזינו", "וזאת הברכה", "ויקהל - פקודי", "תזריע - מצורע", "אחרי מות - קדושים", "בהר - בחוקותי", "חקת - בלק", "מטות - מסעי", "נצבים - וילך"};
 
 const char* gethchar(int num)
@@ -105,77 +105,78 @@ const char* gethchar(int num)
 	return hchar1;
 }
 
-void addchar(char* year, int charnum, int *num, int *counter)
+char* addchar(char* year, int charnum, int *num, size_t *counter, size_t limit)
 {
 			int charvalue = charnum;
 			if (charvalue == 99 || charvalue == 999){ charvalue = 0;}
-			strncat(year, gethchar(charnum), 13-*counter);
-			*counter+=2;
+			size_t len = limit-*counter;
+			char* end = stpncpy(year, gethchar(charnum), len);
+			*counter += len > 2 ? 2 : len;
 			*num -= charvalue;
+			return end;
 }
 
-char* numtohchar(int innum)
+int numtohchar(char* buf, size_t limit, int innum)
 {
 	int num = innum;
-	static char year[13] = {"\0"};
-	year[0] = (char)0;
-	int counter = 0;
+	char* year = buf;
+	size_t counter = 0;
 	if(num >= 1000 && num <= 10000 && num%1000 == 0)
 	{
-		addchar(year, num/1000, &num, &counter);
-		addchar(year, 999, &num, &counter);
-		return year;
+		year = addchar(year, num/1000, &num, &counter, limit);
+		year = addchar(year, 999, &num, &counter, limit);
+		return counter;
 	}
 	if(num >= 1000 && num <= 10000){ num=num%1000; }
 	while (num > 0 && counter < 13)
 	{
 		if (num==15 || num==16)
 		{
-			addchar(year, 9, &num, &counter);
-			addchar(year, 99, &num, &counter);
-			addchar(year, num, &num, &counter);
-			return year;
+			year = addchar(year, 9, &num, &counter, limit);
+			year = addchar(year, 99, &num, &counter, limit);
+			year = addchar(year, num, &num, &counter, limit);
+			return counter;
 		}
 		else if(num<10
 		|| (num < 100 && num%10 == 0)
 		|| (num < 500 && num%100 == 0))
 		{
-			if (counter!=0){ addchar(year, 99, &num, &counter);}
-			addchar(year, num, &num, &counter);
-			return year;
+			if (counter!=0){ year = addchar(year, 99, &num, &counter, limit);}
+			year = addchar(year, num, &num, &counter, limit);
+			return counter;
 		}
 		else if (num > 400)
 		{
-			addchar(year, 400, &num, &counter);
+			year = addchar(year, 400, &num, &counter, limit);
 			continue;
 		}
 		else if (num > 300)
 		{
-			addchar(year, 300, &num, &counter);
+			year = addchar(year, 300, &num, &counter, limit);
 			continue;
 		}
 		else if (num > 200)
 		{
-			addchar(year, 200, &num, &counter);
+			year = addchar(year, 200, &num, &counter, limit);
 			continue;
 		}
 		else if (num > 100)
 		{
-			addchar(year, 100, &num, &counter);
+			year = addchar(year, 100, &num, &counter, limit);
 			continue;
 		}
 		else if (num/10 > 0)
 		{
-			addchar(year, num-(num%10), &num, &counter);
+			year = addchar(year, num-(num%10), &num, &counter, limit);
 			continue;
 		}
 	}
-	return year;
+	return counter;
 }
 
 const char* numtowday(hdate date, _Bool shabbos)
 {
-	if (shabbos && (!date.wday)) {return hwday[0];}
+	if (shabbos && (!date.wday)) {return hwday[7];}
 	return hwday[date.wday];
 }
 
@@ -190,23 +191,14 @@ const char* numtohmonth(int month, int leap)
 	return "\0";
 }
 
-char* hdateformat(hdate date)
+int hdateformat(char* buf, size_t buflen, hdate date)
 {
-	int fl = 32;
-	static char dateformat[32] = {"\0"};
-	dateformat[0] = (char)0;
-	int counter = 1;
-	strncat(dateformat, numtohchar(date.day), fl-counter);
-	counter+=strlen(numtohchar(date.day));
-	strncat(dateformat, " ", fl-counter);
-	counter+=1;
-	strncat(dateformat, numtohmonth(date.month, date.leap), fl-counter);
-	counter+=strlen(numtohmonth(date.month, date.leap));
-	strncat(dateformat, " ", fl-counter);
-	counter+=1;
-	strncat(dateformat, numtohchar(date.year), fl-counter);
-	counter+=strlen(numtohchar(date.year));
-	return dateformat;
+	char day[7] = {'\0'};
+	char year[13] = {'\0'};
+	numtohchar(day, 6, date.day);
+	const char* month = numtohmonth(date.month, date.leap);
+	numtohchar(year, 12, date.year);
+	return snprintf(buf, buflen, "%s %s %s", day, month, year);
 }
 
 const char* parshahformat(parshah current)

@@ -18,7 +18,6 @@ This calculator is based on equations from http://www.srrb.noaa.gov/highlights/s
 https://github.com/KosherJava/zmanim/blob/master/src/net/sourceforge/zmanim/util/NOAACalculator.java
 ************/
 
-#include <time.h>
 #include <math.h>
 #include "hebrewcalendar.h"
 #include "NOAAcalculator.h"

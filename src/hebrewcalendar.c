@@ -54,7 +54,6 @@ and code from ICU licensed under the Unicode license
 ---------------------------------------------------------------------------------
 ****/
 
-#include <time.h>
 #include <math.h>
 #include "hebrewcalendar.h"
 

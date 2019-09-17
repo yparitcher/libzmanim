@@ -6,7 +6,7 @@ PREFIX=$$HOME/x-tools/arm-unknown-linux-gnueabi/bin/arm-unknown-linux-gnueabi-
 CC=gcc
 AR=ar
 RANLIB=ranlib
-CFLAGS=-Wall -Wextra -Wno-format-truncation -O2 -std=c99 -pedantic $(INC_DIR:%=-I%)
+CFLAGS=-Wall -Wextra -Wno-format-truncation -O2 -flto -pedantic $(INC_DIR:%=-I%)
 LDLIBS=-lm
 
 INC_DIR = include
