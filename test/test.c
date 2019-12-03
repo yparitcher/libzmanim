@@ -122,6 +122,12 @@ int main(int argc, char *argv[])
 	char today[32] = {"\0"};
 	hdateformat(today, 32, hebrewDate);
 	printf("%-15.15s%s\n", "", today);
+	if (getbirchashashanim(hebrewDate))
+	{
+		printf("%-15.15s%s\n", "", "ותן טל ומטר");
+	} else {
+		printf("%-15.15s%s\n", "", "ותן ברכה");
+	}
 	if (getyomtov(hebrewDate))
 	{
 		printf("%-15.15s%s\n", "", yomtovformat(getyomtov(hebrewDate)));

@@ -851,3 +851,49 @@ _Bool isbirchashachama(hdate date)
 	if (day%10227 == 172){return 1;}
 	return 0;
 }
+
+int TekufasTishreiElapsedDays(hdate date)
+{
+	/*
+	tekufas Shmuel: a solar year is 365.25 days
+	notation: days,hours,chalakim
+	molad BaHaRad was 2,5,204
+	molad nissan add 177,4,438
+	tekufas nissan was 7,9,642 before molad nissan
+	or 169,8,876 after molad tishrei
+	tekufas tishrei was 182,3 before tekufas nissan
+	or -13,+5,876 before BaHaRad
+	or ~ -13 days before Rosh Hashana year 1
+	outside of EY we say תל ומטר in ברכת השנים from 60 day after tekufas tishrei
+	60 includes the day of the tekufah and the day we start.
+	60 days from the tekufah == 47 days from Rosh Hashana year 1
+	*/
+	// days since Rosh Hashana year 1
+	// add 1/2 day as the hebrew day starts at "6pm" the night before
+	double days = HebrewCalendarElapsedDays(date.year) + (date.dayofyear-1) + .5;
+	// days of completed solar years
+	double solar = (date.year-1)*365.25;
+	return (int) days - solar;
+}
+
+_Bool isbirchashashanim(hdate date)
+{
+	if (date.EY && date.month == 7 && date.day == 7) {return 1;}
+	else if (TekufasTishreiElapsedDays(date) == 47) {return 1;}
+	return 0;
+}
+
+_Bool getbirchashashanim(hdate date)
+{
+	if (date.month == 1 && date.day < 15) {return 1;}
+	if (date.month < 7) {return 0;}
+	if (date.EY)
+	{
+		if (date.month == 7 && date.day < 7) {return 0;}
+		else {return 1;}
+	} else {
+		if (TekufasTishreiElapsedDays(date) < 47) {return 0;}
+		else {return 1;}
+	}
+//	return 0;
+}

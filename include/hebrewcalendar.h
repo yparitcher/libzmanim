@@ -116,4 +116,9 @@ int iscandlelighting(hdate date);
 
 // return true if birchas hachama on date
 _Bool isbirchashachama(hdate date);
+
+// return true if birchas hashanim is switched on date (winter)
+_Bool isbirchashashanim(hdate date);
+// return true if tal umatar livrachah is said in birchas hashanim
+_Bool getbirchashashanim(hdate date);
 #endif
