@@ -855,21 +855,25 @@ _Bool isbirchashachama(hdate date)
 int TekufasTishreiElapsedDays(hdate date)
 {
 	/*
-	tekufas Shmuel: a solar year is 365.25 days
+	Tekufas Shmuel: a solar year is 365.25 days.
 	notation: days,hours,chalakim
-	molad BaHaRad was 2,5,204
-	molad nissan add 177,4,438
-	tekufas nissan was 7,9,642 before molad nissan
-	or 169,8,876 after molad tishrei
-	tekufas tishrei was 182,3 before tekufas nissan
-	or -13,+5,876 before BaHaRad
-	or ~ -13 days before Rosh Hashana year 1
-	outside of EY we say תל ומטר in ברכת השנים from 60 day after tekufas tishrei
+	molad BaHaRad was 2D,5H,204C
+	or 5H,204C from the start of rosh hashana year 1
+	molad nissan add 177D,4H,438C (6 * 29D,12H,793C)
+	or 177D,9H,642C after rosh hashana year 1
+	tekufas nissan was 7D,9H,642C before molad nissan ~rambam.
+	or 170D,0H,0C after rosh hashana year 1
+	tekufas tishrei was 182D,3H (365.25 / 2) before tekufas nissan
+	or 12D,15H before Rosh Hashana year 1
+	outside of EY we say תל ומטר in ברכת השנים from 60 days after tekufas tishrei.
 	60 includes the day of the tekufah and the day we start.
-	60 days from the tekufah == 47 days from Rosh Hashana year 1
+	60 days from the tekufah == 47D,9H from Rosh Hashana year 1
 	*/
+
 	// days since Rosh Hashana year 1
-	// add 1/2 day as the hebrew day starts at "6pm" the night before
+	// add 1/2 day as the first tekufas tishrei was 9 hours into the day
+	// this allows all 4 years of the secular leap year cycle to share 47 days
+	// make from 47D,9H to 47D for simplicity
 	double days = HebrewCalendarElapsedDays(date.year) + (date.dayofyear-1) + .5;
 	// days of completed solar years
 	double solar = (date.year-1)*365.25;
