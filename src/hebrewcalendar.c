@@ -899,5 +899,4 @@ _Bool getbirchashashanim(hdate date)
 		if (TekufasTishreiElapsedDays(date) < 47) {return 0;}
 		else {return 1;}
 	}
-//	return 0;
 }
