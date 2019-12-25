@@ -16,6 +16,9 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 #include <stdio.h>
 #include "hebrewcalendar.h"
 #include "hdateformat.h"
+#ifdef _WIN32
+#include "stpncpy.h"
+#endif
 
 const char* hchar[]={ "׆", "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ", "ק", "ר", "ש", "ת", "״", "׳"};
 const char* hmonth[]={ "אדר א׳", "ניסן", "אייר", "סיון", "תמוז", "אב", "אלול", "תשרי", "חשון", "כסלו", "טבת", "שבט", "אדר", "אדר ב׳"};

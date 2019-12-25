@@ -12,6 +12,10 @@ run `make test` to build a test wrapper (in the test folder) to display the dail
 
 this creates a shared and static library that can be used by including the header files in `include` and linking with `-lzmanim` (you must add the library and headers to your `PATH`)
 
+### Windows
+
+run window.bat in a VisualStudio command prompt to build `libzmanim.dll` and `test.exe`. This uses the OpenBSD stpncpy.
+
 ## Usage
 
 this library has a new struct `hdate` which is like `struct tm` used to store a date instance in the hebrew calendar.

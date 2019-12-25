@@ -27,7 +27,7 @@ char* formattime(hdate date)
 	final[0] = '\0';
 	time_t time = hdatetime_t(date);
 	struct tm *tm = localtime(&time);
-	strftime(final, 13, "%I:%M %p %Z", tm);
+	strftime(final, 31, "%I:%M %p %Z", tm);
 	return final;
 }
 

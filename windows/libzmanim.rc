@@ -1,0 +1,29 @@
+#include <windows.h>
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+VS_VERSION_INFO	 VERSIONINFO
+FILEVERSION	0,0,1,0
+PRODUCTVERSION	0,0,1,0
+FILETYPE VFT_DLL
+BEGIN
+	BLOCK	"StringFileInfo"
+	BEGIN
+		BLOCK "040904E4"
+		BEGIN
+			VALUE "CompanyName", "Yparitcher"
+			VALUE "FileDescription", "Zmanim Library"
+			VALUE "FileVersion", "1.0\0"
+			VALUE "InternalName", "libzmanim"
+			VALUE "LegalCopyright", "© yparitcher"
+			VALUE "OriginalFilename", "libzmanim.dll"
+			VALUE "ProductName", "libzmanim"
+			VALUE "ProductVersion", "1.0\0"
+		END
+		
+		BLOCK "VarFileInfo"
+		BEGIN
+			VALUE "Translation", 0x409, 1252
+		END
+	END
+END
