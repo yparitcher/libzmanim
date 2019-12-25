@@ -167,6 +167,11 @@ int main(int argc, char *argv[])
 		numtohchar(omer, 6, getomer(hebrewDate));
 		printf("%-15.15sספירת העומר: %s\n", "", omer);
 	}
+	int avos;
+	if ((avos = getavos(hebrewDate)))
+	{
+		printf("%-15.15sאבות פרק %s\n", "", avosformat(avos));
+	}
 
 	printf("%-20.20s%s\n", "alos: ", formattime(getalosbaalhatanya(hebrewDate, here)));
 	printf("%-20.20s%s\n", "misheyakir: ", formattime(getmisheyakir10p2degrees(hebrewDate, here)));

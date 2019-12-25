@@ -794,6 +794,34 @@ int getomer(hdate date)
 	return omer;
 }
 
+int getavos(hdate date)
+{
+	if (date.wday) {return 0;} // Shabbos
+	int avos_start = nissanCount(date.year) + 23; // 23 Nissan
+	int avos_day = date.dayofyear - avos_start; // days from start of avos
+	if (avos_day <= 0) {return 0;}
+	int chapter = (avos_day/7); // current chapter
+	// corrections
+	int avos_day_of_week = avos_day%7;
+	if (avos_day_of_week == 6) { // tisha bav is Shabbos
+		if (avos_day == 104) {return 0;} // tisha bav
+		if (avos_day > 104) {chapter -=1;} // after tisha bav
+	} else if (avos_day_of_week == 1 && (! date.EY)){// 2nd day of Shavous is Shabbos in Chutz Laaretz
+		if (avos_day == 43) {return 0;} // Shavous
+		if (avos_day > 43) {chapter -=1;} // after Shavous
+	}
+	// normalize
+	chapter %=6;
+	chapter +=1;
+	// Elul double chapters
+	if (date.month == 6)
+	{
+		if (date.day > 22) { chapter = 56;} // Last week Chapter 5 - 6
+		else if (date.day > 15) { chapter = 34;} // Chapter 3 - 4
+		else if (date.day > 8 && chapter == 1) { chapter = 12;} // Chapter 1 - 2
+	}
+	return chapter;
+}
 _Bool istaanis(hdate date)
 {
 	yomtov current = getyomtov(date);

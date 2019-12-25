@@ -29,5 +29,7 @@ int hdateformat(char* buf, size_t buflen, hdate date);
 const char* parshahformat(parshah current);
 // convert yomtov enum to char based representation.
 const char* yomtovformat(yomtov current);
+// convert avos int to char based representation.
+const char* avosformat(int avos);
 
 #endif

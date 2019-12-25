@@ -108,6 +108,9 @@ yomtov getmacharchodesh(hdate date);
 yomtov getshabbosmevorchim(hdate date);
 // The omer count 1 - 49 or 0 if none
 int getomer(hdate date);
+// if Shabbos get the current chapter of avos otherwise return 0
+// returns 1 - 6 or 12 or 34 or 56 for double chapter
+int getavos(hdate date);
 
 _Bool istaanis(hdate date);
 _Bool isassurbemelachah(hdate date);
