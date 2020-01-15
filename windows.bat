@@ -1,3 +1,7 @@
+::####
+:: Copyright (c) 2019 Y Paritcher
+::####
+
 cd "%~dp0"
 
 rc /nologo /v windows\libzmanim.rc
