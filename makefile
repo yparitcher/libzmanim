@@ -77,13 +77,13 @@ $(TESTDIR)%.o: $(TESTDIR)%.c
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
 $(TESTDIR)teststatic: $(testobjects)
-	$(CC) -static $(TESTLDFLAGS) $^ $(TESTLDLIBS) -lm -o $@
+	$(CC) -static $(TESTLDFLAGS) $^ $(TESTLDLIBS) -lm $(staticobjects) -o $@
 
 $(TESTDIR)testshared: $(testobjects)
-		$(CC) $(TESTLDFLAGS) $^ $(TESTLDLIBS) -o $@
+		$(CC) $(TESTLDFLAGS) $^ $(TESTLDLIBS) $(sharedobjects) -o $@
 
 $(TESTDIR)test: $(testobjects)
-		$(CC) $(TESTLDFLAGS) $^ $(TESTLDLIB) $(LDLIBS) -o $@
+		$(CC) $(TESTLDFLAGS) $^ $(TESTLDLIB) $(LDLIBS) $(sharedobjects) -o $@
 
 testobjects: shared static
 
