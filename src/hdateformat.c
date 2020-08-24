@@ -16,6 +16,9 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 #include <stdio.h>
 #include "hebrewcalendar.h"
 #include "hdateformat.h"
+#ifdef _WIN32
+#include "stpncpy.h"
+#endif
 
 const char* hchar[]={ "׆", "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ", "ק", "ר", "ש", "ת", "״", "׳"};
 const char* hmonth[]={ "אדר א׳", "ניסן", "אייר", "סיון", "תמוז", "אב", "אלול", "תשרי", "חשון", "כסלו", "טבת", "שבט", "אדר", "אדר ב׳"};
@@ -309,4 +312,31 @@ const char* yomtovformat(yomtov current)
 			return "שבת מברכים";
 	}
 	return "\0";
+}
+
+const char* avosformat(int avos)
+{
+	switch(avos)
+	{
+		case 1:
+			return "א";
+		case 2:
+			return "ב";
+		case 3:
+			return "ג";
+		case 4:
+			return "ד";
+		case 5:
+			return "ה";
+		case 6:
+			return "ו";
+		case 12:
+			return "א-ב";
+		case 34:
+			return "ג-ד";
+		case 56:
+			return "ה-ו";
+		default:
+			return "\0";
+	}
 }

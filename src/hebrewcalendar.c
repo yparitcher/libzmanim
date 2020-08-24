@@ -794,6 +794,34 @@ int getomer(hdate date)
 	return omer;
 }
 
+int getavos(hdate date)
+{
+	if (date.wday) {return 0;} // Shabbos
+	int avos_start = nissanCount(date.year) + 23; // 23 Nissan
+	int avos_day = date.dayofyear - avos_start; // days from start of avos
+	if (avos_day <= 0) {return 0;}
+	int chapter = (avos_day/7); // current chapter
+	// corrections
+	int avos_day_of_week = avos_day%7;
+	if (avos_day_of_week == 6) { // tisha bav is Shabbos
+		if (avos_day == 104) {return 0;} // tisha bav
+		if (avos_day > 104) {chapter -=1;} // after tisha bav
+	} else if (avos_day_of_week == 1 && (! date.EY)){// 2nd day of Shavous is Shabbos in Chutz Laaretz
+		if (avos_day == 43) {return 0;} // Shavous
+		if (avos_day > 43) {chapter -=1;} // after Shavous
+	}
+	// normalize
+	chapter %=6;
+	chapter +=1;
+	// Elul double chapters
+	if (date.month == 6)
+	{
+		if (date.day > 22) { chapter = 56;} // Last week Chapter 5 - 6
+		else if (date.day > 15) { chapter = 34;} // Chapter 3 - 4
+		else if (date.day > 8 && chapter == 1) { chapter = 12;} // Chapter 1 - 2
+	}
+	return chapter;
+}
 _Bool istaanis(hdate date)
 {
 	yomtov current = getyomtov(date);
@@ -850,4 +878,53 @@ _Bool isbirchashachama(hdate date)
 	int day = yearstart + date.dayofyear;
 	if (day%10227 == 172){return 1;}
 	return 0;
+}
+
+int TekufasTishreiElapsedDays(hdate date)
+{
+	/*
+	Tekufas Shmuel: a solar year is 365.25 days.
+	notation: days,hours,chalakim
+	molad BaHaRad was 2D,5H,204C
+	or 5H,204C from the start of rosh hashana year 1
+	molad nissan add 177D,4H,438C (6 * 29D,12H,793C)
+	or 177D,9H,642C after rosh hashana year 1
+	tekufas nissan was 7D,9H,642C before molad nissan ~rambam.
+	or 170D,0H,0C after rosh hashana year 1
+	tekufas tishrei was 182D,3H (365.25 / 2) before tekufas nissan
+	or 12D,15H before Rosh Hashana year 1
+	outside of EY we say תל ומטר in ברכת השנים from 60 days after tekufas tishrei.
+	60 includes the day of the tekufah and the day we start.
+	60 days from the tekufah == 47D,9H from Rosh Hashana year 1
+	*/
+
+	// days since Rosh Hashana year 1
+	// add 1/2 day as the first tekufas tishrei was 9 hours into the day
+	// this allows all 4 years of the secular leap year cycle to share 47 days
+	// make from 47D,9H to 47D for simplicity
+	double days = HebrewCalendarElapsedDays(date.year) + (date.dayofyear-1) + .5;
+	// days of completed solar years
+	double solar = (date.year-1)*365.25;
+	return (int) days - solar;
+}
+
+_Bool isbirchashashanim(hdate date)
+{
+	if (date.EY && date.month == 7 && date.day == 7) {return 1;}
+	else if (TekufasTishreiElapsedDays(date) == 47) {return 1;}
+	return 0;
+}
+
+_Bool getbirchashashanim(hdate date)
+{
+	if (date.month == 1 && date.day < 15) {return 1;}
+	if (date.month < 7) {return 0;}
+	if (date.EY)
+	{
+		if (date.month == 7 && date.day < 7) {return 0;}
+		else {return 1;}
+	} else {
+		if (TekufasTishreiElapsedDays(date) < 47) {return 0;}
+		else {return 1;}
+	}
 }

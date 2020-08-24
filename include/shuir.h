@@ -14,4 +14,5 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 // put a char representation of the daily shuir in the specified buffer using sprintf. 
 int chumash(hdate date, char* buffer);
 int tehillim(hdate date, char* buffer);
+int tanya(hdate date, char* buffer);
 int rambam(hdate date, char* buffer);

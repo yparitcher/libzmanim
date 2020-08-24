@@ -57,6 +57,9 @@ typedef hdate molad;
 // get length of given month
 int LastDayOfHebrewMonth(int month, int year);
 
+// is the year a leap year
+int HebrewLeapYear(int year);
+
 // day from molad tohu until Rosh Hashana
 long int HebrewCalendarElapsedDays(int year);
 // convert struct tm to hdate
@@ -108,6 +111,9 @@ yomtov getmacharchodesh(hdate date);
 yomtov getshabbosmevorchim(hdate date);
 // The omer count 1 - 49 or 0 if none
 int getomer(hdate date);
+// if Shabbos get the current chapter of avos otherwise return 0
+// returns 1 - 6 or 12 or 34 or 56 for double chapter
+int getavos(hdate date);
 
 _Bool istaanis(hdate date);
 _Bool isassurbemelachah(hdate date);
@@ -116,4 +122,9 @@ int iscandlelighting(hdate date);
 
 // return true if birchas hachama on date
 _Bool isbirchashachama(hdate date);
+
+// return true if birchas hashanim is switched on date (winter)
+_Bool isbirchashashanim(hdate date);
+// return true if tal umatar livrachah is said in birchas hashanim
+_Bool getbirchashashanim(hdate date);
 #endif

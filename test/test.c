@@ -27,7 +27,7 @@ char* formattime(hdate date)
 	final[0] = '\0';
 	time_t time = hdatetime_t(date);
 	struct tm *tm = localtime(&time);
-	strftime(final, 13, "%I:%M %p %Z", tm);
+	strftime(final, 31, "%I:%M %p %Z", tm);
 	return final;
 }
 
@@ -122,6 +122,12 @@ int main(int argc, char *argv[])
 	char today[32] = {"\0"};
 	hdateformat(today, 32, hebrewDate);
 	printf("%-15.15s%s\n", "", today);
+	if (getbirchashashanim(hebrewDate))
+	{
+		printf("%-15.15s%s\n", "", "ותן טל ומטר");
+	} else {
+		printf("%-15.15s%s\n", "", "ותן ברכה");
+	}
 	if (getyomtov(hebrewDate))
 	{
 		printf("%-15.15s%s\n", "", yomtovformat(getyomtov(hebrewDate)));
@@ -161,6 +167,11 @@ int main(int argc, char *argv[])
 		numtohchar(omer, 6, getomer(hebrewDate));
 		printf("%-15.15sספירת העומר: %s\n", "", omer);
 	}
+	int avos;
+	if ((avos = getavos(hebrewDate)))
+	{
+		printf("%-15.15sאבות פרק %s\n", "", avosformat(avos));
+	}
 
 	printf("%-20.20s%s\n", "alos: ", formattime(getalosbaalhatanya(hebrewDate, here)));
 	printf("%-20.20s%s\n", "misheyakir: ", formattime(getmisheyakir10p2degrees(hebrewDate, here)));
@@ -192,6 +203,9 @@ int main(int argc, char *argv[])
 	char tehillimbuf[100];
 	tehillim(hebrewDate, tehillimbuf);
 	printf("%s\n", tehillimbuf);
+	char tanyabuf[100];
+	tanya(hebrewDate, tanyabuf);
+	printf("%s\n", tanyabuf);
 	char rambambuf[100];
 	rambam(hebrewDate, rambambuf);
 	printf("%s\n", rambambuf);
