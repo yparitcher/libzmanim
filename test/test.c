@@ -203,6 +203,9 @@ int main(int argc, char *argv[])
 	char tehillimbuf[100];
 	tehillim(hebrewDate, tehillimbuf);
 	printf("%s\n", tehillimbuf);
+	char tanyabuf[100];
+	tanya(hebrewDate, tanyabuf);
+	printf("%s\n", tanyabuf);
 	char rambambuf[100];
 	rambam(hebrewDate, rambambuf);
 	printf("%s\n", rambambuf);
