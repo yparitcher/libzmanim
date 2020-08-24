@@ -440,7 +440,7 @@ int tanya(hdate date, char* buffer)
 	int current = date.day;
 	if (current == 29 && LastDayOfHebrewMonth(date.month, date.year) != 30) {current = 0;}
 	const char* shuir = leap ? "" : tanyaarrayregular[date.month-1][current];
-	return sprintf(buffer, "%s %s", "תניא", shuir);
+	return sprintf(buffer, "%s\n%s", "תניא", shuir);
 }
 
 int rambam(hdate date, char* buffer)
