@@ -14,8 +14,10 @@ STATICDIR=build/static
 SHAREDDIR=build/shared
 LIBDIR=lib
 SRCDIR=src/
+EXTRADIR=extra/
 sharedobjects := $(patsubst $(SRCDIR)%.c,$(SHAREDDIR)/%.o,$(wildcard $(SRCDIR)*.c))
 staticobjects := $(patsubst $(SRCDIR)%.c,$(STATICDIR)/%.o,$(wildcard $(SRCDIR)*.c))
+extraexecs := $(patsubst %.c, %, $(wildcard $(EXTRADIR)*.c))
 
 TESTDIR=test/
 TESTLDFLAGS=-L$(LIBDIR)
@@ -25,7 +27,7 @@ testobjects := $(patsubst %.c,%.o,$(wildcard $(TESTDIR)*.c))
 
 VPATH = src $(INC_DIR)
 
-.PHONY: clean cleaner all shared static test directories teststatic testshared teststandard kindle fresh
+.PHONY: clean cleaner all shared static test directories teststatic testshared teststandard kindle fresh extra
 
 all:
 	$(MAKE) directories
@@ -80,18 +82,23 @@ $(TESTDIR)teststatic: $(testobjects)
 	$(CC) -static $(TESTLDFLAGS) $^ $(TESTLDLIBS) -lm -o $@
 
 $(TESTDIR)testshared: $(testobjects)
-		$(CC) $(TESTLDFLAGS) $^ $(TESTLDLIBS) -o $@
+	$(CC) $(TESTLDFLAGS) $^ $(TESTLDLIBS) -o $@
 
 $(TESTDIR)test: $(testobjects)
-		$(CC) $(TESTLDFLAGS) $^ $(TESTLDLIB) $(LDLIBS) -o $@
+	$(CC) $(TESTLDFLAGS) $^ $(TESTLDLIB) $(LDLIBS) -o $@
 
 testobjects: shared static
+
+extra: static $(extraexecs)
+
+$(extraexecs): %: %.c
+	$(CC) $(CFLAGS) $(TESTLDFLAGS) $^ $(TESTLDLIB) $(LDLIBS) -o $@
 
 clean:
 	rm -f $(SHAREDDIR)/*.o $(STATICDIR)/*.o $(TESTDIR)test.o
 
 cleaner: clean
-	rm -f $(LIBDIR)/libzmanim.so $(LIBDIR)/libzmanim.a $(TESTDIR)testshared $(TESTDIR)teststatic $(TESTDIR)test
+	rm -f $(LIBDIR)/libzmanim.so $(LIBDIR)/libzmanim.a $(TESTDIR)testshared $(TESTDIR)teststatic $(TESTDIR)test $(extraexecs)
 
 fresh:
 	$(MAKE) cleaner
