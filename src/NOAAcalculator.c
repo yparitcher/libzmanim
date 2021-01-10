@@ -173,8 +173,10 @@ double calcHourAngleSunset(double lat, double solarDec, double zenith)
 	return -HA;
 }
 
-double calcSolNoonUTC(double jcent, double longitude)
+double calcSolNoonUTC(double JD, double longitude)
 {
+	double jcent = calcTimeJulianCent(JD);
+
 	double tnoon = calcTimeJulianCent(calcJDFromJulianCent(jcent) + longitude/360.0);
 	double eqTime = calcEquationOfTime(tnoon);
 	double solNoonUTC = 720 + (longitude * 4) - eqTime;

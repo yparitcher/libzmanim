@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -6,6 +7,68 @@
 #include "zmanim.h"
 #include "hdateformat.h"
 #include "shuir.h"
+
+extern double calcSolNoonUTC(double jcent, double longitude);
+
+double getUTCNoon(double JD, location here)
+{
+
+	double noon = calcSolNoonUTC(JD, -here.longitude);
+	noon = noon / 60;
+
+	while (noon < 0.0)
+	{
+		noon += 24.0;
+	}
+	while (noon >= 24.0)
+	{
+		noon -= 24.0;
+	}
+	return noon;
+}
+
+hdate getDateFromNoon(hdate current, double time)
+{
+	hdate result = {0};
+	if (isnan(time)) {
+		return result;
+	}
+	//int adjustment = getAntimeridianAdjustment(current, here);
+	double calculatedTime = time;
+	result.year = current.year;
+	result.EY = current.EY;
+	result.offset = current.offset;
+	result.month = current.month;
+	result.day = current.day;
+	//if (adjustment){hdateaddday(&result, adjustment);}
+
+	int hours = (int)calculatedTime;
+	calculatedTime -= hours;
+	int minutes = (int)(calculatedTime *= 60);
+	calculatedTime -= minutes;
+	int seconds = (int)(calculatedTime *= 60);
+	calculatedTime -= seconds;
+	int miliseconds = (int)(calculatedTime * 1000);
+/*	int localTimeHours = (int)here.longitude / 15;
+	if (isSunrise && localTimeHours + hours > 18) {
+		hdateaddday(&result, -1);
+	} else if (!isSunrise && localTimeHours + hours < 6) {
+		hdateaddday(&result, +1);
+	}
+*/
+	result.hour = hours;
+	result.min = minutes;
+	result.sec = seconds;
+	result.msec = miliseconds;
+	hdateaddsecond(&result, current.offset);
+	return result;
+}
+
+hdate calcnoon(hdate date, location here)
+{
+	double noon = getUTCNoon(hdatejulian(date), here);
+	return getDateFromNoon(date, noon);
+}
 
 char* formattime(hdate date)
 {
@@ -119,7 +182,9 @@ int main(int argc, char *argv[])
 	unsigned long long int total = 0;
 	for (int i = 0; i < limit; hdateaddday(&hebrewDate, 1),i++)
 	{
-		hdate ctz = getchatzosbaalhatanya(hebrewDate, here);
+		hdate ctz = calcnoon(hebrewDate, here);
+//printf("%s\n", formattime(hebrewDate));
+		//hdate ctz = getchatzosbaalhatanya(hebrewDate, here);
 		unsigned long int tme = (((((ctz.hour*60)+ctz.min)*60)+ctz.sec)*1000)+ctz.msec;
 //		res[i] = tme;
 		total += tme;
