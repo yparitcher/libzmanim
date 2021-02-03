@@ -842,6 +842,7 @@ _Bool isassurbemelachah(hdate date)
 
 int iscandlelighting(hdate date)
 {
+	if(date.wday == 6) {return 1;}
 	yomtov current = getyomtov(date);
 	if((current >= EREV_PESACH && current <= EREV_SUKKOS)
 	|| (current == CHOL_HAMOED_PESACH_DAY4 && !date.EY)
@@ -862,7 +863,6 @@ int iscandlelighting(hdate date)
 	|| current == ROSH_HASHANAH_DAY2
 	|| current == SIMCHAS_TORAH)
 	&& date.wday == 6) {return 2;}
-	if(date.wday == 6) {return 1;}
 	if((date.month == 9 && date.day == 24)
 	|| (current >= CHANUKAH_DAY1 && current <= CHANUKAH_DAY7))
 	{
