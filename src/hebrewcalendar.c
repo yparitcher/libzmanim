@@ -806,6 +806,9 @@ int getavos(hdate date)
 	if (avos_day_of_week == 6) { // tisha bav is Shabbos
 		if (avos_day == 104) {return 0;} // tisha bav
 		if (avos_day > 104) {chapter -=1;} // after tisha bav
+	} else if (avos_day_of_week == 5) { // tisha bav is Sunday
+		if (avos_day == 103) {return 0;} // erev tisha bav
+		if (avos_day > 103) {chapter -=1;} // after tisha bav
 	} else if (avos_day_of_week == 1 && (! date.EY)){// 2nd day of Shavous is Shabbos in Chutz Laaretz
 		if (avos_day == 43) {return 0;} // Shavous
 		if (avos_day > 43) {chapter -=1;} // after Shavous
