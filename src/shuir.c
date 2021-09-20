@@ -806,18 +806,18 @@ int chumash(hdate date, char* buffer)
 {
 	parshah current = NOPARSHAH;
 	hdate shabbos = date;
-	int st = shabbos.EY ? 22 : 23;
 	for (; (current = getparshah(shabbos)) == NOPARSHAH; hdateaddday(&shabbos, 7-shabbos.wday)){}
 	if (current == BERESHIT)
 	{
+		int st = shabbos.EY ? 22 : 23;
 		if (date.day < st) {current = VZOT_HABERACHAH;}
 		else if  (date.day == st){
 			if (date.wday == 1){
-				return sprintf(buffer, "פרשת %s %s עם פירש״י", parshahformat(BERESHIT), numtowday(date, 0));
+				return sprintf(buffer, "פרשת %s\n%s עם פירש״י", parshahformat(BERESHIT), numtowday(date, 0));
 			}else if (!date.wday){
-				return sprintf(buffer, "פרשת %s %s עם פירש״י", parshahformat(VZOT_HABERACHAH), numtowday(date, 0));
+				return sprintf(buffer, "פרשת %s\n%s עם פירש״י", parshahformat(VZOT_HABERACHAH), numtowday(date, 0));
 			}else{
-				return sprintf(buffer, "פרשת %s %s - שביעי, %s ראשון - %s עם פירש״י", parshahformat(VZOT_HABERACHAH), numtowday(date, 0), parshahformat(BERESHIT), numtowday(date, 0));
+				return sprintf(buffer, "פרשת %s\n%s - שביעי,\n %s\nראשון - %s עם פירש״י", parshahformat(VZOT_HABERACHAH), numtowday(date, 0), parshahformat(BERESHIT), numtowday(date, 0));
 			}
 		}
 	}

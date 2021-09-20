@@ -185,7 +185,7 @@ int nissanCount(int year)
 
 hdate convertDate(struct tm date)
 {
-    hdate result;
+    hdate result = {0};
     double julianDay = gregorianjulian(date);
     long int d = (long int)julianDay - 347996;
 	double m = ((d * (double)25920) / (double)765433);
