@@ -179,25 +179,32 @@ int main(int argc, char *argv[])
 	setEY(&hebrewDate, ey);
 
 //	unsigned long int res[1461];
-	unsigned long long int total = 0;
+	unsigned long long int total[2] = {0,0};
+	
+	hdate (*noons[2])(hdate date, location here) = {getchatzosbaalhatanya, calcnoon};
 	for (int i = 0; i < limit; hdateaddday(&hebrewDate, 1),i++)
 	{
-		hdate ctz = calcnoon(hebrewDate, here);
+		for (int n = 0; n < 2; n++)
+		{
+			hdate ctz = (*noons[n])(hebrewDate, here);
+			unsigned long int tme = (((((ctz.hour*60)+ctz.min)*60)+ctz.sec)*1000)+ctz.msec;
+			total[n] += tme;
 //printf("%s\n", formattime(hebrewDate));
-		//hdate ctz = getchatzosbaalhatanya(hebrewDate, here);
-		unsigned long int tme = (((((ctz.hour*60)+ctz.min)*60)+ctz.sec)*1000)+ctz.msec;
 //		res[i] = tme;
-		total += tme;
+		}
 	}
 
-	unsigned long long int final = total/limit;
-	unsigned long int msec = final%1000;
-	unsigned long int sec = final/1000;
-	unsigned long int min = sec/60;
-	unsigned long int hour = min/60;
-	min = min%60;
-	sec = sec%60;
-	printf("%ld:%ld:%ld.%ld\n", hour, min, sec, msec);
-
+	char* text[2] = {"Rise/Set average", "Zenith"};
+	for (int n = 0; n < 2; n++)
+	{
+		unsigned long long int final = total[n]/limit;
+		unsigned long int msec = final%1000;
+		unsigned long int sec = final/1000;
+		unsigned long int min = sec/60;
+		unsigned long int hour = min/60;
+		min = min%60;
+		sec = sec%60;
+		printf("%s\t%ld:%ld:%ld.%ld\n", text[n], hour, min, sec, msec);
+	}
 	return 0;
 }
