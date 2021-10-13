@@ -3,6 +3,7 @@
 #####
 
 PREFIX=$$HOME/x-tools/arm-unknown-linux-gnueabi/bin/arm-unknown-linux-gnueabi-
+PREFIXKT4=arm-kindlepw2-linux-gnueabi-
 CC=gcc
 AR=ar
 RANLIB=ranlib
@@ -27,17 +28,22 @@ testobjects := $(patsubst %.c,%.o,$(wildcard $(TESTDIR)*.c))
 
 VPATH = src $(INC_DIR)
 
-.PHONY: clean cleaner all shared static test directories teststatic testshared teststandard kindle fresh extra
+.PHONY: clean cleaner all shared static test directories teststatic testshared teststandard kindle KT4 fresh extra
 
 all:
 	$(MAKE) directories
 	$(MAKE) shared static
-	$(MAKE) test
+	$(MAKE) test extra
 
 kindle: CC = $(PREFIX)gcc
 kindle: AR = $(PREFIX)ar
 kindle: RANLIB = $(PREFIX)ranlib
 kindle: directories shared static test
+
+KT4: CC = $(PREFIXKT4)gcc
+KT4: AR = $(PREFIXKT4)gcc-ar
+KT4: RANLIB = $(PREFIXKT4)gcc-ranlib
+KT4: directories shared static test
 
 directories: | $(SHAREDDIR) $(STATICDIR) $(LIBDIR)
 
