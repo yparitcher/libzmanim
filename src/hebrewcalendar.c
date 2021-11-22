@@ -913,8 +913,9 @@ int TekufasTishreiElapsedDays(hdate date)
 
 _Bool isbirchashashanim(hdate date)
 {
-	if (date.EY && date.month == 7 && date.day == 7) {return 1;}
-	else if (TekufasTishreiElapsedDays(date) == 47) {return 1;}
+	if (date.EY) {
+		if (date.month == 7 && date.day == 7) {return 1;}
+	} else if (TekufasTishreiElapsedDays(date) == 47) {return 1;}
 	return 0;
 }
 
