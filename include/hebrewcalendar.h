@@ -15,7 +15,11 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 #ifndef HEBREW_CALENDAR_H
 #define HEBREW_CALENDAR_H
 
-#include <time.h>
+#ifndef NOSTDLIB
+	#include <time.h>
+#else
+	typedef long int time_t;
+#endif
 
 // location struct used to calculate zmanim
 typedef struct {
@@ -62,23 +66,33 @@ int HebrewLeapYear(int year);
 
 // day from molad tohu until Rosh Hashana
 long int HebrewCalendarElapsedDays(int year);
+
+unsigned hdatesize();
+hdate hdatenew(int year, int month, int day, int hour, int min, int sec, int msec, long int offset);
+void setEY(hdate *date, _Bool EY);
+#ifndef NOSTDLIB
 // convert struct tm to hdate
 hdate convertDate(struct tm date);
-void setEY(hdate *date, _Bool EY);
-// convert a hdate to julian day
-double hdatejulian(hdate date);
 // convert a hdate to gregorian date
 struct tm hdategregorian(hdate date);
 // convert a gregorian date to julian day
 double gregorianjulian(struct tm date);
+#endif
+// convert a hdate to julian day
+double hdatejulian(hdate date);
 // convert a hdate to a time_t
 time_t hdatetime_t(hdate date);
+// convert a time_t to a hdate
+hdate time_thdate(time_t time, long int offset);
 
 //compare 2 hdate:
 // returns 0 if they are the same
 // 1 if date1 < date2
 // and -1 if date1 > date2
 int hdatecompare(hdate date1, hdate date2);
+
+// normalize a hdate and set the wday, dayofyear, and leap
+void hdatesetdoy(hdate *date);
 
 // functions to add or subtract from a hdate field and then normalize the result
 void hdateaddyear(hdate *date, int years);

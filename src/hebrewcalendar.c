@@ -54,7 +54,9 @@ and code from ICU licensed under the Unicode license
 ---------------------------------------------------------------------------------
 ****/
 
-#include <math.h>
+#ifndef NOSTDLIB
+	#include <math.h>
+#endif
 #include "hebrewcalendar.h"
 
 const parshah parshahlist[17][56] = {
@@ -183,6 +185,31 @@ int nissanCount(int year)
 	return count;
 }
 
+unsigned hdatesize()
+{
+	return sizeof(hdate);
+}
+
+hdate hdatenew(int year, int month, int day, int hour, int min, int sec, int msec, long int offset){
+	hdate result = {0};
+	result.year = year;
+	result.month = month;
+	result.day = day;
+	result.hour = hour;
+	result.min = min;
+	result.sec = sec;
+	result.msec = msec;
+	result.offset = offset;
+	hdatesetdoy(&result);
+	return result;
+}
+
+void setEY(hdate *date, _Bool EY)
+{
+	date->EY = EY;
+}
+
+#ifndef NOSTDLIB
 hdate convertDate(struct tm date)
 {
     hdate result = {0};
@@ -225,18 +252,6 @@ hdate convertDate(struct tm date)
 	return result;
 }
 
-void setEY(hdate *date, _Bool EY)
-{
-	date->EY = EY;
-}
-
-double hdatejulian(hdate date)
-{
-	double diff = 347996.5;
-	long int yearstart = HebrewCalendarElapsedDays(date.year);
-	return (date.dayofyear-1) + yearstart + diff;
-}
-
 struct tm hdategregorian(hdate date)
 {
 	struct tm result;
@@ -260,14 +275,6 @@ struct tm hdategregorian(hdate date)
 	return result;
 }
 
-time_t hdatetime_t(hdate date)
-{
-	time_t result = (HebrewCalendarElapsedDays(date.year)+(date.dayofyear-1))-2092591;
-	result = ((((((result*24)+date.hour)*60)+date.min)*60)+date.sec);
-	result -= date.offset;
-	return result;
-}
-
 double gregorianjulian(struct tm date)
 {
 	int year = date.tm_year + 1900;
@@ -282,6 +289,66 @@ double gregorianjulian(struct tm date)
 
 	double JD = floor(365.25*(year + 4716)) + floor(30.6001*(month+1)) + day + B - 1524.5;
 	return JD;
+}
+#endif
+
+double hdatejulian(hdate date)
+{
+	double diff = 347996.5;
+	long int yearstart = HebrewCalendarElapsedDays(date.year);
+	return (date.dayofyear-1) + yearstart + diff;
+}
+
+time_t hdatetime_t(hdate date)
+{
+	time_t result = (HebrewCalendarElapsedDays(date.year)+(date.dayofyear-1))-2092591;
+	result = ((((((result*24)+date.hour)*60)+date.min)*60)+date.sec);
+	result -= date.offset;
+	return result;
+}
+
+hdate time_thdate(time_t time, long int offset)
+{
+	time_t temp = time += offset;
+	hdate result = {0};
+	result.sec = temp%60;
+	temp = temp / 60;
+	result.min = temp%60;
+	temp = temp / 60;
+	result.hour = temp%24;
+	long int d = (temp / 24) + 2092591;
+	double m = ((d * (double)25920) / (double)765433);
+	int year = (int)((19. * m) / 235.);
+    int month;
+    int dayCount;
+
+    while (d >= HebrewCalendarElapsedDays(year + 1))
+    {
+		year++;
+  	}
+    long int ys  = HebrewCalendarElapsedDays(year);
+    int dayOfYear = (d - ys)+1;
+    int nissanStart = nissanCount(year);
+    if (dayOfYear <= nissanStart) {
+	  month = 7;  //  Start at Tishri
+	  dayCount = 0;
+    } else {
+      month = 1;  //  Start at Nisan
+      dayCount = nissanStart;
+	}
+    while (dayOfYear > (dayCount + LastDayOfHebrewMonth(month, year)))
+    {
+      dayCount += LastDayOfHebrewMonth(month, year);
+      month++;
+	}
+    int day = dayOfYear - dayCount ;
+	result.year = year;
+	result.month = month;
+	result.day = day;
+
+	result.offset = offset;
+	hdatesetdoy(&result);
+	return result;
 }
 
 int hdatecompare(hdate date1, hdate date2)

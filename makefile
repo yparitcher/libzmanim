@@ -28,7 +28,7 @@ testobjects := $(patsubst %.c,%.o,$(wildcard $(TESTDIR)*.c))
 
 VPATH = src $(INC_DIR)
 
-.PHONY: clean cleaner all shared static test directories teststatic testshared teststandard kindle KT4 fresh extra
+.PHONY: clean cleaner all shared static test directories teststatic testshared teststandard kindle KT4 fresh extra wasm
 
 all:
 	$(MAKE) directories
@@ -44,6 +44,10 @@ KT4: CC = $(PREFIXKT4)gcc
 KT4: AR = $(PREFIXKT4)gcc-ar
 KT4: RANLIB = $(PREFIXKT4)gcc-ranlib
 KT4: directories shared static test
+
+wasm: CC = clang
+wasm: CFLAGS= -DNOSTDLIB -Wall -Wextra --target=wasm32 -nostdlib -Wl,--no-entry -Wl,--export-all $(INC_DIR:%=-I%)
+wasm: $(LIBDIR)/libzmanim.wasm
 
 directories: | $(SHAREDDIR) $(STATICDIR) $(LIBDIR)
 
@@ -75,6 +79,9 @@ $(LIBDIR)/libzmanim.a: $(staticobjects)
 	$(AR) rc $@ $^
 	$(RANLIB) $@
 
+$(LIBDIR)/libzmanim.wasm: $(wildcard $(SRCDIR)hebrewcalendar.c)
+	$(CC) $(CFLAGS) -o $@ $^
+
 $(SHAREDDIR)/%.o: $(SRCDIR)%.c
 	$(CC) -fPIC -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
@@ -104,7 +111,7 @@ clean:
 	rm -f $(SHAREDDIR)/*.o $(STATICDIR)/*.o $(TESTDIR)test.o
 
 cleaner: clean
-	rm -f $(LIBDIR)/libzmanim.so $(LIBDIR)/libzmanim.a $(TESTDIR)testshared $(TESTDIR)teststatic $(TESTDIR)test $(extraexecs)
+	rm -f $(LIBDIR)/libzmanim.so $(LIBDIR)/libzmanim.a $(TESTDIR)testshared $(TESTDIR)teststatic $(TESTDIR)test $(extraexecs) $(LIBDIR)/libzmanim.wasm
 
 fresh:
 	$(MAKE) cleaner
