@@ -92,6 +92,8 @@ hdate time_thdate(time_t time, long int offset);
 int hdatecompare(hdate date1, hdate date2);
 
 // normalize a hdate and set the wday, dayofyear, and leap
+// converts 13 (Adar II) in a non leap year to 12
+// converts 30 cheshvan, kislev & adar to 29 in a year that only has 29 days
 void hdatesetdoy(hdate *date);
 
 // functions to add or subtract from a hdate field and then normalize the result

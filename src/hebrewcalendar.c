@@ -371,9 +371,10 @@ int hdatecompare(hdate date1, hdate date2)
 void hdatesetdoy(hdate *date)
 {
 	int year = date->year;
+	if (date->month == 13 && !HebrewLeapYear(year)){date->month--;}
 	int month = date->month;
+	if (date->day == 30 && LastDayOfHebrewMonth(month, year) == 29){date->day = 29;}
 	int day = date->day;
-	if (day == 30 && LastDayOfHebrewMonth(month, year) == 29){day = 29;}
 	int monthcount;
     int dayOfYear;
 	if (month < 7)
