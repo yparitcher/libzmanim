@@ -46,7 +46,7 @@ KT4: RANLIB = $(PREFIXKT4)gcc-ranlib
 KT4: directories shared static test
 
 wasm: CC = clang
-wasm: CFLAGS= -DNOSTDLIB -Wall -Wextra --target=wasm32 -nostdlib -Wl,--no-entry -Wl,--export-all $(INC_DIR:%=-I%)
+wasm: CFLAGS= -DNOSTDLIB -Wall -Wextra --target=wasm32 -nostdlib -mmultivalue -Xclang -target-abi -Xclang experimental-mv -Wl,--no-entry -Wl,--export-all $(INC_DIR:%=-I%)
 wasm: $(LIBDIR)/libzmanim.wasm
 
 directories: | $(SHAREDDIR) $(STATICDIR) $(LIBDIR)
