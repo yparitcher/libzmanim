@@ -28,7 +28,7 @@ testobjects := $(patsubst %.c,%.o,$(wildcard $(TESTDIR)*.c))
 
 VPATH = src $(INC_DIR)
 
-.PHONY: clean cleaner all shared static test directories teststatic testshared teststandard kindle KT4 fresh extra wasm
+.PHONY: clean cleaner all shared static test directories teststatic testshared teststandard kindle KT4 fresh extra wasm rock
 
 all:
 	$(MAKE) directories
@@ -44,6 +44,8 @@ KT4: CC = $(PREFIXKT4)gcc
 KT4: AR = $(PREFIXKT4)gcc-ar
 KT4: RANLIB = $(PREFIXKT4)gcc-ranlib
 KT4: directories shared static test
+
+rock: cleaner shared
 
 wasm: CC = clang
 wasm: CFLAGS= -DNOSTDLIB -Wall -Wextra --target=wasm32 -nostdlib -mmultivalue -Xclang -target-abi -Xclang experimental-mv -Wl,--no-entry -Wl,--export-all $(INC_DIR:%=-I%)
@@ -106,6 +108,13 @@ extra: static $(extraexecs)
 
 $(extraexecs): %: %.c
 	$(CC) $(CFLAGS) $(TESTLDFLAGS) $^ $(TESTLDLIB) $(LDLIBS) -o $@
+
+install:
+	mkdir -p $(INST_LIBDIR)
+	cp lib/libzmanim.so $(INST_LIBDIR)
+	mkdir -p $(INST_LUADIR)
+	cp lua-ffi-cdecl/libzmanim.lua $(INST_LUADIR)
+	cp lua-ffi-cdecl/libzmanim_load.lua $(INST_LUADIR)
 
 clean:
 	rm -f $(SHAREDDIR)/*.o $(STATICDIR)/*.o $(TESTDIR)test.o
