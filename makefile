@@ -45,7 +45,7 @@ KT4: AR = $(PREFIXKT4)gcc-ar
 KT4: RANLIB = $(PREFIXKT4)gcc-ranlib
 KT4: directories shared static test
 
-rock: cleaner shared
+rock: cleaner directories shared
 
 wasm: CC = clang
 wasm: CFLAGS= -DNOSTDLIB -Wall -Wextra --target=wasm32 -nostdlib -mmultivalue -Xclang -target-abi -Xclang experimental-mv -Wl,--no-entry -Wl,--export-all $(INC_DIR:%=-I%)

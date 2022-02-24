@@ -1,14 +1,14 @@
 package = 'Libzmanim'
 version = '1.0-1'
 source = {
-   url = "git://github.com/yparitcher/libzmanim.git",
+   url = "git://github.com/yparitcher/libzmanim",
 }
 description = {
    summary = 'Libzmanim',
    detailed = [[
       Libzmanim
    ]],
-   homepage = '...',
+   homepage = 'paritcher.com',
    maintainer = 'Yparitcher',
    license = 'MIT'
 }
