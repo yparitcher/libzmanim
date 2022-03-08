@@ -1,2 +1,2 @@
 require("libzmanim")
-return require("ffi").load("libzmanim.so")
+return require("ffi").load("zmanim")
