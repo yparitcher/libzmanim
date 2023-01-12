@@ -1,5 +1,5 @@
 #! /usr/bin/python
-from python_cdef import ffi as ffi
+from libzmanim_cdef import ffi as ffi
 ffi.set_source("libzmanim_python",
 """
 #include <time.h>

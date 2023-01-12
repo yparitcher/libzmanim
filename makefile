@@ -22,7 +22,7 @@ PYTHONDIR=python/
 sharedobjects := $(patsubst $(SRCDIR)%.c,$(SHAREDDIR)/%.o,$(wildcard $(SRCDIR)*.c))
 staticobjects := $(patsubst $(SRCDIR)%.c,$(STATICDIR)/%.o,$(wildcard $(SRCDIR)*.c))
 extraexecs := $(patsubst %.c, %, $(wildcard $(EXTRADIR)*.c))
-fficdefs := $(LUADIR)libzmanim.lua $(PYTHONDIR)python_cdef.py
+fficdefs := $(LUADIR)libzmanim.lua $(PYTHONDIR)libzmanim_cdef.py
 
 TESTDIR=test/
 TESTLDFLAGS=-L$(LIBDIR)
