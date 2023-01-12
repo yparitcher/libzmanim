@@ -5,6 +5,8 @@
 #include "hdateformat.h"
 #include "shuir.h"
 
+cdecl_struct(tm)
+
 cdecl_type(location)
 cdecl_type(parshah)
 cdecl_type(yomtov)
@@ -14,15 +16,19 @@ cdecl_c99_type(molad, hdate)
 cdecl_func(LastDayOfHebrewMonth)
 cdecl_func(HebrewLeapYear)
 cdecl_func(HebrewCalendarElapsedDays)
-cdecl_func(convertDate)
+//cdecl_func(hdatesize)
+cdecl_func(hdatenew)
 cdecl_func(setEY)
 
-cdecl_func(hdatejulian)
+cdecl_func(convertDate)
 cdecl_func(hdategregorian)
 cdecl_func(gregorianjulian)
+cdecl_func(hdatejulian)
 cdecl_func(hdatetime_t)
+cdecl_func(time_thdate)
 
 cdecl_func(hdatecompare)
+cdecl_func(hdatesetdoy)
 cdecl_func(hdateaddyear)
 cdecl_func(hdateaddmonth)
 cdecl_func(hdateaddday)
@@ -39,6 +45,7 @@ cdecl_func(getspecialshabbos)
 cdecl_func(getroshchodesh)
 cdecl_func(getmacharchodesh)
 cdecl_func(getshabbosmevorchim)
+
 cdecl_func(getomer)
 cdecl_func(getavos)
 cdecl_func(istaanis)

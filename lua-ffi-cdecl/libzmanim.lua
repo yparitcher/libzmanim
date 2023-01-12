@@ -1,6 +1,19 @@
 local ffi = require("ffi")
 
 ffi.cdef[[
+struct tm {
+  int tm_sec;
+  int tm_min;
+  int tm_hour;
+  int tm_mday;
+  int tm_mon;
+  int tm_year;
+  int tm_wday;
+  int tm_yday;
+  int tm_isdst;
+  long int tm_gmtoff;
+  const char *tm_zone;
+};
 typedef struct {
   double latitude;
   double longitude;
@@ -148,13 +161,16 @@ typedef hdate molad;
 int LastDayOfHebrewMonth(int, int);
 int HebrewLeapYear(int);
 long int HebrewCalendarElapsedDays(int);
-hdate convertDate(struct tm);
+hdate hdatenew(int, int, int, int, int, int, int, long int);
 void setEY(hdate *, bool);
-double hdatejulian(hdate);
+hdate convertDate(struct tm);
 struct tm hdategregorian(hdate);
 double gregorianjulian(struct tm);
+double hdatejulian(hdate);
 long int hdatetime_t(hdate);
+hdate time_thdate(long int, long int);
 int hdatecompare(hdate, hdate);
+void hdatesetdoy(hdate *);
 void hdateaddyear(hdate *, int);
 void hdateaddmonth(hdate *, int);
 void hdateaddday(hdate *, int);
