@@ -16,9 +16,13 @@ SHAREDDIR=build/shared
 LIBDIR=lib
 SRCDIR=src/
 EXTRADIR=extra/
+FFIDIR=ffi-cdecl/
+LUADIR=lua/
+PYTHONDIR=python/
 sharedobjects := $(patsubst $(SRCDIR)%.c,$(SHAREDDIR)/%.o,$(wildcard $(SRCDIR)*.c))
 staticobjects := $(patsubst $(SRCDIR)%.c,$(STATICDIR)/%.o,$(wildcard $(SRCDIR)*.c))
 extraexecs := $(patsubst %.c, %, $(wildcard $(EXTRADIR)*.c))
+fficdefs := $(LUADIR)libzmanim.lua $(PYTHONDIR)python_cdef.py
 
 TESTDIR=test/
 TESTLDFLAGS=-L$(LIBDIR)
@@ -28,7 +32,7 @@ testobjects := $(patsubst %.c,%.o,$(wildcard $(TESTDIR)*.c))
 
 VPATH = src $(INC_DIR)
 
-.PHONY: clean cleaner all shared static test directories teststatic testshared teststandard kindle KT4 fresh extra wasm rock
+.PHONY: clean cleaner all shared static test directories teststatic testshared teststandard kindle KT4 fresh extra wasm rock ffi
 
 all:
 	$(MAKE) directories
@@ -113,14 +117,19 @@ install:
 	mkdir -p $(INST_LIBDIR)
 	cp lib/libzmanim.so $(INST_LIBDIR)
 	mkdir -p $(INST_LUADIR)
-	cp lua-ffi-cdecl/libzmanim.lua $(INST_LUADIR)
-	cp lua-ffi-cdecl/libzmanim_load.lua $(INST_LUADIR)
+	cp $(LUADIR)libzmanim.lua $(INST_LUADIR)
+	cp $(LUADIR)libzmanim_load.lua $(INST_LUADIR)
+
+$(fficdefs): $(FFIDIR)libzmanim.c
+	CPPFLAGS="$(INC_DIR:%=-I%)" ffi-cdecl $(CC) $^ $@
+
+ffi: $(fficdefs)
 
 clean:
 	rm -f $(SHAREDDIR)/*.o $(STATICDIR)/*.o $(TESTDIR)test.o
 
 cleaner: clean
-	rm -f $(LIBDIR)/libzmanim.so $(LIBDIR)/libzmanim.a $(TESTDIR)testshared $(TESTDIR)teststatic $(TESTDIR)test $(extraexecs) $(LIBDIR)/libzmanim.wasm
+	rm -f $(LIBDIR)/libzmanim.so $(LIBDIR)/libzmanim.a $(TESTDIR)testshared $(TESTDIR)teststatic $(TESTDIR)test $(extraexecs) $(LIBDIR)/libzmanim.wasm $(fficdefs)
 
 fresh:
 	$(MAKE) cleaner
