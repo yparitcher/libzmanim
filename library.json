@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/schema/library.json",
+  "name": "Libzmanim",
+  "version": "1.0-1",
+  "description": "a C library for zmanim and hebrew dates",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/yparitcher/libzmanim"
+  },
+  "build": {     
+    "unflags":"-std=gnu11",
+    "flags":[
+       "-I include"   
+      ,"-I windows"
+      ,"-D _WIN32"
+      ,"-Wall"
+      ,"-Wextra"
+      ,"-Wno-format-truncation"      
+      ,"-O2"        
+      ,"-pedantic"       
+      ,"-pedantic-errors"       
+      ,"-std=c11"      
+    ],
+    "includeDir": ".",  
+    "srcDir": ".",  
+    "srcFilter": "+<windows> +<src>"
+  },
+  "authors": [
+    {
+      "name": "Yparitcher",
+      "email": "support@paritcher.com",
+      "url": "https://paritcher.com/"
+    }
+  ],
+  "license": "MIT",
+  "frameworks": "*",
+  "platforms": "*"
+}

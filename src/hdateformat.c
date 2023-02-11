@@ -20,8 +20,8 @@ or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 #include "stpncpy.h"
 #endif
 
-const char* hchar[]={ "׆", "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ", "ק", "ר", "ש", "ת", "״", "׳"};
-const char* hmonth[]={ "אדר א׳", "ניסן", "אייר", "סיון", "תמוז", "אב", "אלול", "תשרי", "חשון", "כסלו", "טבת", "שבט", "אדר", "אדר ב׳"};
+const char* hchar[]={ "׆", "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ", "ק", "ר", "ש", "ת", "\"", "'"};
+const char* hmonth[]={ "אדר א'", "ניסן", "אייר", "סיון", "תמוז", "אב", "אלול", "תשרי", "חשון", "כסלו", "טבת", "שבט", "אדר", "אדר ב'"};
 const char* hwday[]={ "שביעי", "ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"};
 const char* parshahchar[]={"\0", "בראשית", "נח", "לך לך", "וירא", "חיי שרה", "תולדות", "ויצא", "וישלח", "וישב", "מקץ", "ויגש", "ויחי", "שמות", "וארא", "בא", "בשלח", "יתרו", "משפטים", "תרומה", "תצוה", "כי תשא", "ויקהל", "פקודי", "ויקרא", "צו", "שמיני", "תזריע", "מצורע", "אחרי מות", "קדושים", "אמור", "בהר", "בחוקותי", "במדבר", "נשא", "בהעלותך", "שלח", "קרח", "חקת", "בלק", "פינחס", "מטות", "מסעי", "דברים", "ואתחנן", "עקב", "ראה", "שופטים", "כי תצא", "כי תבוא", "נצבים", "וילך", "האזינו", "וזאת הברכה", "ויקהל - פקודי", "תזריע - מצורע", "אחרי מות - קדושים", "בהר - בחוקותי", "חקת - בלק", "מטות - מסעי", "נצבים - וילך"};
 
@@ -254,9 +254,9 @@ const char* yomtovformat(yomtov current)
 		case PESACH_SHEINI:
 			return "פסח שני";
 		case LAG_BAOMER:
-			return "ל״ג בעומר";
+			return "ל\"ג בעומר";
 		case TU_BAV:
-			return "ט״ו באב";
+			return "ט\"ו באב";
 		case CHANUKAH_DAY1:
 		case CHANUKAH_DAY2:
 		case CHANUKAH_DAY3:
@@ -267,7 +267,7 @@ const char* yomtovformat(yomtov current)
 		case CHANUKAH_DAY8:
 			return "חנוכה";
 		case TU_BISHVAT:
-			return "ט״ו בשבט";
+			return "ט\"ו בשבט";
 		case PURIM_KATAN:
 			return "פורים קטן";
 		case SHUSHAN_PURIM_KATAN:
@@ -279,7 +279,7 @@ const char* yomtovformat(yomtov current)
 		case SHIVA_ASAR_BTAAMUZ:
 			return "שבעה עשר בתמוז";
 		case TISHA_BAV:
-			return "ט׳ באב";
+			return "תשעה באב";
 		case TZOM_GEDALIA:
 			return "צום גדליה";
 		case ASARAH_BTEVES:

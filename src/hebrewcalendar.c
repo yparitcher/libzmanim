@@ -78,16 +78,18 @@ const parshah parshahlist[17][56] = {
 {NOPARSHAH, VAYELECH, HAAZINU, NOPARSHAH, BERESHIT, NOACH, LECH_LECHA, VAYEIRA, CHAYEI_SARAH, TOLEDOT, VAYETZE, VAYISHLACH, VAYESHEV, MIKETZ, VAYIGASH, VAYECHI, SHEMOT, VAEIRA, BO, BESHALACH, YITRO, MISHPATIM, TERUMAH, TETZAVEH, KI_TISA, VAYAKHEL, PEKUDEI, VAYIKRA, TZAV, SHEMINI, TAZRIA, METZORA, NOPARSHAH, ACHAREI_MOT, KEDOSHIM, EMOR, BEHAR, BECHUKOTAI, BAMIDBAR, NASO, BEHAALOTECHA, SHLACH, KORACH, CHUKAT, BALAK, PINCHAS, MATOT, MASEI, DEVARIM, VAETCHANAN, EIKEV, REEH, SHOFTIM, KI_TEITZEI, KI_TAVO, NITZAVIM},
 {NOPARSHAH, NOPARSHAH, HAAZINU, NOPARSHAH, NOPARSHAH, BERESHIT, NOACH, LECH_LECHA, VAYEIRA, CHAYEI_SARAH, TOLEDOT, VAYETZE, VAYISHLACH, VAYESHEV, MIKETZ, VAYIGASH, VAYECHI, SHEMOT, VAEIRA, BO, BESHALACH, YITRO, MISHPATIM, TERUMAH, TETZAVEH, KI_TISA, VAYAKHEL, PEKUDEI, VAYIKRA, TZAV, SHEMINI, TAZRIA, METZORA, NOPARSHAH, ACHAREI_MOT, KEDOSHIM, EMOR, BEHAR, BECHUKOTAI, BAMIDBAR, NASO, BEHAALOTECHA, SHLACH, KORACH, CHUKAT, BALAK, PINCHAS, MATOT_MASEI, DEVARIM, VAETCHANAN, EIKEV, REEH, SHOFTIM, KI_TEITZEI, KI_TAVO, NITZAVIM_VAYELECH}};
 
-int HebrewLeapYear(int year)
+int HebrewLeapYear(int hyear)
 {  
+  long int year=hyear;
   if ((((7 * year) + 1) % 19) < 7)
     return 1;
   else
     return 0;
 }
 
-long int HebrewCalendarElapsedDays(int year)
+long int HebrewCalendarElapsedDays(int hyear)
 {
+  long int year=hyear;
   long int MonthsElapsed =
     (235 * ((year - 1) / 19))           // Months in complete cycles so far.
     + (12 * ((year - 1) % 19))          // Regular months in this cycle.
@@ -933,7 +935,7 @@ int iscandlelighting(hdate date)
 	|| current == SHAVOUS_DAY2
 	|| current == ROSH_HASHANAH_DAY2
 	|| current == SIMCHAS_TORAH)
-	&& date.wday == 6) {return 2;}
+	) {return 2;}
 	if((date.month == 9 && date.day == 24)
 	|| (current >= CHANUKAH_DAY1 && current <= CHANUKAH_DAY7))
 	{
