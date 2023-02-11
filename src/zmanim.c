@@ -440,7 +440,7 @@ hdate gettzais72(hdate date, location here)
 	return calctimeoffset(getsunset(date, here), MINUTES72);
 }
 
-hdate calcmoladoffset(hdate date, int offsetsec)
+hdate calcmoladoffset(hdate date, long int offsetsec)
 {
 	molad result = getmolad(date.year, date.month);
 	int tz = (-result.offset) + date.offset;
