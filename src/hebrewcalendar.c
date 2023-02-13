@@ -923,17 +923,15 @@ int iscandlelighting(hdate date)
 		if(!date.wday){return 2;}
 		return 1;
 	}
+	if(current == ROSH_HASHANAH_DAY1){return 2;}
 	if(current == PESACH_DAY1
 	|| current == SHVEI_SHEL_PESACH
 	|| current == SHAVOUS_DAY1
-	|| current == ROSH_HASHANAH_DAY1
 	|| current == SUKKOS_DAY1
-	|| current == SHMEINI_ATZERES){return 2;}
-	if((current == ACHRON_SHEL_PESACH
-	|| current == SHAVOUS_DAY2
-	|| current == ROSH_HASHANAH_DAY2
-	|| current == SIMCHAS_TORAH)
-	&& date.wday == 6) {return 2;}
+	|| current == SHMEINI_ATZERES)
+	{
+		if(!date.EY){return 2;}
+	}
 	if((date.month == 9 && date.day == 24)
 	|| (current >= CHANUKAH_DAY1 && current <= CHANUKAH_DAY7))
 	{
