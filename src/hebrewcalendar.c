@@ -80,7 +80,7 @@ const parshah parshahlist[17][56] = {
 
 int HebrewLeapYear(int hyear)
 {  
-  long int year=hyear;
+  long int year=hyear;//8 bit
   if ((((7 * year) + 1) % 19) < 7)
     return 1;
   else
@@ -89,7 +89,7 @@ int HebrewLeapYear(int hyear)
 
 long int HebrewCalendarElapsedDays(int hyear)
 {
-  long int year=hyear;
+ long int year=hyear;// 8 bit
   long int MonthsElapsed =
     (235 * ((year - 1) / 19))           // Months in complete cycles so far.
     + (12 * ((year - 1) % 19))          // Regular months in this cycle.
