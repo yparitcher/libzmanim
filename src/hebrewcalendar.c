@@ -849,6 +849,7 @@ yomtov getmacharchodesh(hdate date)
 yomtov getshabbosmevorchim(hdate date)
 {
 	if (date.wday) {return CHOL;}
+	if (date.month == 6) {return CHOL;} // No Shabbos Mevorchim before Rosh Hashana
 	if (date.day >= 23 && date.day <= 29) {return SHABBOS_MEVORCHIM;}
 	return CHOL;
 }
@@ -980,7 +981,7 @@ int TekufasTishreiElapsedDays(hdate date)
 _Bool isbirchashashanim(hdate date)
 {
 	if (date.EY) {
-		if (date.month == 7 && date.day == 7) {return 1;}
+		if (date.month == 8 && date.day == 7) {return 1;}
 	} else if (TekufasTishreiElapsedDays(date) == 47) {return 1;}
 	return 0;
 }

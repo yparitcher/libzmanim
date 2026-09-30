@@ -847,6 +847,8 @@ int tanya(hdate date, char* buffer)
 
 int rambam(hdate date, char* buffer)
 {
-	int current = ((HebrewCalendarElapsedDays(date.year)+date.dayofyear)- (2097823)) % 339;
+	int elapsed = HebrewCalendarElapsedDays(date.year)+date.dayofyear;
+	int current = (elapsed - 2097823) % 339;
+	if (current < 0) {current += 339;}
 	return sprintf(buffer, "%s\n%s", "רמב״ם", rambamarray[current]);
 }
