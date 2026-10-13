@@ -209,5 +209,8 @@ int main(int argc, char *argv[])
 	char rambambuf[100];
 	rambam(hebrewDate, rambambuf);
 	printf("%s\n", rambambuf);
+	char rambamperekbuf[100];
+	rambamperek(hebrewDate, rambamperekbuf);
+	printf("%s\n", rambamperekbuf);
 	return 0;
 }
