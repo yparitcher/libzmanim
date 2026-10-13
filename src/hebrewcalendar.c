@@ -988,10 +988,10 @@ _Bool isbirchashashanim(hdate date)
 _Bool getbirchashashanim(hdate date)
 {
 	if (date.month == 1 && date.day < 15) {return 1;}
-	if (date.month < 7) {return 0;}
+	if (date.month < 8) {return 0;}
 	if (date.EY)
 	{
-		if (date.month == 7 && date.day < 7) {return 0;}
+		if (date.month == 8 && date.day < 7) {return 0;}
 		else {return 1;}
 	} else {
 		if (TekufasTishreiElapsedDays(date) < 47) {return 0;}
