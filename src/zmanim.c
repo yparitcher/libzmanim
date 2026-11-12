@@ -56,6 +56,7 @@ hdate getDateFromTime(hdate current, double time, location here, int isSunrise)
 	result.offset = current.offset;
 	result.month = current.month;
 	result.day = current.day;
+	result.leap = HebrewLeapYear(current.year);
 	if (adjustment){hdateaddday(&result, adjustment);}
 
 	int hours = (int)calculatedTime;
